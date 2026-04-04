@@ -10,7 +10,12 @@ import {
   ChevronRight,
   Calendar,
   Clock,
-  Target
+  Target,
+  User as UserIcon,
+  Shield,
+  Trash2,
+  Mail,
+  Camera
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
@@ -78,6 +83,215 @@ const StatCard = ({ label, value, unit, trend, icon: Icon, color }) => (
     </div>
   </div>
 );
+
+// --- Main App ---
+
+const ProfileView = ({ user, onUpdate }) => {
+  const [name, setName] = useState(user?.name || '');
+  const [email, setEmail] = useState(user?.email || '');
+  const [profilePicture, setProfilePicture] = useState(user?.profilePicture || '');
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState({ type: '', text: '' });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setMessage({ type: '', text: '' });
+    try {
+      const res = await fetch('/api/user', {
+        method: 'PUT',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({ name, email, profilePicture })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Update failed');
+      onUpdate(data);
+      setMessage({ type: 'success', text: 'Profile updated successfully!' });
+    } catch (err) {
+      setMessage({ type: 'error', text: err.message });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="max-w-2xl mx-auto">
+      <Card title="Manage Profile" subtitle="Update your personal information">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="flex flex-col items-center mb-8">
+            <div className="relative group">
+              <img 
+                src={profilePicture} 
+                alt="Profile" 
+                className="w-32 h-32 rounded-full border-4 border-brand-100 object-cover"
+                referrerPolicy="no-referrer"
+              />
+              <div className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                <Camera className="text-white" size={24} />
+              </div>
+            </div>
+            <p className="text-xs text-slate-400 mt-2">Click to change (simulated)</p>
+          </div>
+
+          <div className="space-y-4">
+            <div className="space-y-1">
+              <label className="text-sm font-bold text-slate-700">Full Name</label>
+              <div className="relative">
+                <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                <input 
+                  required
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 rounded-xl border border-slate-200 focus:border-brand-500 outline-none"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-sm font-bold text-slate-700">Email Address</label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                <input 
+                  required
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 rounded-xl border border-slate-200 focus:border-brand-500 outline-none"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-sm font-bold text-slate-700">Profile Picture URL</label>
+              <input 
+                type="text"
+                value={profilePicture}
+                onChange={(e) => setProfilePicture(e.target.value)}
+                className="w-full px-4 py-2 rounded-xl border border-slate-200 focus:border-brand-500 outline-none"
+                placeholder="https://example.com/image.jpg"
+              />
+            </div>
+          </div>
+
+          {message.text && (
+            <p className={`text-sm font-medium ${message.type === 'success' ? 'text-green-600' : 'text-red-600'}`}>
+              {message.text}
+            </p>
+          )}
+
+          <button 
+            disabled={loading}
+            type="submit"
+            className="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-3 rounded-xl shadow-lg shadow-brand-500/20 transition-all disabled:opacity-50"
+          >
+            {loading ? 'Saving...' : 'Save Changes'}
+          </button>
+        </form>
+      </Card>
+    </div>
+  );
+};
+
+const AdminView = () => {
+  const [users, setUsers] = useState([]);
+  const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const fetchData = async () => {
+    try {
+      const headers = { 'Authorization': `Bearer ${localStorage.getItem('token')}` };
+      const [usersRes, statsRes] = await Promise.all([
+        fetch('/api/admin/users', { headers }),
+        fetch('/api/admin/stats', { headers })
+      ]);
+      setUsers(await usersRes.json());
+      setStats(await statsRes.json());
+    } catch (err) {
+      console.error('Admin fetch error:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const deleteUser = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this user? This action cannot be undone.')) return;
+    try {
+      const res = await fetch(`/api/admin/users/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+      });
+      if (res.ok) {
+        setUsers(users.filter(u => u.id !== id));
+        fetchData(); // Refresh stats
+      }
+    } catch (err) {
+      console.error('Delete error:', err);
+    }
+  };
+
+  if (loading) return <div className="text-center py-20 text-slate-400">Loading admin data...</div>;
+
+  return (
+    <div className="space-y-8">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <StatCard label="Total Users" value={stats?.totalUsers || 0} unit="members" icon={UserIcon} color="bg-blue-500" />
+        <StatCard label="Workouts" value={stats?.totalWorkouts || 0} unit="logged" icon={Dumbbell} color="bg-brand-500" />
+        <StatCard label="Nutrition" value={stats?.totalNutritionLogs || 0} unit="entries" icon={Utensils} color="bg-orange-500" />
+        <StatCard label="Progress" value={stats?.totalProgressLogs || 0} unit="updates" icon={TrendingUp} color="bg-purple-500" />
+      </div>
+
+      <Card title="User Management" subtitle="View and manage registered users">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left">
+            <thead>
+              <tr className="border-b border-slate-100">
+                <th className="pb-4 font-bold text-slate-700">User</th>
+                <th className="pb-4 font-bold text-slate-700">Email</th>
+                <th className="pb-4 font-bold text-slate-700">Role</th>
+                <th className="pb-4 font-bold text-slate-700 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-50">
+              {users.map(u => (
+                <tr key={u.id} className="group">
+                  <td className="py-4">
+                    <div className="flex items-center gap-3">
+                      <img src={u.profilePicture} className="w-8 h-8 rounded-full" referrerPolicy="no-referrer" />
+                      <span className="font-medium text-slate-900">{u.name}</span>
+                    </div>
+                  </td>
+                  <td className="py-4 text-slate-500">{u.email}</td>
+                  <td className="py-4">
+                    <span className={`text-xs font-bold px-2 py-1 rounded-full ${u.role === 'admin' ? 'bg-purple-100 text-purple-600' : 'bg-slate-100 text-slate-600'}`}>
+                      {u.role}
+                    </span>
+                  </td>
+                  <td className="py-4 text-right">
+                    <button 
+                      onClick={() => deleteUser(u.id)}
+                      className="p-2 text-slate-400 hover:text-red-500 transition-colors"
+                      title="Delete User"
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Card>
+    </div>
+  );
+};
 
 // --- Main App ---
 
@@ -253,6 +467,7 @@ export default function App() {
     setWorkouts([]);
     setNutrition([]);
     setProgress([]);
+    setActiveTab('dashboard');
   };
 
   const addWorkout = async (workout) => {
@@ -357,6 +572,23 @@ export default function App() {
             active={activeTab === 'progress'} 
             onClick={() => setActiveTab('progress')} 
           />
+          <div className="pt-4 pb-2">
+            <p className="px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Account</p>
+            <SidebarItem 
+              icon={UserIcon} 
+              label="Profile" 
+              active={activeTab === 'profile'} 
+              onClick={() => setActiveTab('profile')} 
+            />
+            {user?.role === 'admin' && (
+              <SidebarItem 
+                icon={Shield} 
+                label="Admin Panel" 
+                active={activeTab === 'admin'} 
+                onClick={() => setActiveTab('admin')} 
+              />
+            )}
+          </div>
         </nav>
 
         <div className="mt-auto pt-6 border-t border-slate-100">
@@ -391,12 +623,16 @@ export default function App() {
               {activeTab === 'workouts' && 'Workout Routines'}
               {activeTab === 'nutrition' && 'Nutrition Log'}
               {activeTab === 'progress' && 'Fitness Progress'}
+              {activeTab === 'profile' && 'My Profile'}
+              {activeTab === 'admin' && 'Admin Dashboard'}
             </h2>
             <p className="text-slate-500 mt-1">
               {activeTab === 'dashboard' && "Here's what's happening with your fitness today."}
               {activeTab === 'workouts' && "Manage your exercises and track your sets."}
               {activeTab === 'nutrition' && "Keep track of your daily intake and macros."}
               {activeTab === 'progress' && "Visualize your journey and achievements."}
+              {activeTab === 'profile' && "Manage your account settings and preferences."}
+              {activeTab === 'admin' && "Overview of system users and activity."}
             </p>
           </div>
           <div className="flex items-center gap-4">
@@ -487,7 +723,12 @@ export default function App() {
               </div>
             )}
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {activeTab === 'profile' ? (
+              <ProfileView user={user} onUpdate={setUser} />
+            ) : activeTab === 'admin' ? (
+              <AdminView />
+            ) : (
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               <div className="lg:col-span-2 space-y-8">
                 {activeTab === 'dashboard' && (
                   <>
@@ -554,8 +795,10 @@ export default function App() {
                 {activeTab === 'workouts' && (
                   <Card title="Workout Routines">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {/* Workout Form or List */}
-                      <div className="p-6 border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center text-center hover:border-brand-500 hover:bg-brand-50 transition-all cursor-pointer group">
+                      <div 
+                        onClick={() => setShowWorkoutForm(true)}
+                        className="p-6 border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center text-center hover:border-brand-500 hover:bg-brand-50 transition-all cursor-pointer group"
+                      >
                         <div className="bg-slate-100 p-4 rounded-full mb-4 group-hover:bg-brand-100 transition-colors">
                           <Plus className="text-slate-400 group-hover:text-brand-500" size={32} />
                         </div>
@@ -577,6 +820,61 @@ export default function App() {
                                ))}
                             </div>
                          </div>
+                      ))}
+                    </div>
+                  </Card>
+                )}
+
+                {activeTab === 'nutrition' && (
+                  <Card title="Nutrition Logs">
+                    <div className="space-y-4">
+                      <div 
+                        onClick={() => setShowNutritionForm(true)}
+                        className="p-4 border-2 border-dashed border-slate-200 rounded-xl flex items-center justify-center gap-2 hover:border-brand-500 hover:bg-brand-50 transition-all cursor-pointer text-slate-500 hover:text-brand-500 font-bold"
+                      >
+                        <Plus size={20} /> Log New Meal
+                      </div>
+                      {nutrition.map(n => (
+                        <div key={n.id} className="p-4 bg-slate-50 rounded-xl border border-slate-100 flex items-center justify-between">
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs font-bold uppercase text-brand-600 bg-brand-50 px-2 py-0.5 rounded-full">{n.mealType}</span>
+                              <h4 className="font-bold text-slate-900">{n.foodItems}</h4>
+                            </div>
+                            <p className="text-xs text-slate-500 mt-1">{format(new Date(n.date), 'MMM dd, yyyy HH:mm')}</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="font-bold text-slate-900">{n.calories} kcal</p>
+                            <p className="text-[10px] text-slate-400">P: {n.protein}g • C: {n.carbs}g • F: {n.fats}g</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </Card>
+                )}
+
+                {activeTab === 'progress' && (
+                  <Card title="Progress History">
+                    <div className="space-y-4">
+                      <div 
+                        onClick={() => setShowProgressForm(true)}
+                        className="p-4 border-2 border-dashed border-slate-200 rounded-xl flex items-center justify-center gap-2 hover:border-brand-500 hover:bg-brand-50 transition-all cursor-pointer text-slate-500 hover:text-brand-500 font-bold"
+                      >
+                        <Plus size={20} /> Record New Progress
+                      </div>
+                      {progress.slice().reverse().map(p => (
+                        <div key={p.id} className="p-4 bg-slate-50 rounded-xl border border-slate-100 flex items-center justify-between">
+                          <div>
+                            <h4 className="font-bold text-slate-900">{p.weight} kg</h4>
+                            <p className="text-xs text-slate-500">{format(new Date(p.date), 'MMM dd, yyyy')}</p>
+                          </div>
+                          {p.bodyFat && (
+                            <div className="text-right">
+                              <p className="font-bold text-slate-900">{p.bodyFat}%</p>
+                              <p className="text-[10px] text-slate-400 uppercase font-bold">Body Fat</p>
+                            </div>
+                          )}
+                        </div>
                       ))}
                     </div>
                   </Card>
@@ -640,8 +938,9 @@ export default function App() {
                 </Card>
               </div>
             </div>
-          </motion.div>
-        </AnimatePresence>
+          )}
+        </motion.div>
+      </AnimatePresence>
       </main>
     </div>
   );

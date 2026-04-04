@@ -54,13 +54,14 @@ async function startServer() {
       name,
       email,
       password: hashedPassword,
+      role: db.users.length === 0 ? "admin" : "user", // First user is admin
       profilePicture: `https://picsum.photos/seed/${name}/200`,
     };
 
     db.users.push(newUser);
     
-    const token = jwt.sign({ id: newUser.id, email: newUser.email }, JWT_SECRET);
-    res.status(201).json({ token, user: { id: newUser.id, name: newUser.name, email: newUser.email, profilePicture: newUser.profilePicture } });
+    const token = jwt.sign({ id: newUser.id, email: newUser.email, role: newUser.role }, JWT_SECRET);
+    res.status(201).json({ token, user: { id: newUser.id, name: newUser.name, email: newUser.email, profilePicture: newUser.profilePicture, role: newUser.role } });
   });
 
   app.post("/api/login", async (req, res) => {
@@ -71,15 +72,59 @@ async function startServer() {
       return res.status(400).json({ error: "Invalid email or password." });
     }
 
-    const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET);
-    res.json({ token, user: { id: user.id, name: user.name, email: user.email, profilePicture: user.profilePicture } });
+    const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET);
+    res.json({ token, user: { id: user.id, name: user.name, email: user.email, profilePicture: user.profilePicture, role: user.role } });
   });
 
   // Protected API Routes
   app.get("/api/user", authenticateToken, (req, res) => {
     const user = db.users.find(u => u.id === req.user.id);
     if (!user) return res.status(404).json({ error: "User not found." });
-    res.json({ id: user.id, name: user.name, email: user.email, profilePicture: user.profilePicture });
+    res.json({ id: user.id, name: user.name, email: user.email, profilePicture: user.profilePicture, role: user.role });
+  });
+
+  app.put("/api/user", authenticateToken, async (req, res) => {
+    const { name, email, profilePicture } = req.body;
+    const userIndex = db.users.findIndex(u => u.id === req.user.id);
+    
+    if (userIndex === -1) return res.status(404).json({ error: "User not found." });
+    
+    db.users[userIndex] = { ...db.users[userIndex], name, email, profilePicture };
+    res.json({ id: db.users[userIndex].id, name: db.users[userIndex].name, email: db.users[userIndex].email, profilePicture: db.users[userIndex].profilePicture, role: db.users[userIndex].role });
+  });
+
+  // Admin Routes
+  const isAdmin = (req, res, next) => {
+    if (req.user.role !== "admin") {
+      return res.status(403).json({ error: "Forbidden. Admin access required." });
+    }
+    next();
+  };
+
+  app.get("/api/admin/users", authenticateToken, isAdmin, (req, res) => {
+    const users = db.users.map(u => ({ id: u.id, name: u.name, email: u.email, role: u.role, profilePicture: u.profilePicture }));
+    res.json(users);
+  });
+
+  app.delete("/api/admin/users/:id", authenticateToken, isAdmin, (req, res) => {
+    const userId = req.params.id;
+    if (userId === req.user.id) return res.status(400).json({ error: "Cannot delete yourself." });
+    
+    db.users = db.users.filter(u => u.id !== userId);
+    db.workouts = db.workouts.filter(w => w.userId !== userId);
+    db.nutrition = db.nutrition.filter(n => n.userId !== userId);
+    db.progress = db.progress.filter(p => p.userId !== userId);
+    
+    res.status(204).send();
+  });
+
+  app.get("/api/admin/stats", authenticateToken, isAdmin, (req, res) => {
+    res.json({
+      totalUsers: db.users.length,
+      totalWorkouts: db.workouts.length,
+      totalNutritionLogs: db.nutrition.length,
+      totalProgressLogs: db.progress.length,
+    });
   });
 
   app.get("/api/workouts", authenticateToken, (req, res) => {
