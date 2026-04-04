@@ -144,6 +144,18 @@ async function startServer() {
     res.status(204).send();
   });
 
+  app.delete("/api/nutrition/:id", authenticateToken, (req, res) => {
+    const id = parseInt(req.params.id);
+    db.nutrition = db.nutrition.filter(n => n.id !== id || n.userId !== req.user.id);
+    res.status(204).send();
+  });
+
+  app.delete("/api/progress/:id", authenticateToken, (req, res) => {
+    const id = parseInt(req.params.id);
+    db.progress = db.progress.filter(p => p.id !== id || p.userId !== req.user.id);
+    res.status(204).send();
+  });
+
   app.get("/api/nutrition", authenticateToken, (req, res) => {
     const userNutrition = db.nutrition.filter(n => n.userId === req.user.id);
     res.json(userNutrition);

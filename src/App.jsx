@@ -509,6 +509,42 @@ export default function App() {
     setProgress([...progress, newEntry]);
   };
 
+  const deleteWorkout = async (id) => {
+    await fetch(`/api/workouts/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    setWorkouts(workouts.filter(w => w.id !== id));
+  };
+
+  const deleteNutrition = async (id) => {
+    await fetch(`/api/nutrition/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    setNutrition(nutrition.filter(n => n.id !== id));
+  };
+
+  const deleteProgress = async (id) => {
+    await fetch(`/api/progress/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    setProgress(progress.filter(p => p.id !== id));
+  };
+
+  const today = format(new Date(), 'yyyy-MM-dd');
+  const todayNutrition = nutrition.filter(n => format(new Date(n.date), 'yyyy-MM-dd') === today);
+  const todayCalories = todayNutrition.reduce((sum, n) => sum + (n.calories || 0), 0);
+  const todayProtein = todayNutrition.reduce((sum, n) => sum + (n.protein || 0), 0);
+  const todayCarbs = todayNutrition.reduce((sum, n) => sum + (n.carbs || 0), 0);
+  const todayFats = todayNutrition.reduce((sum, n) => sum + (n.fats || 0), 0);
+  
+  const calorieGoal = 2200;
+  const proteinGoal = 150;
+  const waterGoal = 3.0;
+  const todayWater = 2.1; // Simulated for now
+
   const exportData = () => {
     const csv = Papa.unparse(progress);
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -690,17 +726,17 @@ export default function App() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 <StatCard 
                   label="Daily Calories" 
-                  value="1,850" 
+                  value={todayCalories} 
                   unit="kcal" 
-                  trend="+12%" 
+                  trend={todayCalories > 1500 ? "+12%" : ""} 
                   icon={Utensils} 
                   color="bg-orange-500" 
                 />
                 <StatCard 
                   label="Workouts" 
-                  value={workouts.length} 
-                  unit="this week" 
-                  trend="+2" 
+                  value={workouts.filter(w => format(new Date(w.date), 'yyyy-MM-dd') === today).length} 
+                  unit="today" 
+                  trend={workouts.length > 0 ? "+2" : ""} 
                   icon={Dumbbell} 
                   color="bg-blue-500" 
                 />
@@ -708,15 +744,15 @@ export default function App() {
                   label="Weight" 
                   value={progress.length > 0 ? progress[progress.length-1].weight : '--'} 
                   unit="kg" 
-                  trend="-0.5" 
+                  trend={progress.length > 1 ? (progress[progress.length-1].weight - progress[progress.length-2].weight).toFixed(1) : ""} 
                   icon={TrendingUp} 
                   color="bg-brand-500" 
                 />
                 <StatCard 
                   label="Active Time" 
-                  value="45" 
+                  value={workouts.filter(w => format(new Date(w.date), 'yyyy-MM-dd') === today).length * 45} 
                   unit="mins" 
-                  trend="+5" 
+                  trend="" 
                   icon={Clock} 
                   color="bg-purple-500" 
                 />
@@ -806,7 +842,13 @@ export default function App() {
                         <p className="text-sm text-slate-500">Add exercises, sets, and reps</p>
                       </div>
                       {workouts.map(w => (
-                         <div key={w.id} className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                         <div key={w.id} className="p-6 bg-slate-50 rounded-2xl border border-slate-100 relative group">
+                            <button 
+                              onClick={() => deleteWorkout(w.id)}
+                              className="absolute top-4 right-4 p-2 text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all"
+                            >
+                              <Trash2 size={16} />
+                            </button>
                             <div className="flex justify-between items-start mb-4">
                                <h4 className="font-bold text-slate-900">{w.name}</h4>
                                <span className="text-xs font-bold px-2 py-1 bg-white rounded-full text-slate-500 border border-slate-200 uppercase tracking-wider">{w.type}</span>
@@ -835,7 +877,7 @@ export default function App() {
                         <Plus size={20} /> Log New Meal
                       </div>
                       {nutrition.map(n => (
-                        <div key={n.id} className="p-4 bg-slate-50 rounded-xl border border-slate-100 flex items-center justify-between">
+                        <div key={n.id} className="p-4 bg-slate-50 rounded-xl border border-slate-100 flex items-center justify-between group">
                           <div>
                             <div className="flex items-center gap-2">
                               <span className="text-xs font-bold uppercase text-brand-600 bg-brand-50 px-2 py-0.5 rounded-full">{n.mealType}</span>
@@ -843,9 +885,17 @@ export default function App() {
                             </div>
                             <p className="text-xs text-slate-500 mt-1">{format(new Date(n.date), 'MMM dd, yyyy HH:mm')}</p>
                           </div>
-                          <div className="text-right">
-                            <p className="font-bold text-slate-900">{n.calories} kcal</p>
-                            <p className="text-[10px] text-slate-400">P: {n.protein}g • C: {n.carbs}g • F: {n.fats}g</p>
+                          <div className="flex items-center gap-4">
+                            <div className="text-right">
+                              <p className="font-bold text-slate-900">{n.calories} kcal</p>
+                              <p className="text-[10px] text-slate-400">P: {n.protein}g • C: {n.carbs}g • F: {n.fats}g</p>
+                            </div>
+                            <button 
+                              onClick={() => deleteNutrition(n.id)}
+                              className="p-2 text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all"
+                            >
+                              <Trash2 size={16} />
+                            </button>
                           </div>
                         </div>
                       ))}
@@ -863,17 +913,25 @@ export default function App() {
                         <Plus size={20} /> Record New Progress
                       </div>
                       {progress.slice().reverse().map(p => (
-                        <div key={p.id} className="p-4 bg-slate-50 rounded-xl border border-slate-100 flex items-center justify-between">
+                        <div key={p.id} className="p-4 bg-slate-50 rounded-xl border border-slate-100 flex items-center justify-between group">
                           <div>
                             <h4 className="font-bold text-slate-900">{p.weight} kg</h4>
                             <p className="text-xs text-slate-500">{format(new Date(p.date), 'MMM dd, yyyy')}</p>
                           </div>
-                          {p.bodyFat && (
-                            <div className="text-right">
-                              <p className="font-bold text-slate-900">{p.bodyFat}%</p>
-                              <p className="text-[10px] text-slate-400 uppercase font-bold">Body Fat</p>
-                            </div>
-                          )}
+                          <div className="flex items-center gap-4">
+                            {p.bodyFat && (
+                              <div className="text-right">
+                                <p className="font-bold text-slate-900">{p.bodyFat}%</p>
+                                <p className="text-[10px] text-slate-400 uppercase font-bold">Body Fat</p>
+                              </div>
+                            )}
+                            <button 
+                              onClick={() => deleteProgress(p.id)}
+                              className="p-2 text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all"
+                            >
+                              <Trash2 size={16} />
+                            </button>
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -887,28 +945,28 @@ export default function App() {
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
                         <span className="font-medium text-slate-700">Calories</span>
-                        <span className="text-slate-500">1,850 / 2,200 kcal</span>
+                        <span className="text-slate-500">{todayCalories.toLocaleString()} / {calorieGoal.toLocaleString()} kcal</span>
                       </div>
                       <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
-                        <div className="h-full bg-orange-500 rounded-full" style={{ width: '84%' }} />
+                        <div className="h-full bg-orange-500 rounded-full" style={{ width: `${Math.min((todayCalories / calorieGoal) * 100, 100)}%` }} />
                       </div>
                     </div>
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
                         <span className="font-medium text-slate-700">Protein</span>
-                        <span className="text-slate-500">120 / 150g</span>
+                        <span className="text-slate-500">{todayProtein} / {proteinGoal}g</span>
                       </div>
                       <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
-                        <div className="h-full bg-blue-500 rounded-full" style={{ width: '80%' }} />
+                        <div className="h-full bg-blue-500 rounded-full" style={{ width: `${Math.min((todayProtein / proteinGoal) * 100, 100)}%` }} />
                       </div>
                     </div>
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
                         <span className="font-medium text-slate-700">Water</span>
-                        <span className="text-slate-500">2.1 / 3.0 L</span>
+                        <span className="text-slate-500">{todayWater} / {waterGoal} L</span>
                       </div>
                       <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
-                        <div className="h-full bg-brand-500 rounded-full" style={{ width: '70%' }} />
+                        <div className="h-full bg-brand-500 rounded-full" style={{ width: `${Math.min((todayWater / waterGoal) * 100, 100)}%` }} />
                       </div>
                     </div>
                   </div>
