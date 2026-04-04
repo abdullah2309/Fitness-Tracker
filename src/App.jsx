@@ -15,7 +15,9 @@ import {
   Shield,
   Trash2,
   Mail,
-  Camera
+  Camera,
+  BookOpen,
+  Book
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
@@ -414,6 +416,8 @@ export default function App() {
   const [workouts, setWorkouts] = useState([]);
   const [nutrition, setNutrition] = useState([]);
   const [progress, setProgress] = useState([]);
+  const [blogs, setBlogs] = useState([]);
+  const [exerciseGuide, setExerciseGuide] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showWorkoutForm, setShowWorkoutForm] = useState(false);
   const [showNutritionForm, setShowNutritionForm] = useState(false);
@@ -429,11 +433,13 @@ export default function App() {
       setLoading(true);
       try {
         const headers = { 'Authorization': `Bearer ${token}` };
-        const [userRes, workoutRes, nutritionRes, progressRes] = await Promise.all([
+        const [userRes, workoutRes, nutritionRes, progressRes, blogRes, exerciseRes] = await Promise.all([
           fetch('/api/user', { headers }),
           fetch('/api/workouts', { headers }),
           fetch('/api/nutrition', { headers }),
-          fetch('/api/progress', { headers })
+          fetch('/api/progress', { headers }),
+          fetch('/api/blogs', { headers }),
+          fetch('/api/exercises', { headers })
         ]);
         
         if (userRes.status === 401 || userRes.status === 403) {
@@ -445,6 +451,8 @@ export default function App() {
         setWorkouts(await workoutRes.json());
         setNutrition(await nutritionRes.json());
         setProgress(await progressRes.json());
+        setBlogs(await blogRes.json());
+        setExerciseGuide(await exerciseRes.json());
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
@@ -608,6 +616,18 @@ export default function App() {
             active={activeTab === 'progress'} 
             onClick={() => setActiveTab('progress')} 
           />
+          <SidebarItem 
+            icon={BookOpen} 
+            label="Blog" 
+            active={activeTab === 'blog'} 
+            onClick={() => setActiveTab('blog')} 
+          />
+          <SidebarItem 
+            icon={Book} 
+            label="Exercise Guide" 
+            active={activeTab === 'exercise-guide'} 
+            onClick={() => setActiveTab('exercise-guide')} 
+          />
           <div className="pt-4 pb-2">
             <p className="px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Account</p>
             <SidebarItem 
@@ -659,6 +679,8 @@ export default function App() {
               {activeTab === 'workouts' && 'Workout Routines'}
               {activeTab === 'nutrition' && 'Nutrition Log'}
               {activeTab === 'progress' && 'Fitness Progress'}
+              {activeTab === 'blog' && 'Fitness Blog'}
+              {activeTab === 'exercise-guide' && 'Exercise Guide'}
               {activeTab === 'profile' && 'My Profile'}
               {activeTab === 'admin' && 'Admin Dashboard'}
             </h2>
@@ -667,6 +689,8 @@ export default function App() {
               {activeTab === 'workouts' && "Manage your exercises and track your sets."}
               {activeTab === 'nutrition' && "Keep track of your daily intake and macros."}
               {activeTab === 'progress' && "Visualize your journey and achievements."}
+              {activeTab === 'blog' && "Read and share fitness tips and stories."}
+              {activeTab === 'exercise-guide' && "Learn how to perform exercises correctly."}
               {activeTab === 'profile' && "Manage your account settings and preferences."}
               {activeTab === 'admin' && "Overview of system users and activity."}
             </p>
@@ -763,6 +787,32 @@ export default function App() {
               <ProfileView user={user} onUpdate={setUser} />
             ) : activeTab === 'admin' ? (
               <AdminView />
+            ) : activeTab === 'blog' ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {blogs.map(blog => (
+                  <Card key={blog.id} title={blog.title} subtitle={`By ${blog.author} • ${format(new Date(blog.date), 'MMM dd, yyyy')}`}>
+                    <div className="space-y-4">
+                      <img src={blog.image} alt={blog.title} className="w-full h-48 object-cover rounded-xl" referrerPolicy="no-referrer" />
+                      <p className="text-slate-600 line-clamp-3">{blog.content}</p>
+                      <button className="text-brand-500 font-bold hover:underline">Read More</button>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            ) : activeTab === 'exercise-guide' ? (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {exerciseGuide.map(ex => (
+                  <Card key={ex.id} title={ex.name} subtitle={ex.category}>
+                    <div className="space-y-4">
+                      <div className="flex gap-2">
+                        <span className="text-[10px] font-bold px-2 py-1 bg-slate-100 text-slate-600 rounded-full uppercase">{ex.difficulty}</span>
+                        <span className="text-[10px] font-bold px-2 py-1 bg-brand-50 text-brand-600 rounded-full uppercase">{ex.targetMuscle}</span>
+                      </div>
+                      <p className="text-sm text-slate-600">{ex.instructions}</p>
+                    </div>
+                  </Card>
+                ))}
+              </div>
             ) : (
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               <div className="lg:col-span-2 space-y-8">

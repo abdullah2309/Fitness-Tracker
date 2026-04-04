@@ -24,6 +24,50 @@ async function startServer() {
     workouts: [], // { id, userId, name, type, exercises, date, notes }
     nutrition: [], // { id, userId, mealType, foodItems, calories, protein, carbs, fats, date }
     progress: [], // { id, userId, weight, bodyFat, date }
+    blogs: [
+      {
+        id: "1",
+        title: "Top 5 Exercises for Weight Loss",
+        content: "Weight loss is a journey that involves both diet and exercise. Here are the top 5 exercises that can help you burn more calories...",
+        author: "Admin",
+        date: new Date().toISOString(),
+        image: "https://picsum.photos/seed/fitness1/800/400"
+      },
+      {
+        id: "2",
+        title: "The Importance of Hydration",
+        content: "Staying hydrated is crucial for your overall health and fitness performance. Water helps regulate body temperature and lubricate joints...",
+        author: "Admin",
+        date: new Date().toISOString(),
+        image: "https://picsum.photos/seed/fitness2/800/400"
+      }
+    ],
+    exerciseGuide: [
+      {
+        id: "1",
+        name: "Pushups",
+        category: "Strength",
+        targetMuscle: "Chest, Triceps, Shoulders",
+        instructions: "Start in a plank position. Lower your body until your chest almost touches the floor. Push yourself back up.",
+        difficulty: "Beginner"
+      },
+      {
+        id: "2",
+        name: "Squats",
+        category: "Strength",
+        targetMuscle: "Quads, Glutes, Hamstrings",
+        instructions: "Stand with feet shoulder-width apart. Lower your hips as if sitting in a chair. Keep your back straight and return to standing.",
+        difficulty: "Beginner"
+      },
+      {
+        id: "3",
+        name: "Plank",
+        category: "Core",
+        targetMuscle: "Abs, Core",
+        instructions: "Hold a pushup position but rest on your forearms. Keep your body in a straight line from head to heels.",
+        difficulty: "Intermediate"
+      }
+    ]
   };
 
   // Middleware to verify JWT
@@ -176,6 +220,27 @@ async function startServer() {
     const entry = { id: Date.now(), userId: req.user.id, ...req.body, date: new Date().toISOString() };
     db.progress.push(entry);
     res.status(201).json(entry);
+  });
+
+  // Blog Routes
+  app.get("/api/blogs", (req, res) => {
+    res.json(db.blogs);
+  });
+
+  app.post("/api/blogs", authenticateToken, (req, res) => {
+    const blog = { 
+      id: Date.now().toString(), 
+      author: db.users.find(u => u.id === req.user.id)?.name || "Unknown",
+      date: new Date().toISOString(),
+      ...req.body 
+    };
+    db.blogs.push(blog);
+    res.status(201).json(blog);
+  });
+
+  // Exercise Guide Routes
+  app.get("/api/exercises", (req, res) => {
+    res.json(db.exerciseGuide);
   });
 
   // Vite middleware for development
