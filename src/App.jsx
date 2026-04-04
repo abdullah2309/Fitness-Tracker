@@ -200,18 +200,29 @@ const ProfileView = ({ user, onUpdate }) => {
 
 const AdminView = () => {
   const [users, setUsers] = useState([]);
+  const [blogs, setBlogs] = useState([]);
+  const [exercises, setExercises] = useState([]);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  // New Blog Form State
+  const [newBlog, setNewBlog] = useState({ title: '', content: '', image: '' });
+  // New Exercise Form State
+  const [newExercise, setNewExercise] = useState({ name: '', category: '', targetMuscle: '', instructions: '', difficulty: 'Beginner' });
 
   const fetchData = async () => {
     try {
       const headers = { 'Authorization': `Bearer ${localStorage.getItem('token')}` };
-      const [usersRes, statsRes] = await Promise.all([
+      const [usersRes, statsRes, blogsRes, exercisesRes] = await Promise.all([
         fetch('/api/admin/users', { headers }),
-        fetch('/api/admin/stats', { headers })
+        fetch('/api/admin/stats', { headers }),
+        fetch('/api/blogs', { headers }),
+        fetch('/api/exercises', { headers })
       ]);
       setUsers(await usersRes.json());
       setStats(await statsRes.json());
+      setBlogs(await blogsRes.json());
+      setExercises(await exercisesRes.json());
     } catch (err) {
       console.error('Admin fetch error:', err);
     } finally {
@@ -224,33 +235,150 @@ const AdminView = () => {
   }, []);
 
   const deleteUser = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this user? This action cannot be undone.')) return;
-    try {
-      const res = await fetch(`/api/admin/users/${id}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-      });
-      if (res.ok) {
-        setUsers(users.filter(u => u.id !== id));
-        fetchData(); // Refresh stats
-      }
-    } catch (err) {
-      console.error('Delete error:', err);
-    }
+    if (!window.confirm('Are you sure you want to delete this user?')) return;
+    await fetch(`/api/admin/users/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+    });
+    fetchData();
+  };
+
+  const deleteBlog = async (id) => {
+    if (!window.confirm('Delete this blog?')) return;
+    await fetch(`/api/admin/blogs/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+    });
+    fetchData();
+  };
+
+  const deleteExercise = async (id) => {
+    if (!window.confirm('Delete this exercise?')) return;
+    await fetch(`/api/admin/exercises/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+    });
+    fetchData();
+  };
+
+  const addBlog = async (e) => {
+    e.preventDefault();
+    await fetch('/api/admin/blogs', {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}` 
+      },
+      body: JSON.stringify(newBlog)
+    });
+    setNewBlog({ title: '', content: '', image: '' });
+    fetchData();
+  };
+
+  const addExercise = async (e) => {
+    e.preventDefault();
+    await fetch('/api/admin/exercises', {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}` 
+      },
+      body: JSON.stringify(newExercise)
+    });
+    setNewExercise({ name: '', category: '', targetMuscle: '', instructions: '', difficulty: 'Beginner' });
+    fetchData();
   };
 
   if (loading) return <div className="text-center py-20 text-slate-400">Loading admin data...</div>;
 
   return (
-    <div className="space-y-8">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <StatCard label="Total Users" value={stats?.totalUsers || 0} unit="members" icon={UserIcon} color="bg-blue-500" />
+    <div className="space-y-8 pb-20">
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-6">
+        <StatCard label="Users" value={stats?.totalUsers || 0} unit="members" icon={UserIcon} color="bg-blue-500" />
         <StatCard label="Workouts" value={stats?.totalWorkouts || 0} unit="logged" icon={Dumbbell} color="bg-brand-500" />
         <StatCard label="Nutrition" value={stats?.totalNutritionLogs || 0} unit="entries" icon={Utensils} color="bg-orange-500" />
         <StatCard label="Progress" value={stats?.totalProgressLogs || 0} unit="updates" icon={TrendingUp} color="bg-purple-500" />
+        <StatCard label="Blogs" value={stats?.totalBlogs || 0} unit="posts" icon={BookOpen} color="bg-pink-500" />
+        <StatCard label="Exercises" value={stats?.totalExercises || 0} unit="guide" icon={Book} color="bg-indigo-500" />
       </div>
 
-      <Card title="User Management" subtitle="View and manage registered users">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <Card title="Add New Blog Post">
+          <form onSubmit={addBlog} className="space-y-4">
+            <input 
+              required
+              placeholder="Blog Title"
+              value={newBlog.title}
+              onChange={e => setNewBlog({...newBlog, title: e.target.value})}
+              className="w-full px-4 py-2 rounded-xl border border-slate-200 outline-none"
+            />
+            <input 
+              required
+              placeholder="Image URL"
+              value={newBlog.image}
+              onChange={e => setNewBlog({...newBlog, image: e.target.value})}
+              className="w-full px-4 py-2 rounded-xl border border-slate-200 outline-none"
+            />
+            <textarea 
+              required
+              placeholder="Blog Content"
+              value={newBlog.content}
+              onChange={e => setNewBlog({...newBlog, content: e.target.value})}
+              className="w-full px-4 py-2 rounded-xl border border-slate-200 outline-none min-h-[100px]"
+            />
+            <button type="submit" className="w-full bg-brand-500 text-white py-2 rounded-xl font-bold">Post Blog</button>
+          </form>
+        </Card>
+
+        <Card title="Add New Exercise">
+          <form onSubmit={addExercise} className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <input 
+                required
+                placeholder="Exercise Name"
+                value={newExercise.name}
+                onChange={e => setNewExercise({...newExercise, name: e.target.value})}
+                className="w-full px-4 py-2 rounded-xl border border-slate-200 outline-none"
+              />
+              <input 
+                required
+                placeholder="Category"
+                value={newExercise.category}
+                onChange={e => setNewExercise({...newExercise, category: e.target.value})}
+                className="w-full px-4 py-2 rounded-xl border border-slate-200 outline-none"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <input 
+                required
+                placeholder="Target Muscle"
+                value={newExercise.targetMuscle}
+                onChange={e => setNewExercise({...newExercise, targetMuscle: e.target.value})}
+                className="w-full px-4 py-2 rounded-xl border border-slate-200 outline-none"
+              />
+              <select 
+                value={newExercise.difficulty}
+                onChange={e => setNewExercise({...newExercise, difficulty: e.target.value})}
+                className="w-full px-4 py-2 rounded-xl border border-slate-200 outline-none"
+              >
+                <option>Beginner</option>
+                <option>Intermediate</option>
+                <option>Advanced</option>
+              </select>
+            </div>
+            <textarea 
+              required
+              placeholder="Instructions"
+              value={newExercise.instructions}
+              onChange={e => setNewExercise({...newExercise, instructions: e.target.value})}
+              className="w-full px-4 py-2 rounded-xl border border-slate-200 outline-none min-h-[80px]"
+            />
+            <button type="submit" className="w-full bg-indigo-500 text-white py-2 rounded-xl font-bold">Add Exercise</button>
+          </form>
+        </Card>
+      </div>
+
+      <Card title="User Management">
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
@@ -263,7 +391,7 @@ const AdminView = () => {
             </thead>
             <tbody className="divide-y divide-slate-50">
               {users.map(u => (
-                <tr key={u.id} className="group">
+                <tr key={u.id}>
                   <td className="py-4">
                     <div className="flex items-center gap-3">
                       <img src={u.profilePicture} className="w-8 h-8 rounded-full" referrerPolicy="no-referrer" />
@@ -277,13 +405,7 @@ const AdminView = () => {
                     </span>
                   </td>
                   <td className="py-4 text-right">
-                    <button 
-                      onClick={() => deleteUser(u.id)}
-                      className="p-2 text-slate-400 hover:text-red-500 transition-colors"
-                      title="Delete User"
-                    >
-                      <Trash2 size={18} />
-                    </button>
+                    <button onClick={() => deleteUser(u.id)} className="p-2 text-slate-400 hover:text-red-500"><Trash2 size={18} /></button>
                   </td>
                 </tr>
               ))}
@@ -291,6 +413,30 @@ const AdminView = () => {
           </table>
         </div>
       </Card>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <Card title="Manage Blogs">
+          <div className="space-y-4">
+            {blogs.map(b => (
+              <div key={b.id} className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
+                <span className="font-medium text-slate-900 truncate mr-4">{b.title}</span>
+                <button onClick={() => deleteBlog(b.id)} className="text-red-500 hover:bg-red-50 p-2 rounded-lg transition-colors"><Trash2 size={18} /></button>
+              </div>
+            ))}
+          </div>
+        </Card>
+
+        <Card title="Manage Exercises">
+          <div className="space-y-4">
+            {exercises.map(ex => (
+              <div key={ex.id} className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
+                <span className="font-medium text-slate-900 truncate mr-4">{ex.name}</span>
+                <button onClick={() => deleteExercise(ex.id)} className="text-red-500 hover:bg-red-50 p-2 rounded-lg transition-colors"><Trash2 size={18} /></button>
+              </div>
+            ))}
+          </div>
+        </Card>
+      </div>
     </div>
   );
 };
@@ -583,7 +729,7 @@ export default function App() {
   return (
     <div className="flex h-screen bg-slate-50 overflow-hidden">
       {/* Sidebar */}
-      <aside className="w-64 bg-white border-r border-slate-200 flex flex-col p-6">
+      <aside className="w-64 bg-white border-r border-slate-200 flex flex-col p-6 overflow-y-auto">
         <div className="flex items-center gap-3 mb-10 px-2">
           <div className="bg-brand-500 p-2 rounded-xl">
             <Activity className="text-white" size={24} />

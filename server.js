@@ -168,7 +168,41 @@ async function startServer() {
       totalWorkouts: db.workouts.length,
       totalNutritionLogs: db.nutrition.length,
       totalProgressLogs: db.progress.length,
+      totalBlogs: db.blogs.length,
+      totalExercises: db.exerciseGuide.length,
     });
+  });
+
+  app.post("/api/admin/blogs", authenticateToken, isAdmin, (req, res) => {
+    const blog = { 
+      id: Date.now().toString(), 
+      author: db.users.find(u => u.id === req.user.id)?.name || "Admin",
+      date: new Date().toISOString(),
+      ...req.body 
+    };
+    db.blogs.push(blog);
+    res.status(201).json(blog);
+  });
+
+  app.delete("/api/admin/blogs/:id", authenticateToken, isAdmin, (req, res) => {
+    const id = req.params.id;
+    db.blogs = db.blogs.filter(b => b.id !== id);
+    res.status(204).send();
+  });
+
+  app.post("/api/admin/exercises", authenticateToken, isAdmin, (req, res) => {
+    const exercise = { 
+      id: Date.now().toString(), 
+      ...req.body 
+    };
+    db.exerciseGuide.push(exercise);
+    res.status(201).json(exercise);
+  });
+
+  app.delete("/api/admin/exercises/:id", authenticateToken, isAdmin, (req, res) => {
+    const id = req.params.id;
+    db.exerciseGuide = db.exerciseGuide.filter(e => e.id !== id);
+    res.status(204).send();
   });
 
   app.get("/api/workouts", authenticateToken, (req, res) => {
