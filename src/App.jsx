@@ -81,9 +81,122 @@ const StatCard = ({ label, value, unit, trend, icon: Icon, color }) => (
 
 // --- Main App ---
 
+const AuthScreen = ({ onLogin, onSignup }) => {
+  const [isLogin, setIsLogin] = useState(true);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+    try {
+      const endpoint = isLogin ? '/api/login' : '/api/signup';
+      const body = isLogin ? { email, password } : { name, email, password };
+      
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Something went wrong');
+      
+      if (isLogin) onLogin(data);
+      else onSignup(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-white p-8 rounded-3xl shadow-xl border border-slate-100 w-full max-w-md"
+      >
+        <div className="flex flex-col items-center mb-8">
+          <div className="bg-brand-500 p-3 rounded-2xl mb-4">
+            <Activity className="text-white" size={32} />
+          </div>
+          <h1 className="text-2xl font-bold text-slate-900">FitTrack Pro</h1>
+          <p className="text-slate-500 text-sm mt-1">
+            {isLogin ? 'Welcome back! Please login.' : 'Create an account to start tracking.'}
+          </p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {!isLogin && (
+            <div className="space-y-1">
+              <label className="text-sm font-bold text-slate-700">Full Name</label>
+              <input 
+                required
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full px-4 py-2 rounded-xl border border-slate-200 focus:border-brand-500 outline-none"
+                placeholder="John Doe"
+              />
+            </div>
+          )}
+          <div className="space-y-1">
+            <label className="text-sm font-bold text-slate-700">Email Address</label>
+            <input 
+              required
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-4 py-2 rounded-xl border border-slate-200 focus:border-brand-500 outline-none"
+              placeholder="john@example.com"
+            />
+          </div>
+          <div className="space-y-1">
+            <label className="text-sm font-bold text-slate-700">Password</label>
+            <input 
+              required
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-4 py-2 rounded-xl border border-slate-200 focus:border-brand-500 outline-none"
+              placeholder="••••••••"
+            />
+          </div>
+
+          {error && <p className="text-red-500 text-xs font-medium">{error}</p>}
+
+          <button 
+            disabled={loading}
+            type="submit"
+            className="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-3 rounded-xl shadow-lg shadow-brand-500/20 transition-all disabled:opacity-50"
+          >
+            {loading ? 'Processing...' : (isLogin ? 'Login' : 'Sign Up')}
+          </button>
+        </form>
+
+        <div className="mt-6 text-center">
+          <button 
+            onClick={() => setIsLogin(!isLogin)}
+            className="text-sm font-medium text-slate-500 hover:text-brand-500 transition-colors"
+          >
+            {isLogin ? "Don't have an account? Sign up" : "Already have an account? Login"}
+          </button>
+        </div>
+      </motion.div>
+    </div>
+  );
+};
+
 export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [user, setUser] = useState(null);
+  const [token, setToken] = useState(localStorage.getItem('token'));
   const [workouts, setWorkouts] = useState([]);
   const [nutrition, setNutrition] = useState([]);
   const [progress, setProgress] = useState([]);
@@ -93,15 +206,27 @@ export default function App() {
   const [showProgressForm, setShowProgressForm] = useState(false);
 
   useEffect(() => {
+    if (!token) {
+      setLoading(false);
+      return;
+    }
+
     const fetchData = async () => {
+      setLoading(true);
       try {
+        const headers = { 'Authorization': `Bearer ${token}` };
         const [userRes, workoutRes, nutritionRes, progressRes] = await Promise.all([
-          fetch('/api/user'),
-          fetch('/api/workouts'),
-          fetch('/api/nutrition'),
-          fetch('/api/progress')
+          fetch('/api/user', { headers }),
+          fetch('/api/workouts', { headers }),
+          fetch('/api/nutrition', { headers }),
+          fetch('/api/progress', { headers })
         ]);
         
+        if (userRes.status === 401 || userRes.status === 403) {
+          handleLogout();
+          return;
+        }
+
         setUser(await userRes.json());
         setWorkouts(await workoutRes.json());
         setNutrition(await nutritionRes.json());
@@ -113,12 +238,30 @@ export default function App() {
       }
     };
     fetchData();
-  }, []);
+  }, [token]);
+
+  const handleLogin = (data) => {
+    localStorage.setItem('token', data.token);
+    setToken(data.token);
+    setUser(data.user);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setToken(null);
+    setUser(null);
+    setWorkouts([]);
+    setNutrition([]);
+    setProgress([]);
+  };
 
   const addWorkout = async (workout) => {
     const res = await fetch('/api/workouts', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
       body: JSON.stringify(workout)
     });
     const newWorkout = await res.json();
@@ -128,7 +271,10 @@ export default function App() {
   const addNutrition = async (entry) => {
     const res = await fetch('/api/nutrition', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
       body: JSON.stringify(entry)
     });
     const newEntry = await res.json();
@@ -138,7 +284,10 @@ export default function App() {
   const addProgress = async (entry) => {
     const res = await fetch('/api/progress', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
       body: JSON.stringify(entry)
     });
     const newEntry = await res.json();
@@ -167,6 +316,10 @@ export default function App() {
       />
     </div>
   );
+
+  if (!token) {
+    return <AuthScreen onLogin={handleLogin} onSignup={handleLogin} />;
+  }
 
   return (
     <div className="flex h-screen bg-slate-50 overflow-hidden">
@@ -219,7 +372,10 @@ export default function App() {
               <p className="text-xs text-slate-500 truncate">{user?.email}</p>
             </div>
           </div>
-          <button className="w-full flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all">
+          <button 
+            onClick={handleLogout}
+            className="w-full flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
+          >
             <LogOut size={20} />
             <span className="font-medium">Logout</span>
           </button>
