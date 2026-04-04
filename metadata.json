@@ -1,0 +1,5 @@
+{
+  "name": "FitTrack Pro",
+  "description": "A comprehensive MERN-inspired Fitness Tracker with workout logging, nutrition tracking, and progress analytics.",
+  "requestFramePermissions": []
+}
