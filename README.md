@@ -62,10 +62,10 @@ Fitness-Tracker/
 ├── server.js
 ├── .env
 ├── package.json
-├── client/ (React App)
-│   ├── src/
-│   └── index.html
-└── dist/ (Production Build)
+├── index.html
+├── Readme.md
+├── tsconfig.json
+└── vite.config.js
 ```
 
 ---
@@ -75,7 +75,7 @@ Fitness-Tracker/
 ### 1️⃣ Clone the repository
 
 ```bash
-git clone https://github.com/your-username/fitness-tracker.git
+git clone https://github.com/abdullah2309/fitness-tracker.git
 cd fitness-tracker
 ```
 
