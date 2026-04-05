@@ -1,4 +1,4 @@
-# 🏋️‍♂️ Fitness Tracker (MERN Stack)
+#  Fitness Tracker (MERN Stack)
 
 A full-stack Fitness Tracker web application built using **MongoDB, Express, React (Vite), and Node.js**. This app allows users to track workouts, nutrition, and fitness progress with secure authentication and an admin dashboard.
 
@@ -176,7 +176,7 @@ npm start
 <img src="https://github.com/abdullah2309/Fitness-Tracker/blob/main/assets/dash.png">
 
 ###  Admin Panel  
-<img src="https://github.com/abdullah2309/Fitness-Tracker/blob/man/assets/Admin.png">
+<img src="https://github.com/abdullah2309/Fitness-Tracker/blob/main/assets/Admin.png">
 
 
 ---
