@@ -172,8 +172,12 @@ npm start
 
 ## 📸 Screenshots (Optional)
 
+###  User Dashboard  
 <img src="https://github.com/abdullah2309/Fitness-Tracker/blob/main/assets/dash.png">
-*Add screenshots of your UI here*
+
+###  Admin Panel  
+<img src="https://github.com/abdullah2309/Fitness-Tracker/blob/man/assets/Admin.png">
+
 
 ---
 
