@@ -1,20 +1,206 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# 🏋️‍♂️ Fitness Tracker (MERN Stack)
 
-# Run and deploy your AI Studio app
+A full-stack Fitness Tracker web application built using **MongoDB, Express, React (Vite), and Node.js**. This app allows users to track workouts, nutrition, and fitness progress with secure authentication and an admin dashboard.
 
-This contains everything you need to run your app locally.
+---
 
-View your app in AI Studio: https://ai.studio/apps/5c12aa67-a67c-492f-9a3b-c9cd6e6cc495
+## 🚀 Features
 
-## Run Locally
+### 🔐 Authentication
 
-**Prerequisites:**  Node.js
+* User Signup & Login
+* JWT-based authentication
+* Role-based access (Admin & User)
 
+### 👤 User Features
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+* View & update profile
+* Track workouts
+* Log nutrition data
+* Monitor fitness progress (weight, body fat)
+
+### 🧑‍💼 Admin Features
+
+* View all users
+* Delete users
+* Manage blogs
+* Manage exercise guides
+* View system statistics
+
+### 📝 Blogs & Exercises
+
+* Public blog system
+* Exercise guide with categories and instructions
+
+---
+
+## 🛠️ Tech Stack
+
+**Frontend:**
+
+* React (Vite)
+* Tailwind CSS
+
+**Backend:**
+
+* Node.js
+* Express.js
+* MongoDB (Mongoose)
+
+**Authentication:**
+
+* JSON Web Tokens (JWT)
+* bcryptjs (password hashing)
+
+---
+
+## 📁 Project Structure
+
+```
+Fitness-Tracker/
+│
+├── server.js
+├── .env
+├── package.json
+├── client/ (React App)
+│   ├── src/
+│   └── index.html
+└── dist/ (Production Build)
+```
+
+---
+
+## ⚙️ Installation & Setup
+
+### 1️⃣ Clone the repository
+
+```bash
+git clone https://github.com/your-username/fitness-tracker.git
+cd fitness-tracker
+```
+
+### 2️⃣ Install dependencies
+
+```bash
+npm install
+```
+
+### 3️⃣ Setup environment variables
+
+Create a `.env` file in root:
+
+```env
+PORT=3000
+MONGO_URI=mongodb://127.0.0.1:27017/fitness_tracker
+JWT_SECRET=your_secret_key
+NODE_ENV=development
+```
+
+---
+
+## ▶️ Run the Project
+
+### Development Mode
+
+```bash
+npm run dev
+```
+
+### Production Mode
+
+```bash
+npm run build
+npm start
+```
+
+---
+
+## 🔌 API Endpoints
+
+### Auth
+
+* `POST /api/signup`
+* `POST /api/login`
+
+### User
+
+* `GET /api/user`
+* `PUT /api/user`
+
+### Workouts
+
+* `GET /api/workouts`
+* `POST /api/workouts`
+* `DELETE /api/workouts/:id`
+
+### Nutrition
+
+* `GET /api/nutrition`
+* `POST /api/nutrition`
+* `DELETE /api/nutrition/:id`
+
+### Progress
+
+* `GET /api/progress`
+* `POST /api/progress`
+* `DELETE /api/progress/:id`
+
+### Blogs
+
+* `GET /api/blogs`
+* `POST /api/blogs`
+
+### Admin
+
+* `GET /api/admin/users`
+* `DELETE /api/admin/users/:id`
+* `GET /api/admin/stats`
+* `POST /api/admin/blogs`
+* `DELETE /api/admin/blogs/:id`
+* `POST /api/admin/exercises`
+* `DELETE /api/admin/exercises/:id`
+
+---
+
+## 🔒 Security
+
+* Passwords are hashed using **bcrypt**
+* Protected routes using **JWT middleware**
+* Role-based authorization for admin routes
+
+---
+
+## 📸 Screenshots (Optional)
+
+*Add screenshots of your UI here*
+
+---
+
+## 📌 Future Improvements
+
+* Email verification system
+* Password reset functionality
+* File upload for profile pictures
+* Advanced analytics dashboard
+* Mobile app integration (Flutter)
+
+---
+
+## 👨‍💻 Author
+
+**Abdullah**
+Software Engineering Student | MERN Stack Developer
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License**.
+
+---
+
+## ⭐ Support
+
+If you like this project, give it a ⭐ on GitHub!
+
+---

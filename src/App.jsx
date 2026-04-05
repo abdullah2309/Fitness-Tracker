@@ -263,7 +263,7 @@ const AdminView = () => {
 
   const addBlog = async (e) => {
     e.preventDefault();
-    await fetch('/api/admin/blogs', {
+    await fetch('/api/blogs', {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',

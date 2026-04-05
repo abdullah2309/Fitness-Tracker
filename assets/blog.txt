@@ -1,0 +1,72 @@
+[
+  {
+    "title": "Exploring the Hidden Gems of the City",
+    "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "author": "Alice Johnson",
+    "date": "2026-04-05T00:00:00Z",
+    "image": "https://picsum.photos/640/480?random=1"
+  },
+  {
+    "title": "The Ultimate Guide to Healthy Living",
+    "content": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    "author": "Michael Smith",
+    "date": "2026-04-04T00:00:00Z",
+    "image": "https://picsum.photos/640/480?random=2"
+  },
+  {
+    "title": "Top 10 Travel Destinations for 2026",
+    "content": "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+    "author": "Sarah Lee",
+    "date": "2026-04-03T00:00:00Z",
+    "image": "https://picsum.photos/640/480?random=3"
+  },
+  {
+    "title": "Mastering the Art of Cooking",
+    "content": "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "author": "David Brown",
+    "date": "2026-04-02T00:00:00Z",
+    "image": "https://picsum.photos/640/480?random=4"
+  },
+  {
+    "title": "How to Stay Productive While Working From Home",
+    "content": "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.",
+    "author": "Emma Wilson",
+    "date": "2026-04-01T00:00:00Z",
+    "image": "https://picsum.photos/640/480?random=5"
+  },
+  {
+    "title": "The Future of Technology in Everyday Life",
+    "content": "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.",
+    "author": "James Anderson",
+    "date": "2026-03-31T00:00:00Z",
+    "image": "https://picsum.photos/640/480?random=6"
+  },
+  {
+    "title": "A Beginner's Guide to Photography",
+    "content": "Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.",
+    "author": "Olivia Martinez",
+    "date": "2026-03-30T00:00:00Z",
+    "image": "https://picsum.photos/640/480?random=7"
+  },
+  {
+    "title": "The Importance of Mental Health",
+    "content": "Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur.",
+    "author": "Liam Davis",
+    "date": "2026-03-29T00:00:00Z",
+    "image": "https://picsum.photos/640/480?random=8"
+  },
+  {
+    "title": "10 Tips for Effective Time Management",
+    "content": "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque.",
+    "author": "Sophia Taylor",
+    "date": "2026-03-28T00:00:00Z",
+    "image": "https://picsum.photos/640/480?random=9"
+  },
+  {
+    "title": "How to Build a Personal Brand Online",
+    "content": "Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio.",
+    "author": "Noah Thomas",
+    "date": "2026-03-27T00:00:00Z",
+    "image": "https://picsum.photos/640/480?random=10"
+  }
+]
