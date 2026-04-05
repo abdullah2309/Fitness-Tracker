@@ -172,6 +172,7 @@ npm start
 
 ## 📸 Screenshots (Optional)
 
+<img src="https://github.com/abdullah2309/Fitness-Tracker/blob/main/assets/dash.png">
 *Add screenshots of your UI here*
 
 ---
