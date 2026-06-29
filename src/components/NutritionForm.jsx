@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
-
+ 
 export default function NutritionForm({ onClose, onSubmit }) {
   const [mealType, setMealType] = useState('breakfast');
   const [foodItems, setFoodItems] = useState('');
