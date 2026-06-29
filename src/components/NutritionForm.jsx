@@ -13,7 +13,7 @@ export default function NutritionForm({ onClose, onSubmit }) {
     e.preventDefault();
     onSubmit({ mealType, foodItems, calories, protein, carbs, fats });
     onClose();
-  };
+  }; 
 
   return (
     <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
