@@ -35,7 +35,7 @@ import NutritionForm from './components/NutritionForm';
 import ProgressForm from './components/ProgressForm';
 import Papa from 'papaparse';
 
-// --- Components -----
+// ------ Components -----
 
 const SidebarItem = ({ icon: Icon, label, active, onClick }) => (
   <button
