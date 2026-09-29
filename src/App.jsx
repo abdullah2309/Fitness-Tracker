@@ -86,7 +86,7 @@ const StatCard = ({ label, value, unit, trend, icon: Icon, color }) => (
   </div>
 );
 
-// --- Main App ---
+// ----- Main App ---
 
 const ProfileView = ({ user, onUpdate }) => {
   const [name, setName] = useState(user?.name || '');
