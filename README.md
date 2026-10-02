@@ -32,7 +32,7 @@ A full-stack Fitness Tracker web application built using **MongoDB, Express, Rea
 * Public blog system
 * Exercise guide with categories and instructions
 
----
+-----
 
 ## 🛠️ Tech Stack
 
