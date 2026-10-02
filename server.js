@@ -86,7 +86,7 @@ const progressSchema = new mongoose.Schema({
 });
 const Progress = mongoose.model("Progress", progressSchema);
 
-// ---------------- Middleware ----------------
+// ---------------- Middleware ---------------- 
 const authenticateToken = async (req, res, next) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
