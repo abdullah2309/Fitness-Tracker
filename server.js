@@ -53,7 +53,7 @@ const exerciseSchema = new mongoose.Schema({
 });
 const Exercise = mongoose.model("Exercise", exerciseSchema);
 
-// Workout
+// Workout 
 const workoutSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   name: String,
