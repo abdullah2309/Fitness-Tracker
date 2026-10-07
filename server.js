@@ -149,7 +149,7 @@ app.put("/api/user", authenticateToken, async (req, res) => {
   const user = await User.findByIdAndUpdate(req.user.id, { name, email, profilePicture }, { new: true });
   res.json(user);
 });
-
+     
 // ---------------- Admin Routes ----------------
 app.get("/api/admin/users", authenticateToken, isAdmin, async (req, res) => {
   const users = await User.find({}, "-password");
