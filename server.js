@@ -156,7 +156,7 @@ app.get("/api/admin/users", authenticateToken, isAdmin, async (req, res) => {
   res.json(users);
 });
 
-app.delete("/api/admin/users/:id", authenticateToken, isAdmin, async (req, res) => {
+app.delete("/api/admin/users/:id", authenticateToken , isAdmin, async (req, res) => {
   if (req.params.id === req.user.id) return res.status(400).json({ error: "Cannot delete yourself" });
   await User.findByIdAndDelete(req.params.id);
   await Workout.deleteMany({ userId: req.params.id });
