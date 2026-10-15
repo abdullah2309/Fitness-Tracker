@@ -20,7 +20,7 @@ A full-stack Fitness Tracker web application built using **MongoDB, Express, Rea
 * Monitor fitness progress (weight, body fat)
 
 ### 🧑‍💼 Admin Features
-
+ 
 * View all users
 * Delete users
 * Manage blogs
