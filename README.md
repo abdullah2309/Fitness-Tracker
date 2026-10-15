@@ -36,7 +36,7 @@ A full-stack Fitness Tracker web application built using **MongoDB, Express, Rea
 
 ## 🛠️ Tech Stack
 
-**Frontend:**
+**Frontend:** 
 
 * React (Vite)
 * Tailwind CSS
