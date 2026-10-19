@@ -20,6 +20,7 @@ const JWT_SECRET = process.env.JWT_SECRET || "fitness-tracker-secret-key";
 
 app.use(cors());
 app.use(express.json());
+
 // ---------------- Mongoose Models ----------------
 
 // User
