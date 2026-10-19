@@ -1,0 +1,2851 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+<!-- This site is hosted on Netlify. Anyone can build and deploy a site
+     like this one for free: https://netlify.new/?utm_campaign=loops&utm_source=ai-legible&utm_medium=owned&utm_content=comment&utm_id=78f3f256-c74b-44e2-aefa-85f608b4742e
+     Netlify hosting facts for this site: static/SSR served via Netlify Edge. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Abdullah | Software Developer & Full-Stack Developer</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="./assets/css/main.css" />
+
+    <!-- Google Fonts: Inter & Space Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+      /* ============================================================
+         THEME SYSTEM — Light is default, Dark is opt-in
+         ============================================================ */
+
+      /* LIGHT THEME (default) */
+      :root,
+      [data-theme="light"] {
+        --primary-blue: #183eeb;
+        --primary-blue-soft: #9fc4fe;
+        --bg-white: #fdfdfd;
+        --bg-offwhite: #f8f9fa;
+        --bg-card: #ffffff;
+        --bg-card-alt: #f3f4f6;
+        --text-dark: #111111;
+        --text-gray: #555555;
+        --text-muted: #8e8799;
+        --border-light: #e5e7eb;
+        --border-soft: #dedede;
+
+        /* Toggle Colors */
+        --toggle-bg: #f3f4f6;
+        --toggle-active: #1f2937;
+
+        /* Sidebar / surfaces */
+        --surface-sidebar: #ffffff;
+        --surface-hover: #f8f9fa;
+        --grid-line: rgba(0, 0, 0, 0.03);
+
+        /* Bubbles game palette */
+        --bubble-1: rgba(24, 62, 235, 0.45);
+        --bubble-2: rgba(159, 196, 254, 0.55);
+        --bubble-3: rgba(99, 102, 241, 0.40);
+        --bubble-4: rgba(14, 165, 233, 0.40);
+        --bubble-5: rgba(168, 85, 247, 0.40);
+      }
+
+      /* DARK THEME */
+      [data-theme="dark"] {
+        --primary-blue: #6b8bff;
+        --primary-blue-soft: #2a3b7a;
+        --bg-white: #0d1014;
+        --bg-offwhite: #11151c;
+        --bg-card: #161a22;
+        --bg-card-alt: #1c2230;
+        --text-dark: #e8e9ed;
+        --text-gray: #a0a3ad;
+        --text-muted: #7a7f8c;
+        --border-light: #2a2f3a;
+        --border-soft: #2f3540;
+
+        /* Toggle Colors */
+        --toggle-bg: #1c2230;
+        --toggle-active: #6b8bff;
+
+        /* Sidebar / surfaces */
+        --surface-sidebar: #0d1014;
+        --surface-hover: #161a22;
+        --grid-line: rgba(255, 255, 255, 0.04);
+
+        /* Bubbles game palette — brighter for dark bg */
+        --bubble-1: rgba(107, 139, 255, 0.55);
+        --bubble-2: rgba(159, 196, 254, 0.50);
+        --bubble-3: rgba(129, 140, 248, 0.50);
+        --bubble-4: rgba(56, 189, 248, 0.45);
+        --bubble-5: rgba(192, 132, 252, 0.45);
+      }
+
+      /* Smooth transitions when switching themes */
+      body, .sidebar-container, .main-container, .profile-avatar__inner,
+      .toggle-container, .mobile-menu-btn, .btn-outline, .form-input,
+      .experience-logo, .experience-date, .profile-image-fill-bg,
+      .my-contact-li, .contact-dot, .skills-text, .experience-meta a,
+      .experience-toggle, .experience-toggle:hover, .experience-description,
+      .experience-content li, .copy-email-btn {
+        transition: background-color 0.4s ease, color 0.4s ease,
+                    border-color 0.4s ease, box-shadow 0.4s ease;
+      }
+
+      /* Base Reset & Typography */
+      body {
+        font-family: "Inter", system-ui, sans-serif;
+        background-color: var(--bg-white);
+        color: var(--text-dark);
+        overflow: hidden;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* Custom Selection */
+      ::selection {
+        background-color: var(--primary-blue);
+        color: #ffffff;
+      }
+
+      /* Layout: Fixed Sidebar & Scrollable Main */
+      @media (min-width: 1024px) {
+        .sidebar-container {
+          position: fixed;
+          top: 0;
+          left: 0;
+          bottom: 0;
+          width: 380px;
+          height: 100vh;
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+          z-index: 50;
+          background-color: var(--surface-sidebar);
+          border-right: 1px solid var(--border-light);
+        }
+        .main-container {
+          margin-left: 380px;
+          width: calc(100% - 380px);
+          height: 100vh;
+          overflow: hidden;          /* NO SCROLL — single-screen pages */
+          background-color: var(--bg-offwhite);
+        }
+      }
+
+      /* Custom Scrollbar for Main Content */
+      .main-container::-webkit-scrollbar {
+        width: 6px;
+      }
+      .main-container::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .main-container::-webkit-scrollbar-thumb {
+        background: #d1d5db;
+        border-radius: 4px;
+      }
+      .main-container::-webkit-scrollbar-thumb:hover {
+        background: var(--primary-blue);
+      }
+      [data-theme="dark"] .main-container::-webkit-scrollbar-thumb {
+        background: #2f3540;
+      }
+
+      /* Hide Scrollbar for Sidebar Inner Content */
+      .scrollable-content::-webkit-scrollbar {
+        display: none;
+      }
+      .scrollable-content {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+
+      /* Subtle Link Hover Underline */
+      .hover-underline {
+        position: relative;
+        display: inline-block;
+      }
+      .hover-underline::after {
+        content: "";
+        position: absolute;
+        width: 100%;
+        transform: scaleX(0);
+        height: 1px;
+        bottom: -2px;
+        left: 0;
+        background-color: currentColor;
+        transform-origin: bottom right;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .hover-underline:hover::after {
+        transform: scaleX(1);
+        transform-origin: bottom left;
+      }
+
+      /* Profile Avatar Specific Styles */
+      .profile-avatar {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 50px;
+        padding: 0;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        outline: none;
+        flex-shrink: 0;
+      }
+      .profile-avatar__inner {
+        display: block;
+        width: 100%;
+        height: 100%;
+        border-radius: 8px;
+        overflow: hidden;
+        background-color: var(--bg-card-alt);
+        border: 1px solid var(--border-light);
+      }
+      .profile-avatar__photo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+      }
+      .profile-avatar-frame {
+        position: absolute;
+        inset: -4px;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+      }
+      .profile-avatar:hover .profile-avatar-frame {
+        opacity: 1;
+      }
+      .profile-avatar-frame__drawing {
+        position: absolute;
+        inset: 0;
+      }
+      .profile-avatar-frame__line {
+        position: absolute;
+        background-color: var(--primary-blue);
+      }
+      .profile-avatar-frame__line--top {
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+      }
+      .profile-avatar-frame__line--bottom {
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+      }
+      .profile-avatar-frame__line--left {
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 1px;
+      }
+      .profile-avatar-frame__line--right {
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 1px;
+      }
+      .profile-avatar-frame__corner {
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        background-color: var(--primary-blue);
+        border: 1px solid var(--bg-card);
+      }
+      .profile-avatar-frame__corner--top-left { top: -3px; left: -3px; }
+      .profile-avatar-frame__corner--top-right { top: -3px; right: -3px; }
+      .profile-avatar-frame__corner--bottom-left { bottom: -3px; left: -3px; }
+      .profile-avatar-frame__corner--bottom-right { bottom: -3px; right: -3px; }
+      .profile-avatar-hover-label {
+        position: absolute;
+        top: -24px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: var(--primary-blue);
+        font-size: 12px;
+        font-weight: 600;
+        font-family: "Space Mono", monospace;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        pointer-events: none;
+      }
+      .profile-avatar:hover .profile-avatar-hover-label {
+        opacity: 1;
+      }
+      .profile-avatar-size-pill {
+        position: absolute;
+        bottom: -28px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: var(--primary-blue);
+        color: #ffffff;
+        font-size: 10px;
+        font-weight: 600;
+        font-family: "Space Mono", monospace;
+        padding: 2px 8px;
+        border-radius: 10px;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        pointer-events: none;
+        white-space: nowrap;
+      }
+      .profile-avatar:hover .profile-avatar-size-pill {
+        opacity: 1;
+      }
+
+      /* Toggle Switch Styles (Work/Play & Theme) */
+      .toggle-container {
+        display: inline-flex;
+        background-color: var(--bg-card-alt);
+        border: 1px solid var(--border-light);
+        border-radius: 50px;
+        padding: 4px;
+        height: 35px;
+        position: relative;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.02);
+      }
+      .toggle-btn {
+        position: relative;
+        z-index: 10;
+        padding: 5px 10px;
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--text-muted);
+        border-radius: 50px;
+        transition: color 0.3s ease;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+      }
+      .toggle-btn.active {
+        color: #ffffff;
+      }
+      .toggle-slider {
+        position: absolute;
+        top: 4px;
+        bottom: 4px;
+        left: 4px;
+        width: calc(50% - 4px);
+        background-color: var(--primary-blue-soft);
+        border-radius: 50px;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      [data-theme="dark"] .toggle-slider {
+        background-color: var(--primary-blue);
+      }
+
+      /* Theme Toggle (Sun / Moon) — smaller pill next to Karachi text */
+      .theme-toggle {
+        display: inline-flex;
+        background-color: var(--bg-card-alt);
+        border: 1px solid var(--border-light);
+        border-radius: 50px;
+        padding: 3px;
+        height: 30px;
+        position: relative;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.03);
+        flex-shrink: 0;
+      }
+      .theme-toggle-btn {
+        position: relative;
+        z-index: 10;
+        width: 26px;
+        height: 22px;
+        padding: 0;
+        border: none;
+        background: transparent;
+        color: var(--text-muted);
+        border-radius: 50px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        transition: color 0.3s ease;
+      }
+      .theme-toggle-btn.active {
+        color: #ffffff;
+      }
+      .theme-toggle-slider {
+        position: absolute;
+        top: 3px;
+        bottom: 3px;
+        left: 3px;
+        width: 26px;
+        height: 22px;
+        background-color: var(--primary-blue);
+        border-radius: 50px;
+        transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 0;
+        box-shadow: 0 2px 6px rgba(24, 62, 235, 0.25);
+      }
+      [data-theme="dark"] .theme-toggle-slider {
+        background-color: var(--primary-blue);
+      }
+
+      /* UI Utilities */
+      .btn-primary {
+        background-color: var(--primary-blue);
+        color: #ffffff;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(24, 62, 235, 0.2);
+      }
+      .btn-primary:hover {
+        background-color: #0f2bb5;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(24, 62, 235, 0.3);
+      }
+      .btn-outline {
+        border: 1px solid var(--border-light);
+        color: var(--text-dark);
+        background-color: var(--bg-card);
+        transition: all 0.3s ease;
+      }
+      .btn-outline:hover {
+        background-color: var(--surface-hover);
+        border-color: var(--border-soft);
+      }
+      .text-primary { color: var(--primary-blue); }
+      .bg-primary { background-color: var(--primary-blue); }
+      .border-primary { border-color: var(--primary-blue); }
+
+      /* Form Inputs */
+      .form-input {
+        background-color: var(--bg-card);
+        border: 1px solid var(--border-light);
+        color: var(--text-dark);
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      }
+      .form-input:focus {
+        outline: none;
+        border-color: var(--primary-blue);
+        box-shadow: 0 0 0 3px rgba(24, 62, 235, 0.1);
+      }
+
+
+      .my-text {
+        color: var(--text-dark);
+        font-size: 13px;
+        letter-spacing: -0.1px;
+        display: inline-flex !important;
+        align-items: center;
+      }
+      .my-text-tilte {
+        font-size: 16px;
+        font-weight: 500;
+        color: var(--text-dark);
+        letter-spacing: -0.1px;
+      }
+      .my-text-subtilte {
+        font-size: 13px;
+        font-weight: 400;
+        color: var(--text-muted);
+        letter-spacing: -0.1px;
+      }
+
+      /* Dark-theme overrides for Tailwind utility classes that used
+         hard-coded colors like text-gray-900 / bg-white / border-gray-200.
+         We remap them to theme-aware values so the existing markup
+         keeps working without changing a single class. */
+      [data-theme="dark"] .text-gray-900 { color: var(--text-dark) !important; }
+      [data-theme="dark"] .text-gray-600 { color: #b8bcc6 !important; }
+      [data-theme="dark"] .text-gray-500 { color: var(--text-muted) !important; }
+      [data-theme="dark"] .text-gray-700 { color: #c5c9d3 !important; }
+      [data-theme="dark"] .text-gray-400 { color: #6b7280 !important; }
+
+      [data-theme="dark"] .bg-white { background-color: var(--bg-card) !important; }
+      [data-theme="dark"] .bg-\[\#ffffff\] { background-color: var(--bg-card) !important; }
+      [data-theme="dark"] .bg-gray-50 { background-color: var(--bg-card-alt) !important; }
+      [data-theme="dark"] .bg-blue-100 { background-color: rgba(107, 139, 255, 0.15) !important; }
+      [data-theme="dark"] .group:hover .bg-blue-100 { background-color: rgba(107, 139, 255, 0.25) !important; }
+
+      [data-theme="dark"] .border-gray-200 { border-color: var(--border-light) !important; }
+      [data-theme="dark"] .border-gray-100 { border-color: var(--border-soft) !important; }
+      [data-theme="dark"] .hover\:border-primary\/50:hover { border-color: var(--primary-blue) !important; opacity: 0.6; }
+      [data-theme="dark"] .border-primary\/20 { border-color: rgba(107, 139, 255, 0.3) !important; }
+      [data-theme="dark"] .border-primary\/30 { border-color: rgba(107, 139, 255, 0.4) !important; }
+
+      [data-theme="dark"] .hover\:bg-white:hover { background-color: var(--bg-card) !important; }
+      [data-theme="dark"] .hover\:bg-blue-50:hover { background-color: rgba(107, 139, 255, 0.12) !important; }
+      [data-theme="dark"] .hover\:text-black:hover { color: var(--text-dark) !important; }
+
+      [data-theme="dark"] .bg-white\/80 { background-color: rgba(22, 26, 34, 0.85) !important; }
+
+      [data-theme="dark"] .text-primary { color: var(--primary-blue) !important; }
+
+      /* ====================================================== */
+      /* =====  MOBILE RESPONSIVE (Top Navbar Sidebar)  ====== */
+      /* ====================================================== */
+
+      .mobile-menu-btn {
+        display: none;
+      }
+      .sidebar-backdrop {
+        display: none;
+      }
+
+      @media (max-width: 1023px) {
+        body {
+          overflow: auto;
+        }
+        .sidebar-container {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          width: 100%;
+          height: auto;
+          max-height: 72px;
+          z-index: 60;
+          background-color: var(--surface-sidebar);
+          border-right: none;
+          border-bottom: 1px solid var(--border-light);
+          overflow: hidden;
+          padding: 12px 16px;
+          transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                      box-shadow 0.3s ease;
+        }
+        .sidebar-container.sidebar-open {
+          max-height: 100vh;
+          overflow-y: auto;
+          box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        }
+        .mobile-menu-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 40px;
+          height: 40px;
+          /* border: 1px solid var(--border-light); */
+          border-radius: 8px;
+          background-color: var(--bg-card);
+          color: var(--text-dark);
+          cursor: pointer;
+          flex-shrink: 0;
+          transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        .mobile-menu-btn:hover {
+          /* background-color: var(--surface-hover);
+          color: var(--primary-blue); */
+        }
+        .mobile-menu-btn svg {
+          width: 22px;
+          height: 22px;
+        }
+        .sidebar-container:not(.sidebar-open) .scrollable-content,
+        .sidebar-container:not(.sidebar-open) > nav {
+          display: none;
+        }
+        .sidebar-container:not(.sidebar-open) .flex-shrink-0 > .mb-8 {
+          margin-bottom: 0;
+        }
+        .sidebar-container.sidebar-open .scrollable-content {
+          max-height: none;
+          overflow-y: visible;
+        }
+        .main-container {
+          margin-left: 0;
+          width: 100%;
+          height: auto;
+          overflow-y: visible;
+          padding-top: 84px;
+          background-color: var(--bg-offwhite);
+        }
+        .sidebar-backdrop.sidebar-open {
+          display: block;
+          position: fixed;
+          top: 0; left: 0; right: 0; bottom: 0;
+          background-color: rgba(0, 0, 0, 0.4);
+          z-index: 55;
+          opacity: 1;
+          transition: opacity 0.3s ease;
+        }
+        @media (max-width: 480px) {
+          .sidebar-container:not(.sidebar-open) #modeToggle {
+            display: none;
+          }
+          .sidebar-container:not(.sidebar-open) .flex-shrink-0 > .mb-8 {
+            justify-content: space-between;
+          }
+        }
+      }
+
+      /* ====================================================== */
+      /* ====================================================== */
+      /* ======  PLAY SECTION — Memory Sequence Game  ========= */
+      /* ====================================================== */
+
+      #content-play {
+        background-color: var(--bg-offwhite);
+        overflow-y: auto;
+      }
+
+      .play-shell {
+        position: relative;
+        width: 100%;
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 28px 24px 40px;
+      }
+
+      .play-header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        margin-bottom: 22px;
+        position: relative;
+        z-index: 4;
+      }
+      .play-eyebrow {
+        font-family: "Space Mono", monospace;
+        font-size: 11px;
+        letter-spacing: 2px;
+        color: var(--primary-blue);
+        text-transform: uppercase;
+        margin-bottom: 6px;
+      }
+      .play-title {
+        font-size: 30px;
+        font-weight: 700;
+        color: var(--text-dark);
+        letter-spacing: -0.5px;
+        margin: 0 0 6px;
+      }
+      .play-subtitle {
+        font-size: 13px;
+        color: var(--text-muted);
+        max-width: 520px;
+        line-height: 1.6;
+        margin: 0;
+      }
+
+      /* ====== Game stage ====== */
+      .game-stage {
+        position: relative;
+        width: 100%;
+        max-width: 560px;
+        margin: 0 auto;
+        padding: 28px 24px 24px;
+        border-radius: 20px;
+        background:
+          radial-gradient(ellipse at top, rgba(107, 139, 255, 0.08), transparent 60%),
+          var(--bg-card);
+        border: 1px solid var(--border-light);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.06);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+      }
+      [data-theme="dark"] .game-stage {
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+      }
+
+      /* Status bar — shows current round + best */
+      .game-statusbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        max-width: 460px;
+        gap: 12px;
+      }
+      .game-stat {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
+        padding: 8px 14px;
+        background: var(--bg-card-alt);
+        border: 1px solid var(--border-light);
+        border-radius: 10px;
+        min-width: 90px;
+      }
+      .game-stat-label {
+        font-family: "Space Mono", monospace;
+        font-size: 9px;
+        letter-spacing: 1.4px;
+        color: var(--text-muted);
+        text-transform: uppercase;
+      }
+      .game-stat-value {
+        font-family: "Space Mono", monospace;
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--primary-blue);
+        line-height: 1;
+      }
+      .game-status-text {
+        flex: 1;
+        text-align: center;
+        font-size: 12px;
+        color: var(--text-muted);
+        font-family: "Space Mono", monospace;
+        letter-spacing: 0.5px;
+        padding: 8px 12px;
+        background: var(--bg-card-alt);
+        border: 1px solid var(--border-light);
+        border-radius: 10px;
+        min-height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: color 0.3s ease, border-color 0.3s ease;
+      }
+      .game-status-text.status-watch {
+        color: var(--primary-blue);
+        border-color: var(--primary-blue);
+      }
+      .game-status-text.status-input {
+        color: #16a34a;
+        border-color: #16a34a;
+      }
+      .game-status-text.status-error {
+        color: #dc2626;
+        border-color: #dc2626;
+      }
+
+      /* ====== Color pads (2x2 grid) ====== */
+      .pads-grid {
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+        gap: 14px;
+        width: 100%;
+        max-width: 380px;
+        aspect-ratio: 1 / 1;
+      }
+      .pad {
+        position: relative;
+        border-radius: 16px;
+        border: 1px solid var(--border-light);
+        cursor: pointer;
+        overflow: hidden;
+        transition: transform 0.12s ease, box-shadow 0.3s ease, filter 0.18s ease;
+        will-change: transform, filter;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+      }
+      /* Default dim states — themed */
+      .pad--green   { background: linear-gradient(135deg, #1f6f43, #14432a); }
+      .pad--red     { background: linear-gradient(135deg, #8e2a2a, #5a1a1a); }
+      .pad--yellow  { background: linear-gradient(135deg, #8a6b1a, #5c4710); }
+      .pad--blue    { background: linear-gradient(135deg, #1d3a8a, #112456); }
+
+      [data-theme="dark"] .pad--green   { background: linear-gradient(135deg, #14532d, #0a2e18); }
+      [data-theme="dark"] .pad--red     { background: linear-gradient(135deg, #5a1a1a, #3a0f0f); }
+      [data-theme="dark"] .pad--yellow  { background: linear-gradient(135deg, #5c4710, #3a2c08); }
+      [data-theme="dark"] .pad--blue    { background: linear-gradient(135deg, #1e3a8a, #0f1e4a); }
+
+      /* Lit (active) state — bright & glowing */
+      .pad.lit {
+        filter: brightness(1.55) saturate(1.2);
+        transform: scale(0.97);
+        box-shadow: 0 0 24px var(--pad-glow), inset 0 0 16px rgba(255,255,255,0.25);
+      }
+      .pad--green.lit   { --pad-glow: rgba(34, 197, 94, 0.65); }
+      .pad--red.lit     { --pad-glow: rgba(239, 68, 68, 0.65); }
+      .pad--yellow.lit  { --pad-glow: rgba(234, 179, 8, 0.65); }
+      .pad--blue.lit    { --pad-glow: rgba(59, 130, 246, 0.65); }
+
+      .pad:hover:not(.disabled) {
+        filter: brightness(1.15);
+      }
+      .pad.disabled {
+        cursor: not-allowed;
+        opacity: 0.85;
+      }
+      .pad.pressed {
+        transform: scale(0.96);
+      }
+
+      /* ====== Center round indicator ====== */
+      .round-indicator {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 76px;
+        height: 76px;
+        border-radius: 50%;
+        background: var(--bg-card);
+        border: 2px solid var(--border-light);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 18px rgba(0,0,0,0.10);
+        z-index: 3;
+        pointer-events: none;
+      }
+      .round-indicator .ri-label {
+        font-family: "Space Mono", monospace;
+        font-size: 8px;
+        letter-spacing: 1.2px;
+        color: var(--text-muted);
+        text-transform: uppercase;
+      }
+      .round-indicator .ri-value {
+        font-family: "Space Mono", monospace;
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--text-dark);
+        line-height: 1;
+        margin-top: 2px;
+      }
+
+      /* ====== Controls ====== */
+      .game-controls {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .game-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 10px 18px;
+        font-size: 12px;
+        font-weight: 600;
+        font-family: "Inter", sans-serif;
+        color: #ffffff;
+        background: var(--primary-blue);
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 12px rgba(24, 62, 235, 0.25);
+      }
+      .game-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(24, 62, 235, 0.35);
+      }
+      .game-btn.game-btn--ghost {
+        background: var(--bg-card);
+        color: var(--text-dark);
+        border: 1px solid var(--border-light);
+        box-shadow: none;
+      }
+      .game-btn.game-btn--ghost:hover {
+        background: var(--surface-hover);
+        border-color: var(--primary-blue);
+        color: var(--primary-blue);
+      }
+      .game-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+      }
+      .game-btn i { font-size: 11px; }
+
+      /* ====== How to play ====== */
+      .game-howto {
+        margin-top: 6px;
+        font-size: 12px;
+        color: var(--text-muted);
+        text-align: center;
+        line-height: 1.6;
+        max-width: 460px;
+      }
+      .game-howto strong {
+        color: var(--text-dark);
+        font-weight: 600;
+      }
+
+      /* Game-over flash overlay */
+      .game-flash {
+        position: absolute;
+        inset: 0;
+        background: rgba(220, 38, 38, 0);
+        pointer-events: none;
+        transition: background 0.2s ease;
+        border-radius: 20px;
+        z-index: 6;
+      }
+      .game-flash.flash-error {
+        background: rgba(220, 38, 38, 0.18);
+      }
+
+      @media (max-width: 640px) {
+        .play-title { font-size: 24px; }
+        .play-shell { padding: 20px 14px 30px; }
+        .game-stage { padding: 20px 14px 18px; gap: 16px; }
+        .game-stat { padding: 6px 10px; min-width: 78px; }
+        .game-stat-value { font-size: 16px; }
+        .game-status-text { font-size: 11px; padding: 6px 8px; }
+        .pads-grid { gap: 10px; max-width: 320px; }
+        .round-indicator { width: 60px; height: 60px; }
+        .round-indicator .ri-value { font-size: 18px; }
+        .game-btn { padding: 9px 14px; font-size: 11px; }
+        .game-howto { font-size: 11px; }
+      }
+
+      /* ====================================================== */
+      /* ======  SIDEBAR SKILLS MARQUEE SLIDER  =============== */
+      /* ====================================================== */
+
+      .skills-slider {
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+        mask-image: linear-gradient(to right,
+                      transparent 0,
+                      #000 14px,
+                      #000 calc(100% - 14px),
+                      transparent 100%);
+        -webkit-mask-image: linear-gradient(to right,
+                      transparent 0,
+                      #000 14px,
+                      #000 calc(100% - 14px),
+                      transparent 100%);
+      }
+      .skills-slider-track {
+        display: inline-flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: 8px;
+        width: max-content;
+        padding: 6px 0;
+        will-change: transform;
+        /* GPU compositing for buttery-smooth scrolling */
+        transform: translate3d(0, 0, 0);
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        animation: skillsScroll 40s linear infinite;
+      }
+      /* Pause the whole track on slider hover — smooth, no jump */
+      .skills-slider:hover .skills-slider-track {
+        animation-play-state: paused;
+      }
+      /* Hovered individual skill — smooth transition to primary color */
+      .skills-slider .skills-text {
+        font-size: 12px;
+        transition: color 0.3s ease, transform 0.3s ease;
+        padding: 2px 4px;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      .skills-slider .skills-text:hover,
+      .skills-slider .skills-text:focus-visible {
+        color: var(--primary-blue);
+        transform: translateY(-1px);
+      }
+      .skills-slider .skills-text:hover i,
+      .skills-slider .skills-text:focus-visible i {
+        color: var(--primary-blue);
+      }
+      .skills-slider .contact-dot {
+        flex-shrink: 0;
+      }
+      @keyframes skillsScroll {
+        from { transform: translateX(0); }
+        to   { transform: translateX(-50%); }
+      }
+      /* Duplicate set is rendered in markup so -50% gives a seamless loop */
+
+      /* Touch device: pause on tap-hold / active */
+      @media (hover: none) {
+        .skills-slider:active .skills-slider-track {
+          animation-play-state: paused;
+        }
+      }
+
+      /* ====================================================== */
+      /* ======  NEW PROJECTS SECTION — 3 vertical rows  ====== */
+      /* ====================================================== */
+
+      .projects-section {
+        /* ===== Fill the parent .page-section (which is 100vh) ===== */
+        height: 100%;
+        min-height: 0;
+        max-height: 100%;
+        padding: 24px 24px 24px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        box-sizing: border-box;
+      }
+      .projects-section .projects-header {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 18px;
+        flex-wrap: wrap;
+        flex-shrink: 0;
+      }
+      .projects-section .projects-header h2 {
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--text-dark);
+        letter-spacing: -0.4px;
+        margin: 0;
+      }
+      .projects-section .projects-header .projects-hint {
+        font-family: "Space Mono", monospace;
+        font-size: 11px;
+        letter-spacing: 1.5px;
+        color: var(--text-muted);
+        text-transform: uppercase;
+      }
+
+      .projects-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+        /* Fill remaining viewport height below the header */
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow: hidden;
+      }
+
+      .projects-row {
+        position: relative;
+        overflow: hidden;
+        border-radius: 14px;
+        background: transparent;
+        /* Each row fills the grid cell height (= 100vh - header) */
+        min-height: 0;
+        mask-image: linear-gradient(to bottom,
+                      transparent 0,
+                      #000 18px,
+                      #000 calc(100% - 18px),
+                      transparent 100%);
+        -webkit-mask-image: linear-gradient(to bottom,
+                      transparent 0,
+                      #000 18px,
+                      #000 calc(100% - 18px),
+                      transparent 100%);
+      }
+      .projects-row-track {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        will-change: transform;
+        /* GPU compositing for buttery-smooth scrolling, no jitter */
+        transform: translate3d(0, 0, 0);
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+      }
+      /* Row 1 — top -> bottom */
+      .projects-row--down .projects-row-track {
+        animation: projDown 38s linear infinite;
+      }
+      /* Row 2 — bottom -> top */
+      .projects-row--up .projects-row-track {
+        animation: projUp 38s linear infinite;
+      }
+      /* Row 3 — top -> bottom (slightly different duration for visual rhythm) */
+      .projects-row--down-2 .projects-row-track {
+        animation: projDown 44s linear infinite;
+      }
+
+      /* Project slider keeps running on hover (no pause) */
+
+      @keyframes projDown {
+        from { transform: translateY(0); }
+        to   { transform: translateY(-50%); }
+      }
+      @keyframes projUp {
+        from { transform: translateY(-50%); }
+        to   { transform: translateY(0); }
+      }
+
+      /* Project card */
+      .project-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-light);
+        border-radius: 14px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        cursor: pointer;
+      }
+      .project-card:hover {
+        transform: translateY(-3px);
+        border-color: var(--primary-blue);
+        box-shadow: 0 12px 28px rgba(24, 62, 235, 0.10);
+      }
+      [data-theme="dark"] .project-card:hover {
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+      }
+
+      .project-card__media {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 16 / 10;
+        background: var(--bg-card-alt);
+        overflow: hidden;
+      }
+      .project-card__media img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.5s ease;
+        border-radius: 8px;
+      }
+      .project-card:hover .project-card__media img {
+        transform: scale(1.05);
+      }
+
+      .project-card__body {
+        padding: 14px 16px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .project-card__title {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text-dark);
+        letter-spacing: -0.2px;
+        margin: 0;
+        line-height: 1.35;
+        transition: color 0.3s ease;
+      }
+      .project-card:hover .project-card__title {
+        color: var(--primary-blue);
+      }
+      .project-card__desc {
+        font-size: 12.5px;
+        line-height: 1.55;
+        color: var(--text-gray);
+        margin: 0;
+      }
+      [data-theme="dark"] .project-card__desc {
+        color: #b8bcc6;
+      }
+      .project-card__meta {
+        margin-top: 4px;
+        font-family: "Space Mono", monospace;
+        font-size: 11px;
+        letter-spacing: 0.5px;
+        color: var(--text-muted);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .project-card__meta .meta-sep {
+        color: var(--border-soft);
+      }
+
+      /* Responsive Projects grid */
+      @media (max-width: 1023px) {
+        .projects-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .projects-row--down-2 {
+          display: none;
+        }
+      }
+      @media (max-width: 640px) {
+        .projects-grid {
+          grid-template-columns: 1fr;
+          gap: 14px;
+        }
+        .projects-row--down-2 {
+          display: block;
+        }
+        .projects-section .projects-header h2 {
+          font-size: 20px;
+        }
+      }
+
+      /* ====== Accessibility: respect prefers-reduced-motion ====== */
+      @media (prefers-reduced-motion: reduce) {
+        .skills-slider-track,
+        .projects-row-track {
+          animation: none !important;
+        }
+        .skills-slider-track {
+          flex-wrap: wrap;
+          width: 100%;
+          justify-content: flex-start;
+        }
+        /* Allow the user to scroll inside the 100vh section instead of animating */
+        .projects-section {
+          overflow-y: auto !important;
+        }
+        .projects-grid {
+          overflow: visible !important;
+        }
+        .projects-row {
+          mask-image: none;
+          -webkit-mask-image: none;
+          overflow: visible;
+          max-height: none !important;
+        }
+        .projects-row-track {
+          transform: none !important;
+        }
+        .project-card__media img,
+        .bubble,
+        .breathe-orb {
+          animation: none !important;
+        }
+      }
+
+      /* ====================================================== */
+      /* ======  PAGE-SECTION: one screen at a time  ========== */
+      /* ====================================================== */
+      .page-section {
+        display: none;
+        height: 100vh;
+        min-height: 100vh;
+        max-height: 100vh;
+        overflow: hidden;
+        box-sizing: border-box;
+        position: relative;
+      }
+      .page-section.page-section--active {
+        display: flex;
+        flex-direction: column;
+      }
+      /* #about scrolls internally IF its content overflows the viewport
+         (e.g. mobile when content is taller than 100vh) */
+      .page-section--scrollable {
+        overflow-y: auto;
+      }
+      /* Sidebar nav active state */
+      .nav-link-active {
+        color: var(--text-dark) !important;
+        font-weight: 600;
+      }
+      .nav-link-active::after {
+        transform: scaleX(1) !important;
+        transform-origin: bottom left !important;
+      }
+
+
+      /* ======  EXPERIENCE: always visible — no click-to-expand  ====== */
+      .experience-item .experience-content {
+        display: block !important;
+      }
+      .experience-item:not(.active) .experience-content {
+        display: block !important;
+      }
+      .experience-item:not(.active) {
+        padding-bottom: 12px;
+      }
+      .experience-item:not(.active) .experience-description {
+        margin-bottom: 10px;
+      }
+      /* Hide the toggle button entirely — no extra clicks */
+      .experience-toggle {
+        display: none !important;
+      }
+
+    </style>
+  </head>
+  <body>
+    <!-- Mobile backdrop (closes sidebar on click) -->
+    <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="toggleSidebar(false)"></div>
+
+    <!-- ==================== LEFT SIDEBAR ==================== -->
+    <aside
+      class="sidebar-container w-full lg:w-[340px] flex flex-col justify-between px-6 py-8"
+      id="sidebar"
+    >
+      <!-- Top Section: Profile Info -->
+      <div class="flex-shrink-0">
+        <!-- Avatar and Toggle Wrapper -->
+        <div class="flex justify-between mb-8 items-start">
+          <!-- Avatar with Hover Effects -->
+          <button class="profile-avatar" aria-label="Profile Avatar">
+            <span class="profile-avatar-hover-label">img</span>
+            <span class="profile-avatar-size-pill">50 × 50</span>
+
+            <span class="profile-avatar-frame">
+              <span class="profile-avatar-frame__drawing">
+                <span class="profile-avatar-frame__line profile-avatar-frame__line--top"></span>
+                <span class="profile-avatar-frame__line profile-avatar-frame__line--right"></span>
+                <span class="profile-avatar-frame__line profile-avatar-frame__line--bottom"></span>
+                <span class="profile-avatar-frame__line profile-avatar-frame__line--left"></span>
+                <span class="profile-avatar-frame__corner profile-avatar-frame__corner--top-left"></span>
+                <span class="profile-avatar-frame__corner profile-avatar-frame__corner--top-right"></span>
+                <span class="profile-avatar-frame__corner profile-avatar-frame__corner--bottom-left"></span>
+                <span class="profile-avatar-frame__corner profile-avatar-frame__corner--bottom-right"></span>
+              </span>
+            </span>
+
+            <span class="profile-avatar__inner">
+              <span class="profile-avatar__photo block w-full h-full">
+                <img
+                  src="./assets/my/my.png"
+                  alt="Abdullah"
+                  draggable="false"
+                />
+              </span>
+            </span>
+          </button>
+
+          <div class="flex items-center gap-3">
+            <!-- Work / Play Toggle -->
+            <div class="toggle-container mt-2" id="modeToggle">
+              <div class="toggle-slider" id="toggleSlider"></div>
+              <button class="toggle-btn active" onclick="switchMode('work')">
+                Work
+              </button>
+              <button class="toggle-btn" onclick="switchMode('play')">
+                Play
+              </button>
+            </div>
+
+            <!-- Mobile Hamburger Button (visible only on < 1024px) -->
+            <button
+              class="mobile-menu-btn lg:hidden"
+              id="mobileMenuBtn"
+              onclick="toggleSidebar()"
+              aria-label="Open menu"
+              aria-expanded="false"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Scrollable Text Content -->
+        <div
+          class="scrollable-content overflow-y-auto"
+          style="max-height: 420px"
+        >
+          <h1
+            class="text-2xl font-bold text-gray-900 tracking-tight my-text-tilte"
+          >
+            Abdullah Shahid
+          </h1>
+          <p class="text-gray-500 mt-1 my-text-subtilte">Software Developer</p>
+
+          <p class="text-gray-600 text-sm mt-2 leading-relaxed my-text">
+            Software Developer at Aptech Computer Education, building secure web applications, enterprise systems, and cross-platform mobile apps.
+          </p>
+
+
+              <h1
+                class="text-2xl mt-5  font-bold text-gray-900 tracking-tight my-text-tilte mb-3"
+              >
+                Skills
+              </h1>
+              <!-- <p class="text-gray-500 mt-1 my-text-subtilte  mb-3">Technologies & Tools I Use to Build Modern Applications</p> -->
+
+              <!-- ===== Skills Marquee Slider ===== -->
+              <div class="skills-slider mb-4" aria-label="Skills slider" role="list">
+                <div class="skills-slider-track">
+
+                  <!-- ===== Set 1 ===== -->
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem">
+                    HTML
+                    <i class="fa-brands fa-html5"></i>
+                  </a>
+                  <span class="contact-dot">·</span>
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem">
+                    Css
+                    <i class="fa-brands fa-css3"></i>
+                  </a>
+                  <span class="contact-dot">·</span>
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem">
+                    Javascript
+                    <i class="fa-brands fa-js"></i>
+                  </a>
+                  <span class="contact-dot">·</span>
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem">
+                    Bootstrap
+                    <i class="fa-brands fa-bootstrap"></i>
+                  </a>
+                  <span class="contact-dot">·</span>
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem">
+                    Tailwind Css
+                    <i class="fa-brands fa-tailwind-css"></i>
+                  </a>
+                  <span class="contact-dot">·</span>
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem">
+                    React.js
+                    <i class="fa-brands fa-react"></i>
+                  </a>
+                  <span class="contact-dot">·</span>
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem">
+                    Angular.js
+                    <i class="fa-brands fa-angular"></i>
+                  </a>
+                  <span class="contact-dot">·</span>
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem">
+                    php
+                    <i class="fa-brands fa-php"></i>
+                  </a>
+                  <span class="contact-dot">·</span>
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem">
+                    Laravel
+                    <i class="fa-brands fa-laravel"></i>
+                  </a>
+                  <span class="contact-dot">·</span>
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem">
+                    MySQL &amp; SQL
+                    <i class="fa-solid fa-database"></i>
+                  </a>
+                  <span class="contact-dot">·</span>
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem">
+                    RESTful API
+                    <i class="fa-solid fa-network-wired"></i>
+                  </a>
+                  <span class="contact-dot">·</span>
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem">
+                    Python
+                    <i class="fa-brands fa-python"></i>
+                  </a>
+                  <span class="contact-dot">·</span>
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem">
+                    Dart
+                    <i class="fa-brands fa-dart-lang"></i>
+                  </a>
+                  <span class="contact-dot">·</span>
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem">
+                    Flutter
+                    <i class="fa-brands fa-flutter"></i>
+                  </a>
+                  <span class="contact-dot">·</span>
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem">
+                    Node.js
+                    <i class="fa-brands fa-node"></i>
+                  </a>
+                  <span class="contact-dot">·</span>
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem">
+                    System Design
+                    <i class="fa-solid fa-gears"></i>
+                  </a>
+                  <span class="contact-dot">·</span>
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem">
+                    LLD &amp; HLD
+                    <i class="fa-solid fa-cubes"></i>
+                  </a>
+                  <span class="contact-dot">·</span>
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem">
+                    Docker
+                    <i class="fa-brands fa-docker"></i>
+                  </a>
+                  <span class="contact-dot">·</span>
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem">
+                    Kubernetes
+                    <i class="fa-brands fa-kubernetes"></i>
+                  </a>
+                  <span class="contact-dot">·</span>
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem">
+                    Visual Studio
+                    <i class="fa-brands fa-visual-studio"></i>
+                  </a>
+                  <span class="contact-dot">·</span>
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem">
+                    Git
+                    <i class="fa-brands fa-git-alt"></i>
+                  </a>
+                  <span class="contact-dot">·</span>
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem">
+                    GitHub
+                    <i class="fa-brands fa-github"></i>
+                  </a>
+                  <span class="contact-dot">·</span>
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem">
+                    Figma
+                    <i class="fa-brands fa-figma"></i>
+                  </a>
+                  <span class="contact-dot">·</span>
+
+                  <!-- ===== Set 2 (duplicate for seamless loop) ===== -->
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem" aria-hidden="true">
+                    HTML
+                    <i class="fa-brands fa-html5"></i>
+                  </a>
+                  <span class="contact-dot" aria-hidden="true">·</span>
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem" aria-hidden="true">
+                    Css
+                    <i class="fa-brands fa-css3"></i>
+                  </a>
+                  <span class="contact-dot" aria-hidden="true">·</span>
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem" aria-hidden="true">
+                    Javascript
+                    <i class="fa-brands fa-js"></i>
+                  </a>
+                  <span class="contact-dot" aria-hidden="true">·</span>
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem" aria-hidden="true">
+                    Bootstrap
+                    <i class="fa-brands fa-bootstrap"></i>
+                  </a>
+                  <span class="contact-dot" aria-hidden="true">·</span>
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem" aria-hidden="true">
+                    Tailwind Css
+                    <i class="fa-brands fa-tailwind-css"></i>
+                  </a>
+                  <span class="contact-dot" aria-hidden="true">·</span>
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem" aria-hidden="true">
+                    React.js
+                    <i class="fa-brands fa-react"></i>
+                  </a>
+                  <span class="contact-dot" aria-hidden="true">·</span>
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem" aria-hidden="true">
+                    Angular.js
+                    <i class="fa-brands fa-angular"></i>
+                  </a>
+                  <span class="contact-dot" aria-hidden="true">·</span>
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem" aria-hidden="true">
+                    php
+                    <i class="fa-brands fa-php"></i>
+                  </a>
+                  <span class="contact-dot" aria-hidden="true">·</span>
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem" aria-hidden="true">
+                    Laravel
+                    <i class="fa-brands fa-laravel"></i>
+                  </a>
+                  <span class="contact-dot" aria-hidden="true">·</span>
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem" aria-hidden="true">
+                    MySQL &amp; SQL
+                    <i class="fa-solid fa-database"></i>
+                  </a>
+                  <span class="contact-dot" aria-hidden="true">·</span>
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem" aria-hidden="true">
+                    RESTful API
+                    <i class="fa-solid fa-network-wired"></i>
+                  </a>
+                  <span class="contact-dot" aria-hidden="true">·</span>
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem" aria-hidden="true">
+                    Python
+                    <i class="fa-brands fa-python"></i>
+                  </a>
+                  <span class="contact-dot" aria-hidden="true">·</span>
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem" aria-hidden="true">
+                    Dart
+                    <i class="fa-brands fa-dart-lang"></i>
+                  </a>
+                  <span class="contact-dot" aria-hidden="true">·</span>
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem" aria-hidden="true">
+                    Flutter
+                    <i class="fa-brands fa-flutter"></i>
+                  </a>
+                  <span class="contact-dot" aria-hidden="true">·</span>
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem" aria-hidden="true">
+                    Node.js
+                    <i class="fa-brands fa-node"></i>
+                  </a>
+                  <span class="contact-dot" aria-hidden="true">·</span>
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem" aria-hidden="true">
+                    System Design
+                    <i class="fa-solid fa-gears"></i>
+                  </a>
+                  <span class="contact-dot" aria-hidden="true">·</span>
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem" aria-hidden="true">
+                    LLD &amp; HLD
+                    <i class="fa-solid fa-cubes"></i>
+                  </a>
+                  <span class="contact-dot" aria-hidden="true">·</span>
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem" aria-hidden="true">
+                    Docker
+                    <i class="fa-brands fa-docker"></i>
+                  </a>
+                  <span class="contact-dot" aria-hidden="true">·</span>
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem" aria-hidden="true">
+                    Kubernetes
+                    <i class="fa-brands fa-kubernetes"></i>
+                  </a>
+                  <span class="contact-dot" aria-hidden="true">·</span>
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem" aria-hidden="true">
+                    Visual Studio
+                    <i class="fa-brands fa-visual-studio"></i>
+                  </a>
+                  <span class="contact-dot" aria-hidden="true">·</span>
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem" aria-hidden="true">
+                    Git
+                    <i class="fa-brands fa-git-alt"></i>
+                  </a>
+                  <span class="contact-dot" aria-hidden="true">·</span>
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem" aria-hidden="true">
+                    GitHub
+                    <i class="fa-brands fa-github"></i>
+                  </a>
+                  <span class="contact-dot" aria-hidden="true">·</span>
+                  <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text" role="listitem" aria-hidden="true">
+                    Figma
+                    <i class="fa-brands fa-figma"></i>
+                  </a>
+                  <span class="contact-dot" aria-hidden="true">·</span>
+
+                </div>
+              </div>
+              <!-- ===== /Skills Marquee Slider ===== -->
+
+            </div>
+          <!-- Contact -->
+          <div class="mt-4">
+            <div
+              class="my-contact-links flex flex-row flex-wrap items-center gap-2 text-sm text-gray-700"
+            >
+              <a
+                href="https://www.linkedin.com/in/abdullah-shahid-a61175336/"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="my-contact-li"
+              >
+                LinkedIn
+              </a>
+
+              <span class="contact-dot">·</span>
+
+              <a
+                href="https://github.com/abdullah2309/"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="my-contact-li"
+              >
+                Github
+              </a>
+
+              <span class="contact-dot">·</span>
+
+              <a
+                href="https://leetcode.com/u/7g1rMdnqLS/"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="my-contact-li"
+              >
+                LeetCode
+              </a>
+
+              <span class="contact-dot">·</span>
+              <a
+                href="assets/resume/Abdullah_Resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="my-contact-li"
+              >
+                Resume
+              </a>
+
+              <span class="contact-dot">·</span>
+
+              <div class="email-copy-wrapper">
+                <a href="mailto:abdullah2309r@gmail.com" class="my-contact-li">
+                  abdullah2309r@gmail.com
+                </a>
+
+                <button
+                  type="button"
+                  class="copy-email-btn"
+                  onclick="copyEmail(this)"
+                  aria-label="Copy email address"
+                  title="Copy email"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <rect x="8" y="8" width="13" height="13" rx="2"></rect>
+                    <path
+                      d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"
+                    ></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Navigation -->
+      <nav class="mt-8 pt-6 border-t border-gray-200">
+        <ul class="space-y-3 text-[15px] font-medium text-gray-500">
+          <li>
+            <a
+              href="#hero"
+              class="hover-underline hover:text-black transition-colors flex items-center gap-2 nav-link-active"
+              onclick="showSection('hero'); closeSidebarOnMobile(); return false;"
+              ><span
+                class="w-1.5 h-1.5 bg-primary rounded-full inline-block"
+              ></span>
+              Home</a
+            >
+          </li>
+          <li>
+            <a
+              href="#about"
+              class="hover-underline hover:text-black transition-colors"
+              onclick="showSection('about'); closeSidebarOnMobile(); return false;"
+              >About & Academics</a
+            >
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- ==================== RIGHT SIDE (MAIN CONTENT) ==================== -->
+    <main class="main-container relative">
+      <!-- ========================================== -->
+      <!-- WORK MODE CONTENT (Default)                -->
+      <!-- ========================================== -->
+      <div id="content-work" class="block">
+        <!-- Hero Section -->
+     
+
+
+            <!-- ---------------------EEEEEE -->
+
+
+   <section
+          id="hero"
+          class="page-section page-section--active"
+          aria-label="Home — Projects"
+        >
+            <!-- ===== NEW PROJECTS SECTION — 3 vertical animated rows ===== -->
+            <section class="projects-section" id="projects">
+              <div class="projects-hea">
+                <!-- <h2>Projects</h2> -->
+                   <h1
+                class="text-2xl  font-bold text-gray-900 tracking-tight my-text-tilte mb-3"
+              >
+                Projects
+              </h1>
+                <!-- <span class="projects-hint">// hover to pause</span> -->
+              </div>
+
+              <div class="projects-grid">
+                <!-- Row 1 — top to bottom -->
+                <div class="projects-row projects-row--down" aria-label="Projects row 1">
+                  <div class="projects-row-track">
+                                        <article class="project-card">
+                      <div class="project-card__media">
+                        <img src="./assets/project/bri.png" alt="Vehicle Insurance Management" loading="lazy" />
+                      </div>
+                      <div class="project-card__body">
+                        <h3 class="project-card__title">Vehicle Insurance Management</h3>
+                        <p class="project-card__desc">A .NET web application for managing vehicle insurance policies — user registration, policy purchase, claims handling, and an admin panel for policy &amp; claim processing.</p>
+                        <span class="project-card__meta">
+                          Web App
+                          <span class="meta-sep">|</span>
+                          2026
+                        </span>
+                      </div>
+                    </article>
+                    <article class="project-card">
+                      <div class="project-card__media">
+                        <img src="./assets/project/bri.png" alt="Policy Admin Dashboard" loading="lazy" />
+                      </div>
+                      <div class="project-card__body">
+                        <h3 class="project-card__title">Policy Admin Dashboard</h3>
+                        <p class="project-card__desc">An admin-focused module of the Vehicle Insurance system for managing policies, reviewing claims, and tracking user activity with role-based access control.</p>
+                        <span class="project-card__meta">
+                          Admin Panel
+                          <span class="meta-sep">|</span>
+                          2026
+                        </span>
+                      </div>
+                    </article>
+                    <article class="project-card">
+                      <div class="project-card__media">
+                        <img src="./assets/project/bri.png" alt="Claims Processing Workflow" loading="lazy" />
+                      </div>
+                      <div class="project-card__body">
+                        <h3 class="project-card__title">Claims Processing Workflow</h3>
+                        <p class="project-card__desc">A structured workflow inside the Vehicle Insurance platform that lets administrators review, approve, or reject claims while keeping a complete audit trail.</p>
+                        <span class="project-card__meta">
+                          Workflow
+                          <span class="meta-sep">|</span>
+                          2026
+                        </span>
+                      </div>
+                    </article>
+                                        <article class="project-card" aria-hidden="true">
+                      <div class="project-card__media">
+                        <img src="./assets/project/bri.png" alt="Vehicle Insurance Management" loading="lazy" />
+                      </div>
+                      <div class="project-card__body">
+                        <h3 class="project-card__title">Vehicle Insurance Management</h3>
+                        <p class="project-card__desc">A .NET web application for managing vehicle insurance policies — user registration, policy purchase, claims handling, and an admin panel for policy &amp; claim processing.</p>
+                        <span class="project-card__meta">
+                          Web App
+                          <span class="meta-sep">|</span>
+                          2026
+                        </span>
+                      </div>
+                    </article>
+                    <article class="project-card" aria-hidden="true">
+                      <div class="project-card__media">
+                        <img src="./assets/project/bri.png" alt="Policy Admin Dashboard" loading="lazy" />
+                      </div>
+                      <div class="project-card__body">
+                        <h3 class="project-card__title">Policy Admin Dashboard</h3>
+                        <p class="project-card__desc">An admin-focused module of the Vehicle Insurance system for managing policies, reviewing claims, and tracking user activity with role-based access control.</p>
+                        <span class="project-card__meta">
+                          Admin Panel
+                          <span class="meta-sep">|</span>
+                          2026
+                        </span>
+                      </div>
+                    </article>
+                    <article class="project-card" aria-hidden="true">
+                      <div class="project-card__media">
+                        <img src="./assets/project/bri.png" alt="Claims Processing Workflow" loading="lazy" />
+                      </div>
+                      <div class="project-card__body">
+                        <h3 class="project-card__title">Claims Processing Workflow</h3>
+                        <p class="project-card__desc">A structured workflow inside the Vehicle Insurance platform that lets administrators review, approve, or reject claims while keeping a complete audit trail.</p>
+                        <span class="project-card__meta">
+                          Workflow
+                          <span class="meta-sep">|</span>
+                          2026
+                        </span>
+                      </div>
+                    </article>
+                  </div>
+                </div>
+
+                <!-- Row 2 — bottom to top -->
+                <div class="projects-row projects-row--up" aria-label="Projects row 2">
+                  <div class="projects-row-track">
+                                        <article class="project-card">
+                      <div class="project-card__media">
+                        <img src="./assets/project/bri.png" alt="User Registration & Auth" loading="lazy" />
+                      </div>
+                      <div class="project-card__body">
+                        <h3 class="project-card__title">User Registration &amp; Auth</h3>
+                        <p class="project-card__desc">Secure user onboarding for the Vehicle Insurance system, with account creation, login, and protected access to personal policy and claim data.</p>
+                        <span class="project-card__meta">
+                          Full-Stack
+                          <span class="meta-sep">|</span>
+                          2026
+                        </span>
+                      </div>
+                    </article>
+                    <article class="project-card">
+                      <div class="project-card__media">
+                        <img src="./assets/project/bri.png" alt="Insurance Policy Catalog" loading="lazy" />
+                      </div>
+                      <div class="project-card__body">
+                        <h3 class="project-card__title">Insurance Policy Catalog</h3>
+                        <p class="project-card__desc">A browsable catalog of available insurance plans inside the Vehicle Insurance application, with clear policy details, pricing, and purchase flow.</p>
+                        <span class="project-card__meta">
+                          Web App
+                          <span class="meta-sep">|</span>
+                          2026
+                        </span>
+                      </div>
+                    </article>
+                    <article class="project-card">
+                      <div class="project-card__media">
+                        <img src="./assets/project/bri.png" alt="Admin Policy Management" loading="lazy" />
+                      </div>
+                      <div class="project-card__body">
+                        <h3 class="project-card__title">Admin Policy Management</h3>
+                        <p class="project-card__desc">A management interface for administrators to create, update, and organize insurance policies within the Vehicle Insurance Management System.</p>
+                        <span class="project-card__meta">
+                          Admin Panel
+                          <span class="meta-sep">|</span>
+                          2026
+                        </span>
+                      </div>
+                    </article>
+                                        <article class="project-card" aria-hidden="true">
+                      <div class="project-card__media">
+                        <img src="./assets/project/bri.png" alt="User Registration & Auth" loading="lazy" />
+                      </div>
+                      <div class="project-card__body">
+                        <h3 class="project-card__title">User Registration &amp; Auth</h3>
+                        <p class="project-card__desc">Secure user onboarding for the Vehicle Insurance system, with account creation, login, and protected access to personal policy and claim data.</p>
+                        <span class="project-card__meta">
+                          Full-Stack
+                          <span class="meta-sep">|</span>
+                          2026
+                        </span>
+                      </div>
+                    </article>
+                    <article class="project-card" aria-hidden="true">
+                      <div class="project-card__media">
+                        <img src="./assets/project/bri.png" alt="Insurance Policy Catalog" loading="lazy" />
+                      </div>
+                      <div class="project-card__body">
+                        <h3 class="project-card__title">Insurance Policy Catalog</h3>
+                        <p class="project-card__desc">A browsable catalog of available insurance plans inside the Vehicle Insurance application, with clear policy details, pricing, and purchase flow.</p>
+                        <span class="project-card__meta">
+                          Web App
+                          <span class="meta-sep">|</span>
+                          2026
+                        </span>
+                      </div>
+                    </article>
+                    <article class="project-card" aria-hidden="true">
+                      <div class="project-card__media">
+                        <img src="./assets/project/bri.png" alt="Admin Policy Management" loading="lazy" />
+                      </div>
+                      <div class="project-card__body">
+                        <h3 class="project-card__title">Admin Policy Management</h3>
+                        <p class="project-card__desc">A management interface for administrators to create, update, and organize insurance policies within the Vehicle Insurance Management System.</p>
+                        <span class="project-card__meta">
+                          Admin Panel
+                          <span class="meta-sep">|</span>
+                          2026
+                        </span>
+                      </div>
+                    </article>
+                  </div>
+                </div>
+
+                <!-- Row 3 — top to bottom -->
+                <div class="projects-row projects-row--down-2" aria-label="Projects row 3">
+                  <div class="projects-row-track">
+                                        <article class="project-card">
+                      <div class="project-card__media">
+                        <img src="./assets/project/bri.png" alt="Claim Review Console" loading="lazy" />
+                      </div>
+                      <div class="project-card__body">
+                        <h3 class="project-card__title">Claim Review Console</h3>
+                        <p class="project-card__desc">A focused console for reviewing submitted insurance claims, with status tracking and decision tools for the Vehicle Insurance platform.</p>
+                        <span class="project-card__meta">
+                          Tool
+                          <span class="meta-sep">|</span>
+                          2026
+                        </span>
+                      </div>
+                    </article>
+                    <article class="project-card">
+                      <div class="project-card__media">
+                        <img src="./assets/project/bri.png" alt="Vehicle Insurance SaaS" loading="lazy" />
+                      </div>
+                      <div class="project-card__body">
+                        <h3 class="project-card__title">Vehicle Insurance SaaS</h3>
+                        <p class="project-card__desc">A SaaS-style deployment of the Vehicle Insurance Management System, designed for multi-tenant policy administration and claim handling.</p>
+                        <span class="project-card__meta">
+                          SaaS
+                          <span class="meta-sep">|</span>
+                          2026
+                        </span>
+                      </div>
+                    </article>
+                    <article class="project-card">
+                      <div class="project-card__media">
+                        <img src="./assets/project/bri.png" alt="Insurance Data Layer" loading="lazy" />
+                      </div>
+                      <div class="project-card__body">
+                        <h3 class="project-card__title">Insurance Data Layer</h3>
+                        <p class="project-card__desc">The database and data-access layer behind the Vehicle Insurance system, modelling users, policies, vehicles, and claims with consistent relations.</p>
+                        <span class="project-card__meta">
+                          Database
+                          <span class="meta-sep">|</span>
+                          2026
+                        </span>
+                      </div>
+                    </article>
+                                        <article class="project-card" aria-hidden="true">
+                      <div class="project-card__media">
+                        <img src="./assets/project/bri.png" alt="Claim Review Console" loading="lazy" />
+                      </div>
+                      <div class="project-card__body">
+                        <h3 class="project-card__title">Claim Review Console</h3>
+                        <p class="project-card__desc">A focused console for reviewing submitted insurance claims, with status tracking and decision tools for the Vehicle Insurance platform.</p>
+                        <span class="project-card__meta">
+                          Tool
+                          <span class="meta-sep">|</span>
+                          2026
+                        </span>
+                      </div>
+                    </article>
+                    <article class="project-card" aria-hidden="true">
+                      <div class="project-card__media">
+                        <img src="./assets/project/bri.png" alt="Vehicle Insurance SaaS" loading="lazy" />
+                      </div>
+                      <div class="project-card__body">
+                        <h3 class="project-card__title">Vehicle Insurance SaaS</h3>
+                        <p class="project-card__desc">A SaaS-style deployment of the Vehicle Insurance Management System, designed for multi-tenant policy administration and claim handling.</p>
+                        <span class="project-card__meta">
+                          SaaS
+                          <span class="meta-sep">|</span>
+                          2026
+                        </span>
+                      </div>
+                    </article>
+                    <article class="project-card" aria-hidden="true">
+                      <div class="project-card__media">
+                        <img src="./assets/project/bri.png" alt="Insurance Data Layer" loading="lazy" />
+                      </div>
+                      <div class="project-card__body">
+                        <h3 class="project-card__title">Insurance Data Layer</h3>
+                        <p class="project-card__desc">The database and data-access layer behind the Vehicle Insurance system, modelling users, policies, vehicles, and claims with consistent relations.</p>
+                        <span class="project-card__meta">
+                          Database
+                          <span class="meta-sep">|</span>
+                          2026
+                        </span>
+                      </div>
+                    </article>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <!-- ===== /NEW PROJECTS SECTION ===== -->
+        </section>
+
+   <section
+          id="about"
+          class="page-section page-section--scrollable bg-[#ffffff]"
+          aria-label="About & Academics"
+        >
+          <div class="min-h-screen flex flex-col px-6 py-12 lg:px-30 lg:py-16  bg-[#ffffff] backdrop-blur-sm">
+
+
+
+
+  <div class="max-w-4xl">
+            <p class="text-gray-600 text-sm mt-2 leading-relaxed my-text">
+              Hey there, I’m Abdullah
+            </p>
+
+            <br />
+            <!-- "based in Karachi" line + Theme Toggle on its right -->
+            <div class="flex items-center flex-wrap gap-3">
+              <a target="_blank" rel="noopener noreferrer" class="my-contact-li">
+                a Software Developer based in Karachi.
+              </a>
+
+              <!-- THEME TOGGLE (Sun / Moon) -->
+              <!-- <div class="theme-toggle" id="themeToggle" role="group"
+                   aria-label="Switch theme">
+                <div class="theme-toggle-slider" id="themeSlider"></div>
+                <button class="theme-toggle-btn active"
+                        onclick="setTheme('light')"
+                        aria-label="Light theme"
+                        title="Light theme">
+                  <i class="fa-solid fa-sun"></i>
+                </button>
+                <button class="theme-toggle-btn"
+                        onclick="setTheme('dark')"
+                        aria-label="Dark theme"
+                        title="Dark theme">
+                  <i class="fa-solid fa-moon"></i>
+                </button>
+              </div> -->
+            </div>
+            <!-- <br /> -->
+
+            <a target="_blank" rel="noopener noreferrer" class="my-text mt-3">
+             I specialize in .NET Core, C#, React.js, Angular.js, PHP, Laravel, and Flutter, with <br>  hands-on experience developing  REST APIs, database-driven applications,<br>  and full-stack solutions using technologies such as MySQL.
+            </a>
+            <br />
+
+            <a target="_blank" rel="noopener noreferrer" class="my-text mt-3 mb-5">
+              I enjoy turning ideas and business requirements into reliable, maintainable software <br>  while continuously improving my technical skills and staying up to date <br>  with modern development practices.
+            </a>
+
+            <div class="mb-6">
+              <h1
+                class="text-2xl  font-bold text-gray-900 tracking-tight my-text-tilte mb-3"
+              >
+                Skills
+              </h1>
+              <!-- <p class="text-gray-500 mt-1 my-text-subtilte  mb-3">Technologies & Tools I Use to Build Modern Applications</p> -->
+
+
+               <div
+              class="my-contact-links flex flex-row flex-wrap items-center gap-2 text-sm text-gray-700 mb-4"
+            >
+              <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text">
+                HTML
+                <i class="fa-brands fa-html5"></i>
+              </a>
+              <span class="contact-dot">·</span>
+              <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text">
+                Css 
+                <i class="fa-brands fa-css3"></i>
+              </a>
+              <span class="contact-dot">·</span>
+              <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text">
+                Javascript
+                <i class="fa-brands fa-js"></i>
+              </a>
+              <span class="contact-dot">·</span>
+              <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text">
+                Bootstrap 
+                <i class="fa-brands fa-bootstrap"></i>
+              </a>
+              <span class="contact-dot">·</span>
+              <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text">
+                Tailwind Css 
+                <i class="fa-brands fa-tailwind-css"></i>
+              </a>
+              <span class="contact-dot">·</span>
+              <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text">
+                React.js
+                <i class="fa-brands fa-react"></i> 
+              </a>
+              <span class="contact-dot">·</span>
+              <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text">
+                Angular.js
+                <i class="fa-brands fa-angular"></i> 
+              </a>
+              <span class="contact-dot">·</span>
+              <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text">
+                php
+                <i class="fa-brands fa-php"></i>
+              </a>
+              <span class="contact-dot">·</span>
+              <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text">
+                Laravel
+                <i class="fa-brands fa-laravel"></i>
+              </a>
+              <span class="contact-dot">·</span>
+              <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text">
+                MySQL & SQL
+                <i class="fa-solid fa-database"></i>
+              </a>
+              <span class="contact-dot">·</span>
+              <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text">
+                RESTful API
+                <i class="fa-solid fa-network-wired"></i>
+              </a>
+              <span class="contact-dot">·</span>
+              <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text">
+                Python
+                <i class="fa-brands fa-python"></i>
+              </a>
+              <span class="contact-dot">·</span>
+              <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text">
+                Dart
+                <i class="fa-brands fa-dart-lang"></i>
+              </a>
+              <span class="contact-dot">·</span>
+              <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text">
+                Flutter
+                <i class="fa-brands fa-flutter"></i>
+              </a>
+              <span class="contact-dot">·</span>
+              <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text">
+                Node.js
+                <i class="fa-brands fa-node"></i>
+              </a>
+              <span class="contact-dot">·</span>
+              <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text">
+                System Design
+                <i class="fa-solid fa-gears"></i>
+              </a>
+              <span class="contact-dot">·</span> 
+              <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text">
+                LLD & HLD
+                <i class="fa-solid fa-cubes"></i>
+              </a>
+              <span class="contact-dot">·</span> 
+              <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text">
+                Docker
+                <i class="fa-brands fa-docker"></i>
+              </a>
+              <span class="contact-dot">·</span> 
+              <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text">
+                Kubernetes
+                <i class="fa-brands fa-kubernetes"></i>
+              </a>
+              <span class="contact-dot">·</span>
+              <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text">
+                Visual Studio
+                <i class="fa-brands fa-visual-studio"></i>
+              </a>
+              <span class="contact-dot">·</span>
+              <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text">
+                Git
+                <i class="fa-brands fa-git-alt"></i>
+              </a>
+              <span class="contact-dot">·</span>
+              <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text">
+                GitHub  
+                <i class="fa-brands fa-github"></i>
+              </a>
+              <span class="contact-dot">·</span>
+              <a target="_blank" rel="noopener noreferrer" class="my-contact-li skills-text">
+                Figma  
+                <i class="fa-brands fa-figma"></i>
+              </a>
+              <!-- <span class="contact-dot">·</span> -->
+              </div>
+
+            </div>
+
+
+
+
+
+
+
+            </div>
+
+
+            <div>
+                <h1
+                class="text-2xl mb-3 mt-8 font-bold text-gray-900 tracking-tight my-text-tilte"
+              >
+                Experience
+              </h1>
+
+<section class="experience-section">
+  <div class="experience-list">
+
+    <!-- Experience 1 -->
+    <article class="experience-item ">
+      <div class="experience-header">
+        <div class="experience-logo">
+          <img src="assets/experience/novelope.png" alt="novelope Pakistan">
+        </div>
+
+        <div class="experience-heading">
+          <div class="experience-meta">
+            <h3>Software Developer Intern</h3>
+            <a href="https://novelops.com.pk/" target="_blank"
+               rel="noopener noreferrer">Novelope Pakistan</a>
+            <span class="experience-date">2025 September – Present</span>
+          </div>
+        </div>
+      </div>
+
+<div class="experience-content">
+    <p class="experience-description">
+        As a Software Developer at Novelops Consulting, I focus on
+        developing reliable, scalable, and user-friendly web applications.
+        I enjoy solving real-world problems, writing clean and maintainable
+        code, and continuously improving my technical skills to deliver
+        high-quality software solutions.
+    </p>
+    <ul>
+        <li>Develop reliable, scalable, and user-friendly web applications.</li>
+        <li>Build customized web solutions to meet diverse client needs.</li>
+        <li>Write clean, maintainable code and solve real-world problems.</li>
+        <li>Continuously improve technical skills through hands-on experience and learning.</li>
+        <li>Collaborate with teams to deliver impactful software solutions.</li>
+    </ul>
+</div>
+    </article>
+
+    <!-- Experience 2 -->
+    <article class="experience-item">
+      <div class="experience-header">
+        <div class="experience-logo">
+          <img src="assets/experience/simx.webp" alt="SimulationsX">
+        </div>
+        <div class="experience-heading">
+          <div class="experience-meta">
+            <h3>Full Stack Developer</h3>
+            <a href="http://games.simulationsx.com/" target="_blank"
+               rel="noopener noreferrer">SimulationsX</a>
+            <span class="experience-date">2025 December – Present</span>
+          </div>
+        </div>
+      </div>
+
+<div class="experience-content">
+    <p class="experience-description">
+        Worked as a Full Stack Developer at SimulationsX, contributing
+        to game development and software solutions. Developed a TOC
+        (Game of Chance) game, focusing on gameplay functionality,
+        interactive user experiences, and application logic.
+    </p>
+    <ul>
+        <li>Developed a TOC game with interactive gameplay and core game logic.</li>
+        <li>Implemented game functionality to provide a smooth and engaging user experience.</li>
+        <li>Applied software development and problem-solving skills throughout the development process.</li>
+        <li>Collaborated on development tasks to improve functionality and overall game quality.</li>
+    </ul>
+</div>
+    </article>
+
+    <!-- Experience 3 -->
+    <article class="experience-item">
+      <div class="experience-header">
+        <div class="experience-logo">
+          <img src="assets/experience/surplus.webp" alt="surplus">
+        </div>
+        <div class="experience-heading">
+          <div class="experience-meta">
+            <h3>php Laravel Developer</h3>
+            <a href="https://surplus.com.pk" target="_blank"
+               rel="noopener noreferrer">Surplus Pakistan</a>
+            <span class="experience-date">2026 March – Present</span>
+          </div>
+        </div>
+      </div>
+
+<div class="experience-content">
+    <p class="experience-description">
+        Working as a PHP / Laravel Developer at Surplus Pakistan,
+        responsible for maintaining and improving the existing
+        Surplus software. Focused on fixing bugs, ensuring reliable
+        functionality, optimizing performance, and keeping the
+        application up to date.
+    </p>
+    <ul>
+        <li>Maintain and update the existing Surplus software using PHP and Laravel.</li>
+        <li>Identify and fix bugs to ensure smooth application functionality.</li>
+        <li>Improve application performance, reliability, and maintainability.</li>
+        <li>Implement updates and resolve issues based on software requirements.</li>
+        <li>Work with databases and backend functionality to maintain data consistency.</li>
+    </ul>
+</div>
+    </article>
+
+    <!-- Experience 4 -->
+    <article class="experience-item">
+      <div class="experience-header">
+        <div class="experience-logo">
+          <img src="assets/experience/count3.png" alt="count3">
+        </div>
+        <div class="experience-heading">
+          <div class="experience-meta">
+            <h3>Software Developer</h3>
+            <a href="https://count3.pk" target="_blank"
+               rel="noopener noreferrer">Count3</a>
+            <span class="experience-date">2026 May – Present</span>
+          </div>
+        </div>
+      </div>
+
+<div class="experience-content">
+    <p class="experience-description">
+        Developed Count3, a complete full-stack software application
+        using React.js, PHP RESTful APIs, and MySQL. Responsible for
+        designing the system architecture, building interactive user
+        interfaces, developing backend services, and integrating
+        database functionality to deliver a scalable and maintainable
+        software solution.
+    </p>
+    <ul>
+        <li>Developed the complete Count3 software application using React.js, PHP, and MySQL.</li>
+        <li>Built responsive and interactive frontend components using React.js.</li>
+        <li>Designed and implemented RESTful APIs using PHP for frontend-backend communication.</li>
+        <li>Designed the MySQL database structure and integrated database operations.</li>
+        <li>Planned the system architecture and organized application components for maintainability.</li>
+        <li>Integrated frontend, backend APIs, and database functionality into a unified system.</li>
+    </ul>
+</div>
+
+    </article>
+
+  </div>
+</section>
+
+            </div>
+          </div>
+          </div>
+        </section>
+
+      </div>
+      <!-- End Work Mode Content -->
+
+      <!-- ========================================== -->
+      <!-- PLAY MODE CONTENT — Memory Sequence Game    -->
+      <!-- ========================================== -->
+      <div
+        id="content-play"
+        class="hidden min-h-screen flex flex-col items-center justify-center p-6 text-center"
+      >
+        <div class="play-shell">
+          <!-- Header -->
+          <div class="play-header">
+            <span class="play-eyebrow">// memory sequence</span>
+            <h2 class="play-title">Echo<span style="color: var(--primary-blue);">.</span></h2>
+            <p class="play-subtitle">
+              Watch the pattern, then echo it back. Each round adds one more step.
+              How long can you keep up?
+            </p>
+          </div>
+
+          <!-- Game stage -->
+          <div class="game-stage" id="gameStage">
+            <div class="game-flash" id="gameFlash"></div>
+
+            <!-- Status bar -->
+            <div class="game-statusbar">
+              <div class="game-stat">
+                <span class="game-stat-label">Round</span>
+                <span class="game-stat-value" id="gameRound">0</span>
+              </div>
+              <div class="game-status-text" id="gameStatus">Press Start</div>
+              <div class="game-stat">
+                <span class="game-stat-label">Best</span>
+                <span class="game-stat-value" id="gameBest">0</span>
+              </div>
+            </div>
+
+            <!-- Color pads -->
+            <div class="pads-grid" id="padsGrid">
+              <div class="pad pad--green"  data-color="0" aria-label="Green pad"></div>
+              <div class="pad pad--red"    data-color="1" aria-label="Red pad"></div>
+              <div class="pad pad--yellow" data-color="2" aria-label="Yellow pad"></div>
+              <div class="pad pad--blue"   data-color="3" aria-label="Blue pad"></div>
+              <div class="round-indicator">
+                <span class="ri-label">Round</span>
+                <span class="ri-value" id="roundIndicator">0</span>
+              </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="game-controls">
+              <button class="game-btn" id="gameStartBtn" onclick="gameStart()">
+                <i class="fa-solid fa-play"></i>
+                <span>Start</span>
+              </button>
+              <button class="game-btn game-btn--ghost" id="gameResetBtn" onclick="gameReset()">
+                <i class="fa-solid fa-rotate-right"></i>
+                <span>Reset</span>
+              </button>
+              <button class="game-btn game-btn--ghost" id="gameSoundBtn" onclick="gameToggleSound()" title="Toggle sound">
+                <i class="fa-solid fa-volume-high" id="gameSoundIcon"></i>
+                <span id="gameSoundLabel">Sound</span>
+              </button>
+            </div>
+
+            <!-- How to play -->
+            <p class="game-howto">
+              <strong>How to play:</strong> Watch the pads light up in sequence, then click them
+              back in the same order. One new step is added each round. Make a mistake and the game ends.
+            </p>
+          </div>
+        </div>
+      </div>
+      <!-- End Play Mode Content -->
+    </main>
+
+    <!-- ==================== JAVASCRIPT ==================== -->
+    <script>
+      // ====== Work / Play toggle ======
+      function switchMode(mode) {
+        const workContent = document.getElementById("content-work");
+        const playContent = document.getElementById("content-play");
+        const slider = document.getElementById("toggleSlider");
+        const btns = document.querySelectorAll("#modeToggle .toggle-btn");
+
+        btns.forEach((btn) => btn.classList.remove("active"));
+
+        if (mode === "work") {
+          btns[0].classList.add("active");
+          slider.style.transform = "translateX(0)";
+          workContent.classList.remove("hidden");
+          workContent.classList.add("block");
+          playContent.classList.add("hidden");
+          playContent.classList.remove("block");
+          // Reset the game when leaving play mode
+          if (typeof window.gameReset === "function") window.gameReset();
+        } else {
+          btns[1].classList.add("active");
+          slider.style.transform = "translateX(100%)";
+          workContent.classList.add("hidden");
+          workContent.classList.remove("block");
+          playContent.classList.remove("hidden");
+          playContent.classList.add("block");
+          // Game auto-starts when user enters play mode
+          if (typeof window.gameAutoStart === "function") window.gameAutoStart();
+        }
+      }
+    </script>
+
+    
+
+    <!-- ===== Mobile Sidebar Open/Close Logic ===== -->
+    <script>
+      const sidebar = document.getElementById("sidebar");
+      const backdrop = document.getElementById("sidebarBackdrop");
+      const menuBtn = document.getElementById("mobileMenuBtn");
+
+      const ICON_OPEN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>';
+      const ICON_CLOSE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
+
+      function toggleSidebar(forceState) {
+        if (!sidebar) return;
+        let open;
+        if (typeof forceState === "boolean") {
+          open = forceState;
+        } else {
+          open = !sidebar.classList.contains("sidebar-open");
+        }
+        if (open) {
+          sidebar.classList.add("sidebar-open");
+          backdrop.classList.add("sidebar-open");
+          menuBtn.setAttribute("aria-expanded", "true");
+          menuBtn.setAttribute("aria-label", "Close menu");
+          menuBtn.innerHTML = ICON_CLOSE;
+        } else {
+          sidebar.classList.remove("sidebar-open");
+          backdrop.classList.remove("sidebar-open");
+          menuBtn.setAttribute("aria-expanded", "false");
+          menuBtn.setAttribute("aria-label", "Open menu");
+          menuBtn.innerHTML = ICON_OPEN;
+        }
+      }
+
+      function closeSidebarOnMobile() {
+        if (window.innerWidth < 1024) {
+          toggleSidebar(false);
+        }
+      }
+
+      window.addEventListener("resize", () => {
+        if (window.innerWidth >= 1024) {
+          toggleSidebar(false);
+        }
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && sidebar.classList.contains("sidebar-open")) {
+          toggleSidebar(false);
+        }
+      });
+    </script>
+
+    <!-- ===== Theme Toggle Logic (light/dark) ===== -->
+    <script>
+      (function initTheme() {
+        // 1. Default = light. If user previously chose dark, apply it.
+        const saved = localStorage.getItem("theme") || "light";
+        applyTheme(saved);
+
+        // Apply theme ASAP to avoid flash
+        function applyTheme(t) {
+          document.documentElement.setAttribute("data-theme", t);
+          localStorage.setItem("theme", t);
+          const slider = document.getElementById("themeSlider");
+          const btns = document.querySelectorAll("#themeToggle .theme-toggle-btn");
+          if (!slider || !btns.length) return;
+          btns.forEach(b => b.classList.remove("active"));
+          if (t === "light") {
+            btns[0].classList.add("active");
+            slider.style.transform = "translateX(0)";
+          } else {
+            btns[1].classList.add("active");
+            slider.style.transform = "translateX(26px)";
+          }
+        }
+
+        // Expose globally for inline onclick handlers
+        window.setTheme = function (t) {
+          applyTheme(t);
+        };
+
+        // Re-apply on DOMContentLoaded in case slider wasn't ready
+        document.addEventListener("DOMContentLoaded", () => applyTheme(saved));
+      })();
+    </script>
+
+    <!-- ===== Memory Sequence Game — Echo ===== -->
+    <script>
+      (function memoryGameModule() {
+        const pads        = document.querySelectorAll(".pad");
+        const roundEl     = document.getElementById("gameRound");
+        const roundIndEl  = document.getElementById("roundIndicator");
+        const bestEl      = document.getElementById("gameBest");
+        const statusEl    = document.getElementById("gameStatus");
+        const startBtn    = document.getElementById("gameStartBtn");
+        const flashEl     = document.getElementById("gameFlash");
+        const soundIcon   = document.getElementById("gameSoundIcon");
+        const soundLabel  = document.getElementById("gameSoundLabel");
+
+        // Game state
+        let sequence = [];
+        let playerInputIndex = 0;
+        let round = 0;
+        let best = parseInt(localStorage.getItem("echoBest") || "0", 10);
+        let acceptingInput = false;
+        let playing = false;
+        let soundOn = true;
+        let audioCtx = null;
+
+        // Pad frequencies (Hz) for tones — pleasant C-major-ish scale
+        const PAD_FREQS = [329.63, 261.63, 392.00, 220.00]; // E4, C4, G4, A3
+
+        bestEl.textContent = best;
+
+        // ----- Audio -----
+        function ensureAudio() {
+          if (!audioCtx) {
+            try {
+              audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            } catch (e) { audioCtx = null; }
+          }
+          if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+        }
+        function playTone(freq, durationMs) {
+          if (!soundOn) return;
+          ensureAudio();
+          if (!audioCtx) return;
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = "sine";
+          osc.frequency.value = freq;
+          const now = audioCtx.currentTime;
+          gain.gain.setValueAtTime(0, now);
+          gain.gain.linearRampToValueAtTime(0.18, now + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + durationMs / 1000);
+          osc.connect(gain).connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + durationMs / 1000 + 0.05);
+        }
+        function playErrorTone() {
+          if (!soundOn) return;
+          ensureAudio();
+          if (!audioCtx) return;
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = "sawtooth";
+          osc.frequency.setValueAtTime(180, audioCtx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(60, audioCtx.currentTime + 0.5);
+          const now = audioCtx.currentTime;
+          gain.gain.setValueAtTime(0.18, now);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.5);
+          osc.connect(gain).connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.55);
+        }
+
+        // ----- Visuals -----
+        function lightPad(padIndex, durationMs) {
+          const pad = pads[padIndex];
+          if (!pad) return;
+          pad.classList.add("lit");
+          playTone(PAD_FREQS[padIndex], durationMs);
+          setTimeout(() => pad.classList.remove("lit"), durationMs);
+        }
+
+        function flashError() {
+          if (!flashEl) return;
+          flashEl.classList.add("flash-error");
+          setTimeout(() => flashEl.classList.remove("flash-error"), 400);
+        }
+
+        function setStatus(text, kind) {
+          if (!statusEl) return;
+          statusEl.textContent = text;
+          statusEl.classList.remove("status-watch", "status-input", "status-error");
+          if (kind) statusEl.classList.add("status-" + kind);
+        }
+
+        function updateRoundDisplay() {
+          if (roundEl) roundEl.textContent = round;
+          if (roundIndEl) roundIndEl.textContent = round;
+        }
+
+        function setPadsDisabled(disabled) {
+          pads.forEach(p => {
+            if (disabled) p.classList.add("disabled");
+            else p.classList.remove("disabled");
+          });
+        }
+
+        // ----- Game flow -----
+        function startGame() {
+          sequence = [];
+          round = 0;
+          playing = true;
+          updateRoundDisplay();
+          if (startBtn) {
+            startBtn.disabled = true;
+            startBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i><span>Playing</span>';
+          }
+          nextRound();
+        }
+
+        function nextRound() {
+          round += 1;
+          updateRoundDisplay();
+          // Add a random pad (0-3) to the sequence
+          sequence.push(Math.floor(Math.random() * 4));
+          playerInputIndex = 0;
+          acceptingInput = false;
+          setPadsDisabled(true);
+          setStatus("Watch...", "watch");
+          // Play the full sequence back, slightly faster as round increases
+          const speed = Math.max(380, 720 - (round * 18));
+          playSequence(speed);
+        }
+
+        function playSequence(stepMs) {
+          let i = 0;
+          const litDuration = Math.max(220, stepMs * 0.6);
+          function step() {
+            if (i >= sequence.length) {
+              // Done showing — accept player input
+              acceptingInput = true;
+              setPadsDisabled(false);
+              setStatus("Your turn", "input");
+              return;
+            }
+            lightPad(sequence[i], litDuration);
+            i++;
+            setTimeout(step, stepMs);
+          }
+          // small delay before sequence starts
+          setTimeout(step, 400);
+        }
+
+        function handlePadPress(padIndex) {
+          if (!acceptingInput || !playing) return;
+          // Brief press feedback
+          const pad = pads[padIndex];
+          if (!pad) return;
+          pad.classList.add("pressed");
+          setTimeout(() => pad.classList.remove("pressed"), 100);
+          lightPad(padIndex, 220);
+
+          const expected = sequence[playerInputIndex];
+          if (padIndex === expected) {
+            playerInputIndex++;
+            if (playerInputIndex >= sequence.length) {
+              // Round complete
+              acceptingInput = false;
+              setPadsDisabled(true);
+              setStatus("Nice! Next round...", "input");
+              // Update best score if needed
+              if (round > best) {
+                best = round;
+                bestEl.textContent = best;
+                localStorage.setItem("echoBest", String(best));
+              }
+              setTimeout(nextRound, 850);
+            }
+          } else {
+            // Wrong pad — game over
+            gameOver();
+          }
+        }
+
+        function gameOver() {
+          playing = false;
+          acceptingInput = false;
+          setPadsDisabled(true);
+          flashError();
+          playErrorTone();
+          const reached = round - 1; // sequence that was successfully completed
+          setStatus("Game over — Round " + Math.max(0, reached) + " cleared", "error");
+          if (startBtn) {
+            startBtn.disabled = false;
+            startBtn.innerHTML = '<i class="fa-solid fa-play"></i><span>Play again</span>';
+          }
+        }
+
+        function resetGame() {
+          sequence = [];
+          round = 0;
+          playerInputIndex = 0;
+          playing = false;
+          acceptingInput = false;
+          updateRoundDisplay();
+          setPadsDisabled(true);
+          setStatus("Press Start");
+          if (startBtn) {
+            startBtn.disabled = false;
+            startBtn.innerHTML = '<i class="fa-solid fa-play"></i><span>Start</span>';
+          }
+        }
+
+        function toggleSound() {
+          soundOn = !soundOn;
+          if (soundIcon) {
+            soundIcon.className = soundOn
+              ? "fa-solid fa-volume-high"
+              : "fa-solid fa-volume-xmark";
+          }
+          if (soundLabel) {
+            soundLabel.textContent = soundOn ? "Sound" : "Muted";
+          }
+        }
+
+        function autoStart() {
+          // Called when user switches to Play tab
+          ensureAudio();
+          if (!playing) {
+            // Reset to fresh start state (don't auto-run, let user press Start)
+            resetGame();
+          }
+        }
+
+        // ----- Wire up pad clicks -----
+        pads.forEach(pad => {
+          const idx = parseInt(pad.dataset.color, 10);
+          pad.addEventListener("click", () => handlePadPress(idx));
+        });
+
+        // ----- Pads disabled initially -----
+        setPadsDisabled(true);
+
+        // ----- Expose globally -----
+        window.gameStart      = startGame;
+        window.gameReset      = resetGame;
+        window.gameAutoStart  = autoStart;
+        window.gameToggleSound = toggleSound;
+      })();
+    </script>
+
+    <!-- ===== Page Section Switcher (Home / About) ===== -->
+    <script>
+      (function pageSectionInit() {
+        function showSection(id) {
+          const sections = document.querySelectorAll('#content-work > .page-section');
+          sections.forEach(function (s) {
+            s.classList.remove('page-section--active');
+          });
+          const target = document.getElementById(id);
+          if (target) {
+            target.classList.add('page-section--active');
+          }
+
+          // Update nav active state
+          const navLinks = document.querySelectorAll('nav ul li a');
+          navLinks.forEach(function (a) { a.classList.remove('nav-link-active'); });
+          const activeLink = document.querySelector('nav ul li a[href="#' + id + '"]');
+          if (activeLink) activeLink.classList.add('nav-link-active');
+
+          // Reset main-container scroll position
+          const main = document.querySelector('.main-container');
+          if (main) main.scrollTop = 0;
+
+          // Update URL hash without jumping
+          if (history.replaceState) {
+            history.replaceState(null, '', '#' + id);
+          }
+        }
+        window.showSection = showSection;
+
+        // On initial load: if URL has a hash, open that section
+        document.addEventListener('DOMContentLoaded', function () {
+          const hash = (window.location.hash || '#hero').replace('#', '');
+          const valid = ['hero', 'about'];
+          const target = valid.indexOf(hash) !== -1 ? hash : 'hero';
+          showSection(target);
+        });
+      })();
+    </script>
+  </body>
+</html>
+<script async src="/.netlify/scripts/hud?variant=public" data-nf-variant="public" data-netlify-site-id="78f3f256-c74b-44e2-aefa-85f608b4742e" data-app-host="app.netlify.com" data-account-tier="free"></script>
