@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mistral-style — "Strings" Interactive Tag Network</title>
+
+<!-- CDN: Google Fonts (Inter) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- CDN: GSAP for entrance animations -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { height:100%; }
+  body {
+    font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background:#f4f3f0;
+    color:#161616;
+    overflow:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ---------- Hero section ---------- */
+  .hero {
+    position:relative;
+    width:100%;
+    height:100svh;
+    min-height:560px;
+    overflow:hidden;
+    cursor:none; /* custom cursor takes over (mouse only) */
+  }
+  @media (pointer:coarse){ .hero { cursor:auto; } }
+
+  /* ---------- Strings layer (SVG) ---------- */
+  .strings-svg {
+    position:absolute; inset:0;
+    width:100%; height:100%;
+    z-index:1;
+    pointer-events:none;
+  }
+  .strings-svg g {
+    stroke:rgba(20,20,20,.14);
+    stroke-width:1;
+  }
+
+  /* ---------- Heading ---------- */
+  .title {
+    position:absolute;
+    top:8%;
+    left:0; right:0;
+    margin:0 auto;
+    width:min(94%, 1100px);
+    text-align:center;
+    font-size:clamp(30px, 4.4vw, 58px);
+    font-weight:500;
+    letter-spacing:-0.022em;
+    line-height:1.18;
+    color:#141414;
+    z-index:2;
+    pointer-events:none;
+  }
+
+  /* ---------- Pills ---------- */
+  .pill-layer {
+    position:absolute; inset:0;
+    z-index:3;
+  }
+  .pill {
+    position:absolute;
+    left:0; top:0;
+    will-change:transform;
+    cursor:none;
+    touch-action:none;
+    user-select:none;
+    -webkit-user-select:none;
+    -webkit-tap-highlight-color:transparent;
+  }
+  @media (pointer:coarse){ .pill { cursor:grab; } }
+  .pill-inner {
+    display:flex; align-items:center; gap:9px;
+    white-space:nowrap;
+    padding:11px 18px;
+    border-radius:9px;
+    font-size:clamp(12px, 1.02vw, 16.5px);
+    line-height:1;
+    transition:transform .28s cubic-bezier(.34,1.56,.64,1), box-shadow .28s ease;
+  }
+  .pill .emoji { font-size:1.12em; line-height:1; }
+
+  /* active pill: white, bold, elevated */
+  .pill.active .pill-inner {
+    background:#ffffff;
+    color:#111111;
+    font-weight:600;
+    border:1px solid rgba(0,0,0,.06);
+    box-shadow:0 1px 2px rgba(0,0,0,.05), 0 5px 16px rgba(0,0,0,.07);
+  }
+  /* inactive pill: ghost */
+  .pill:not(.active) .pill-inner {
+    background:rgba(0,0,0,.028);
+    color:#767676;
+    font-weight:450;
+    border:1px solid rgba(0,0,0,.05);
+  }
+
+  .pill:hover .pill-inner { transform:scale(1.05); }
+  .pill.dragging { z-index:40; }
+  .pill.dragging .pill-inner {
+    transform:scale(1.07);
+    box-shadow:0 3px 8px rgba(0,0,0,.08), 0 18px 40px rgba(0,0,0,.16);
+  }
+
+  /* connection dots on pill edges */
+  .pill .dot {
+    position:absolute;
+    top:50%;
+    width:6px; height:6px;
+    border-radius:50%;
+    background:#8b8b8b;
+    transform:translateY(-50%);
+
+    pointer-events:none;
+  }
+  .pill .dot.l { left:-9px; }
+  .pill .dot.r { right:-9px; }
+
+  /* ---------- Custom cursor ---------- */
+  .cursor {
+    position:fixed;
+    left:0; top:0;
+    width:13px; height:13px;
+    border-radius:50%;
+    background:#5b50e5;
+    z-index:100;
+    pointer-events:none;
+    opacity:0;
+    transition:width .22s ease, height .22s ease, background .22s ease, opacity .25s ease;
+  }
+  .cursor.hovering { width:30px; height:30px; background:rgba(91,80,229,.32); }
+  .cursor.down     { width:21px; height:21px; background:#5b50e5; }
+  @media (pointer:coarse){ .cursor { display:none; } }
+
+  /* ---------- Small screens: tighter pills ---------- */
+  @media (max-width:640px){
+    .title { top:6%; font-size:clamp(25px, 7.2vw, 34px); }
+    .pill-inner { padding:8px 13px; border-radius:7px; }
+  }
+</style>
+</head>
+<body>
+
+<section class="hero" id="hero">
+  <svg class="strings-svg" id="stringsSvg" aria-hidden="true"></svg>
+
+  <h1 class="title" id="title">No one else should hold the<br>strings to your AI</h1>
+
+  <div class="pill-layer" id="pillLayer"></div>
+</section>
+
+<div class="cursor" id="cursor"></div>
+
+<script>
+/* =========================================================
+   Mistral-style "strings" tag network
+   - Pills are spring-physics nodes (drag -> tug -> snap back)
+   - Strings = SVG lines: pill <-> pill  +  pill <-> off-screen anchors
+   - GSAP (CDN) handles the entrance animation
+   ========================================================= */
+
+const NS = 'http://www.w3.org/2000/svg';
+
+/* ---------- Configuration ----------
+   x / y   : home position in % of hero size (pill center)
+   anchors : off-screen string anchor points in % (can be < 0 or > 100)
+   links   : ids of pills this pill is stringed to                */
+/* m: {x,y} = alternate home layout used on narrow screens (< 640px) */
+const PILLS = [
+  { id:'pk',   label:'Software Development',           active:false, x:34.5, y:44, m:[12,0], anchors:[[-102,14]],                 links:['ip'] },
+  { id:'ip',   label:'🚀 Product Engineering',    active:true,  x:54,   y:44, m:[74,27], anchors:[[-6,4]],                 links:['inv','data'] },
+  { id:'inv',  label:'Full-Stack Development',                   active:false, x:69,   y:44, m:[72,36], anchors:[[106,22]],                links:['qs'] },
+  { id:'data', label:'🧠 Product Thinking',                     active:true,  x:33.5, y:52, m:[33,36], anchors:[[-6,42]],                 links:['cpd','disc'] },
+  { id:'cpd',  label:'Frontend Engineering', active:true,  x:52,   y:52, m:[52,45], anchors:[[106,4]],                 links:['qs','pai'] },
+  { id:'qs',   label:'Backend Engineering',           active:false, x:72,   y:52, m:[33,54], anchors:[[106,46]],                links:['pcb'] },
+  { id:'disc', label:'🎨 UI/UX & Figma',                   active:false, x:27,   y:60, m:[71,54], anchors:[[-6,72]],                 links:['pai'] },
+  { id:'pai',  label:'System Design · HLD/LLD',           active:true,  x:42,   y:60, m:[30,63], anchors:[[-6,108]],                links:['pcb','dl'] },
+  { id:'pcb',  label:'🔌 RESTful APIs',        active:true,  x:59.5, y:60, m:[72,63], anchors:[[106,70]],                links:['ep'] },
+  { id:'dl',   label:'🗄️ Database Engineering',              active:false, x:36,   y:68, m:[34,72], anchors:[[-6,88]],                 links:['ep'] },
+  { id:'ep',   label:'Docker · Kubernetes',       active:false, x:53,   y:68, m:[70,72], anchors:[[106,104]],                links:['dt'] },
+  { id:'dt',   label:'Quality & Scalability',            active:false, x:70,   y:68, m:[50,81], anchors:[[106,90]],       links:[] },
+];
+
+// const PILLS = [
+//   { id:'pk',   label:'Software Development',           active:false, x:34.5, y:44, m:[32,27], anchors:[[-6,14]],                 links:['ip'] },
+//   { id:'ip',   label:'🚀 Product Engineering',    active:true,  x:54,   y:44, m:[74,27], anchors:[[-6,4]],                 links:['inv','data'] },
+//   { id:'inv',  label:'Full-Stack Development',                   active:false, x:69,   y:44, m:[72,36], anchors:[[106,22]],                links:['qs'] },
+//   { id:'data', label:'🧠 Product Thinking',                     active:true,  x:33.5, y:52, m:[33,36], anchors:[[-6,42]],                 links:['cpd','disc'] },
+//   { id:'cpd',  label:'Frontend Engineering', active:true,  x:52,   y:52, m:[52,45], anchors:[[106,4]],                 links:['qs','pai'] },
+//   { id:'qs',   label:'Backend Engineering',           active:false, x:72,   y:52, m:[33,54], anchors:[[106,46]],                links:['pcb'] },
+//   { id:'disc', label:'🎨 UI/UX & Figma',                   active:false, x:27,   y:60, m:[71,54], anchors:[[-6,72]],                 links:['pai'] },
+//   { id:'pai',  label:'System Design · HLD/LLD',           active:true,  x:42,   y:60, m:[30,63], anchors:[[-6,108]],                links:['pcb','dl'] },
+//   { id:'pcb',  label:'🔌 RESTful APIs',        active:true,  x:59.5, y:60, m:[72,63], anchors:[[106,70]],                links:['ep'] },
+//   { id:'dl',   label:'🗄️ Database Engineering',              active:false, x:36,   y:68, m:[34,72], anchors:[[-6,88]],                 links:['ep'] },
+//   { id:'ep',   label:'Docker · Kubernetes',       active:false, x:53,   y:68, m:[70,72], anchors:[[106,104]],                links:['dt'] },
+//   { id:'dt',   label:'Quality & Scalability',            active:false, x:70,   y:68, m:[50,81], anchors:[[106,90]],       links:[] },
+// ];
+
+
+
+
+
+/* ----
+
+------ Physics tuning ---------- */
+const PH = {
+  homeK:   0.028,  // spring pull toward home position
+  linkK:   0.012,  // spring between stringed pills
+  damp:    0.86,   // velocity damping
+  dragLerp:0.35,   // how tightly a dragged pill follows the pointer
+  maxV:    42      // velocity clamp
+};
+
+/* ---------- DOM refs ---------- */
+const hero   = document.getElementById('hero');
+const svg    = document.getElementById('stringsSvg');
+const layer  = document.getElementById('pillLayer');
+const cursor = document.getElementById('cursor');
+
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+
+/* ---------- Build nodes ---------- */
+let W = 0, H = 0;
+const nodes  = [];
+const byId   = {};
+const strings = [];
+
+PILLS.forEach(cfg => {
+  const el = document.createElement('div');
+  el.className = 'pill' + (cfg.active ? ' active' : '');
+  el.innerHTML =
+    '<div class="pill-inner">' +
+      (cfg.label.match(/^\S+\s/) && /\p{Emoji}/u.test(cfg.label) ?
+        '<span class="emoji">' + cfg.label.split(' ')[0] + '</span><span>' + cfg.label.split(' ').slice(1).join(' ') + '</span>'
+        : '<span>' + cfg.label + '</span>') +
+    '</div>' +
+    '<span class="dot l"></span><span class="dot r"></span>';
+  layer.appendChild(el);
+
+  const node = {
+    cfg, el,
+    inner: el.querySelector('.pill-inner'),
+    w:0, h:0,
+    hx:0, hy:0,          // home
+    x:0, y:0, px:0, py:0, // position + previous
+    vx:0, vy:0
+  };
+  nodes.push(node);
+  byId[cfg.id] = node;
+});
+
+/* ---------- Build strings (deduplicated links + anchors) ---------- */
+const g = document.createElementNS(NS, 'g');
+svg.appendChild(g);
+
+function addString(p1fn, p2fn) {
+  const line = document.createElementNS(NS, 'line');
+  g.appendChild(line);
+  strings.push({ line, p1:p1fn, p2:p2fn });
+}
+
+const seen = new Set();
+PILLS.forEach(cfg => {
+  const n = byId[cfg.id];
+  cfg.anchors.forEach(a => {
+    addString(
+      () => ({ x:a[0] / 100 * W, y:a[1] / 100 * H }),
+      () => dotPos(n, (a[0] / 100 * W) < n.x ? 'left' : 'right')
+    );
+  });
+  cfg.links.forEach(id => {
+    const key = [cfg.id, id].sort().join('|');
+    if (seen.has(key)) return;
+    seen.add(key);
+    const m = byId[id];
+    addString(
+      () => n.x <= m.x ? dotPos(n,'right') : dotPos(n,'left'),
+      () => n.x <= m.x ? dotPos(m,'left')  : dotPos(m,'right')
+    );
+  });
+});
+
+function dotPos(n, side) {
+  return side === 'left'
+    ? { x: n.x - n.w / 2 - 6, y: n.y }
+    : { x: n.x + n.w / 2 + 6, y: n.y };
+}
+
+/* link spring metadata (rest length at home) */
+const links = [];
+PILLS.forEach(cfg => cfg.links.forEach(id => {
+  const key = [cfg.id, id].sort().join('|');
+  if (seen.has('L' + key)) return;
+  seen.add('L' + key);
+  links.push({ a: byId[cfg.id], b: byId[id], rest: 0 });
+}));
+
+/* ---------- Measure & layout ---------- */
+function layout(soft) {
+  W = hero.clientWidth;
+  H = hero.clientHeight;
+
+  const mobile = W < 640;
+  nodes.forEach(n => {
+    const home = (mobile && n.cfg.m) ? { x:n.cfg.m[0], y:n.cfg.m[1] } : n.cfg;
+    n.w = n.el.offsetWidth;
+    n.h = n.el.offsetHeight;
+    n.hx = home.x / 100 * W;
+    n.hy = home.y / 100 * H;
+    if (soft) { n.px = n.x = n.hx; n.py = n.y = n.hy; n.vx = n.vy = 0; }
+    n.el.style.transform = `translate3d(${n.x - n.w/2}px, ${n.y - n.h/2}px, 0)`;
+  });
+
+  links.forEach(l => {
+    l.rest = Math.hypot(l.b.hx - l.a.hx, l.b.hy - l.a.hy);
+  });
+}
+
+layout(true);
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(() => layout(true));
+}
+window.addEventListener('resize', () => layout(true));
+
+/* ---------- Drag interaction ---------- */
+const drag = { node:null, tx:0, ty:0, lx:0, ly:0 };
+
+nodes.forEach(n => {
+  n.el.addEventListener('pointerdown', e => {
+    if (drag.node) return;
+    e.preventDefault();
+    drag.node = n;
+    drag.lx = e.clientX; drag.ly = e.clientY;
+    drag.tx = e.clientX - hero.getBoundingClientRect().left;
+    drag.ty = e.clientY - hero.getBoundingClientRect().top;
+    n.el.classList.add('dragging');
+    cursor.classList.add('down');
+    n.el.setPointerCapture(e.pointerId);
+  });
+});
+
+window.addEventListener('pointermove', e => {
+  if (!drag.node) return;
+  drag.lx = e.clientX; drag.ly = e.clientY;
+  const r = hero.getBoundingClientRect();
+  drag.tx = clamp(e.clientX - r.left, W * .05, W * .95);
+  drag.ty = clamp(e.clientY - r.top,  H * .15, H * .94);
+});
+
+window.addEventListener('pointerup', () => {
+  if (!drag.node) return;
+  const n = drag.node;
+  n.el.classList.remove('dragging');
+  cursor.classList.remove('down');
+  drag.node = null;
+});
+
+/* ---------- Custom cursor ---------- */
+let cx = -100, cy = -100, ctx = -100, cty = -100;
+window.addEventListener('pointermove', e => {
+  ctx = e.clientX; cty = e.clientY;
+  cursor.style.opacity = 1;
+});
+document.addEventListener('pointerleave', () => cursor.style.opacity = 0);
+document.addEventListener('mouseenter',   () => cursor.style.opacity = 1);
+nodes.forEach(n => {
+  n.el.addEventListener('pointerenter', () => cursor.classList.add('hovering'));
+  n.el.addEventListener('pointerleave', () => cursor.classList.remove('hovering'));
+});
+
+/* ---------- Physics + render loop ---------- */
+function tick() {
+  /* spring forces */
+  nodes.forEach(n => {
+    if (n === drag.node) return;
+    n.vx += (n.hx - n.x) * PH.homeK;
+    n.vy += (n.hy - n.y) * PH.homeK;
+    n.vx *= PH.damp;
+    n.vy *= PH.damp;
+  });
+
+  /* pill <-> pill string springs (tugs propagate through the network) */
+  links.forEach(l => {
+    let dx = l.b.x - l.a.x, dy = l.b.y - l.a.y;
+    const d = Math.hypot(dx, dy) || 1;
+    const f = (d - l.rest) * PH.linkK;
+    const fx = dx / d * f, fy = dy / d * f;
+    if (l.a !== drag.node) { l.a.vx += fx; l.a.vy += fy; }
+    if (l.b !== drag.node) { l.b.vx -= fx; l.b.vy -= fy; }
+  });
+
+  /* integrate */
+  nodes.forEach(n => {
+    n.px = n.x; n.py = n.y;
+    if (n === drag.node) {
+      n.x += (drag.tx - n.x) * PH.dragLerp;
+      n.y += (drag.ty - n.y) * PH.dragLerp;
+      n.vx = (n.x - n.px) * .6;   // remember motion for the release fling
+      n.vy = (n.y - n.py) * .6;
+    } else {
+      n.vx = clamp(n.vx, -PH.maxV, PH.maxV);
+      n.vy = clamp(n.vy, -PH.maxV, PH.maxV);
+      n.x += n.vx;
+      n.y += n.vy;
+    }
+  });
+
+  /* keep pills inside the stage */
+  nodes.forEach(n => {
+    n.x = clamp(n.x, W * .04, W * .96);
+    n.y = clamp(n.y, H * .15, H * .95);
+  });
+
+  /* render pills */
+  nodes.forEach(n => {
+    n.el.style.transform = `translate3d(${n.x - n.w/2}px, ${n.y - n.h/2}px, 0)`;
+  });
+
+  /* render strings */
+  strings.forEach(s => {
+    const p = s.p1(), q = s.p2();
+    s.line.setAttribute('x1', p.x.toFixed(1));
+    s.line.setAttribute('y1', p.y.toFixed(1));
+    s.line.setAttribute('x2', q.x.toFixed(1));
+    s.line.setAttribute('y2', q.y.toFixed(1));
+  });
+
+  /* custom cursor follows with slight lag */
+  cx += (ctx - cx) * .32;
+  cy += (cty - cy) * .32;
+  cursor.style.transform = `translate(${cx}px, ${cy}px) translate(-50%, -50%)`;
+
+  requestAnimationFrame(tick);
+}
+tick();
+
+/* ---------- Entrance animation (GSAP via CDN) ---------- */
+if (window.gsap) {
+  gsap.from('#title', { y:26, opacity:0, duration:.9, ease:'power3.out' });
+  gsap.from('.pill-inner', {
+    scale:.4, opacity:0, y:14,
+    duration:.7, ease:'back.out(1.7)',
+    stagger:.055, delay:.3,
+    clearProps:'transform,opacity'
+  });
+  gsap.from(strings.map(s => s.line), {
+    opacity:0, duration:1.1, delay:.85, ease:'power2.out', stagger:.012
+  });
+}
+</script>
+</body>
+</html>
