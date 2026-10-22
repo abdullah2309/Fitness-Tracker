@@ -9,12 +9,17 @@
     <title>Abdullah | Software Developer & Full-Stack Developer</title>
 
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link rel="stylesheet" href="./assets/css/main.css" />
+    <!-- <link rel="stylesheet" href="./assets/css/main.css" /> -->
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Lenis smooth scroll — consistent across all systems -->
+    <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+    <!-- GSAP for entrance animations -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 
     <style>
       :root, [data-theme="light"] {
@@ -252,7 +257,7 @@
       .projects-section .projects-header h1, .projects-section .projects-header h2 { font-size: 22px; font-weight: 700; color: var(--text-dark); letter-spacing: -0.4px; margin: 0; }
       .projects-section .projects-header .projects-hint { font-family: "Space Mono", monospace; font-size: 11px; letter-spacing: 1.5px; color: var(--text-muted); text-transform: uppercase; }
       .projects-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; flex: 1 1 auto; min-height: 0; overflow: hidden; }
-      .projects-row { position: relative; overflow: hidden; border-radius: 14px; background: transparent; min-height: 0; mask-image: linear-gradient(to bottom, transparent 0, #000 18px, #000 calc(100% - 18px), transparent 100%); -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 18px, #000 calc(100% - 18px), transparent 100%); }
+      .projects-row { position: relative; overflow: hidden; background: transparent; min-height: 0;}
       .projects-row-track { display: flex; flex-direction: column; gap: 18px; will-change: transform; transform: translate3d(0, 0, 0); backface-visibility: hidden; -webkit-backface-visibility: hidden; }
       .projects-row--down .projects-row-track { animation: projDown 38s linear infinite; }
       .projects-row--up .projects-row-track { animation: projUp 38s linear infinite; }
@@ -291,7 +296,7 @@
 
       .experience-item .experience-content { display: block !important; }
       .experience-item:not(.active) .experience-content { display: block !important; }
-      .experience-item:not(.active) { padding-bottom: 12px; }
+      /* .experience-item:not(.active) { padding-bottom: 12px; } */
       .experience-item:not(.active) .experience-description { margin-bottom: 10px; }
       .experience-toggle { display: none !important; }
 
@@ -321,6 +326,23 @@
       .about-card__title { font-size: 13px; font-weight: 600; color: var(--text-dark); margin: 0 0 6px; letter-spacing: -0.2px; }
       .about-card__text { font-size: 12px; line-height: 1.6; color: var(--text-muted); margin: 0; }
 
+      /* ---- Illustration image variant of .fx-art (raster images) ---- */
+      .fx-art.fx-art--img { background: var(--bg-card-alt); }
+      .fx-art.fx-art--img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1), filter 0.4s ease, opacity 0.4s ease;
+      }
+      .about-card:hover .fx-art--img img { transform: scale(1.04); }
+      /* Dark theme: invert + hue-rotate keeps line-art readable on dark card bg */
+      [data-theme="dark"] .fx-art.fx-art--img img {
+        filter: invert(1) hue-rotate(180deg) brightness(0.92) contrast(0.95);
+        opacity: 0.9;
+      }
+      [data-theme="dark"] .about-card:hover .fx-art--img img { opacity: 1; }
+
       .about-section-header { display: flex; align-items: baseline; gap: 12px; margin: 0 0 18px; padding-bottom: 10px; border-bottom: 1px solid var(--border-light); }
       .about-section-header__index { font-family: "Space Mono", monospace; font-size: 11px; color: var(--primary-blue); letter-spacing: 1px; font-weight: 600; }
       .about-section-header__title { font-size: 20px; font-weight: 700; color: var(--text-dark); margin: 0; letter-spacing: -0.4px; }
@@ -333,16 +355,16 @@
       [data-theme="dark"] .about-skill-chip { color: #c5c9d3; }
 
       .experience-section { position: relative; padding: 8px 0 0; }
-      .experience-list { position: relative; padding-left: 32px; }
-      .experience-list::before { content: ""; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 2px; background: linear-gradient(to bottom, var(--primary-blue) 0%, var(--border-light) 50%, transparent 100%); }
-      .experience-item { position: relative; padding: 0 0 26px; border-bottom: none; }
+      .experience-list { position: relative;  }
+      /* .experience-list::before { content: ""; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 2px; background: linear-gradient(to bottom, var(--primary-blue) 0%, var(--border-light) 50%, transparent 100%); } */
+      .experience-item { position: relative; padding: 0 0 0px; border-bottom: none; }
       .experience-item:last-child { padding-bottom: 0; }
-      .experience-item::before { content: ""; position: absolute; left: -32px; top: 18px; width: 16px; height: 16px; border-radius: 50%; background: var(--bg-card); border: 2px solid var(--primary-blue); z-index: 2; transition: all 0.3s ease; }
-      .experience-item::after { content: ""; position: absolute; left: -28px; top: 22px; width: 8px; height: 8px; border-radius: 50%; background: var(--primary-blue); z-index: 3; transition: all 0.3s ease; }
-      .experience-item:hover::before { transform: scale(1.2); box-shadow: 0 0 0 6px rgba(24, 62, 235, 0.10); }
-      .experience-item:hover::after { transform: scale(0.7); }
-      .experience-header { display: flex; align-items: flex-start; gap: 14px; padding: 16px 18px; background: var(--bg-card); border: 1px solid var(--border-light); border-radius: 12px 12px 0 0; border-bottom: 1px solid var(--border-light); transition: border-color 0.3s ease; }
-      .experience-item:hover .experience-header { border-color: var(--primary-blue); }
+      /* .experience-item::before { content: ""; position: absolute; left: -32px; top: 18px; width: 16px; height: 16px; border-radius: 50%; background: var(--bg-card); border: 2px solid var(--primary-blue); z-index: 2; transition: all 0.3s ease; } */
+      /* .experience-item::after { content: ""; position: absolute; left: -28px; top: 22px; width: 8px; height: 8px; border-radius: 50%; background: var(--primary-blue); z-index: 3; transition: all 0.3s ease; } */
+      /* .experience-item:hover::before { transform: scale(1.2); box-shadow: 0 0 0 6px rgba(24, 62, 235, 0.10); }
+      .experience-item:hover::after { transform: scale(0.7); } */
+      .experience-header { display: flex; align-items: flex-start; gap: 14px; padding: 16px 18px; background: var(--bg-card); border: 1px solid var(--border-light); border-radius: 0px; border-bottom: none; transition: border-color 0.3s ease; }
+      /* .experience-item:hover .experience-header { border-color: var(--primary-blue); } */
       .experience-logo { width: 40px; height: 40px; flex: 0 0 40px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid var(--border-light); border-radius: 10px; background: var(--bg-card); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04); }
       [data-theme="dark"] .experience-logo { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); }
       .experience-logo img { width: 100%; height: 100%; object-fit: contain; padding: 4px; }
@@ -351,8 +373,8 @@
       .experience-meta h3 { margin: 0; font-size: 14px; letter-spacing: -0.2px; font-weight: 600; color: var(--text-dark); line-height: 1.3; }
       .experience-meta a { margin: 0; color: var(--text-muted); font-size: 12px; text-decoration: underline; text-decoration-color: var(--border-soft); text-underline-offset: 3px; transition: color 0.2s ease; font-weight: 500; }
       .experience-meta a:hover { color: var(--primary-blue); text-decoration-color: var(--primary-blue); }
-      .experience-date { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 6px; background: var(--bg-card-alt); border: 1px solid var(--border-light); color: var(--text-dark); font-size: 10.5px; font-weight: 500; white-space: nowrap; font-family: "Space Mono", monospace; letter-spacing: 0.2px; }
-      .experience-date::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--primary-blue); display: inline-block; animation: expPulse 2.5s ease-in-out infinite; }
+      .experience-date { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 6px; background: var(--bg-card-alt); border: 1px solid var(--border-light); color: var(--text-dark); font-size: 10.5px; font-weight: 500; white-space: nowrap;  letter-spacing: 0.2px; }
+      /* .experience-date::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--primary-blue); display: inline-block; animation: expPulse 2.5s ease-in-out infinite; } */
       @keyframes expPulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.8); } }
       .experience-content { margin-left: 0; padding: 14px 18px 16px; background: var(--bg-card); border: 1px solid var(--border-light); border-top: none; border-radius: 0 0 12px 12px; overflow: hidden; }
       .experience-description { margin: 0 0 12px; color: var(--text-gray); font-size: 13px; line-height: 1.7; }
@@ -362,7 +384,7 @@
       .experience-content li::before { content: ""; position: absolute; left: 0; top: 7px; width: 12px; height: 1px; background: var(--primary-blue); }
       .experience-content li:hover { color: var(--text-dark); }
       .experience-item .experience-header, .experience-item .experience-content { transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; }
-      .experience-item:hover .experience-header, .experience-item:hover .experience-content { box-shadow: 0 8px 24px rgba(24, 62, 235, 0.06); }
+      /* .experience-item:hover .experience-header, .experience-item:hover .experience-content { box-shadow: 0 8px 24px rgba(24, 62, 235, 0.06); } */
       [data-theme="dark"] .experience-item:hover .experience-header, [data-theme="dark"] .experience-item:hover .experience-content { box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4); }
 
       @media (max-width: 1023px) { .about-cards { grid-template-columns: repeat(2, 1fr); } .about-hero__name { font-size: 32px; } }
@@ -374,10 +396,69 @@
 /* ===== enhancements (scroll text, About card art, easter eggs) ===== */
 /* enhancements.css — add-on layer. Uses only the existing theme variables. */
 
-/* 1. Scroll-driven headline ------------------------------------------- */
-.fx-word {
-  color: var(--text-muted);
-  color: color-mix(in srgb, var(--primary-blue) calc(var(--p, 0) * 100%), var(--text-muted));
+/* 1. Scroll-driven headline (line-by-line color wipe) ----------------- */
+/* Behaviour:
+   - The headline paragraph is broken into line boxes (by JS) so each
+     visual line gets its own gradient-fill animation.
+   - While the headline is in view and we're at the top of #about, user
+     scroll is "captured" — the page does NOT scroll. Instead, each
+     scroll tick advances --scroll-fill from 0 to 1 LINE BY LINE:
+       Line 1 fills first (its color goes gray → dark blue),
+       then Line 2 starts,
+       then Line 3, etc.
+   - When the LAST line reaches --scroll-fill = 1, the scroll lock is
+     released and the page begins to scroll normally.
+   - The hover behaviour on the headline still works: hovering the
+     paragraph fills every line with dark blue at once.
+   - The .se-highlight span keeps its icon-reveal hover behaviour. */
+.fx-word { color: inherit; }
+
+/* Container that holds the wrapped lines (each line is a .hl-line span). */
+#about .hover-p .my-text-tilte2.fx-scrolltext-ready {
+  /* Make this a block so its inline children (.hl-line) can wrap onto
+     separate visual lines without affecting layout outside the span. */
+  display: inline-block;
+  /* Transparent fill — the gradient shows through via background-clip:text */
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+#about .hover-p .my-text-tilte2.fx-scrolltext-ready .hl-line {
+  display: block;          /* each line on its own row */
+  white-space: normal;
+  /* Two-stop gradient per line — dark blue (left, scrolled portion) +
+     default text color (right, unscrolled portion). The middle stops
+     slide based on the per-line --line-fill (0..1), producing a
+     left-to-right color wipe that completes line-by-line. */
+  background-image: linear-gradient(
+    to right,
+    #1d4ed8 0%,
+    #1d4ed8 calc(var(--line-fill, 0) * 100%),
+    var(--text-muted, #555555) calc(var(--line-fill, 0) * 100%),
+    var(--text-muted, #555555) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  transition: background-image 0.05s linear;
+  line-height: 1.5;
+}
+/* On hover of the parent .my-text-tilte2, fill every line at once. */
+#about .hover-p .my-text-tilte2.fx-scrolltext-ready:hover .hl-line {
+  background-image: linear-gradient(to right, #1d4ed8, #1d4ed8) !important;
+}
+/* Dark theme fallback uses theme variables for the "default" gray end. */
+[data-theme="dark"] #about .hover-p .my-text-tilte2.fx-scrolltext-ready .hl-line {
+  background-image: linear-gradient(
+    to right,
+    var(--primary-blue) 0%,
+    var(--primary-blue) calc(var(--line-fill, 0) * 100%),
+    var(--text-muted, #7a7f8c) calc(var(--line-fill, 0) * 100%),
+    var(--text-muted, #7a7f8c) 100%
+  );
+}
+[data-theme="dark"] #about .hover-p .my-text-tilte2.fx-scrolltext-ready:hover .hl-line {
+  background-image: linear-gradient(to right, var(--primary-blue), var(--primary-blue)) !important;
 }
 
 /* 3. About cards: art, entrance, hover ---------------------------------- */
@@ -483,7 +564,7 @@
 .about-card.fx-in .about-card__text  { transition-delay: calc(var(--d, 0ms) + 650ms); }
 
 /* 4. Experience: scroll-linked timeline -------------------------------- */
-.fx-line {
+/* .fx-line {
   position: absolute;
   left: 7px;
   top: 8px;
@@ -505,11 +586,11 @@
   border-radius: 50%;
   background: var(--primary-blue);
   box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary-blue) 18%, transparent);
-}
+} */
 .experience-list.fx-armed .experience-item { opacity: calc(0.5 + 0.5 * var(--f, 1)); }
 /* nodes wake up as the line reaches them */
-.experience-list.fx-armed .experience-item::before { border-color: var(--border-soft); }
-.experience-list.fx-armed .experience-item::after { background: var(--border-soft); }
+/* .experience-list.fx-armed .experience-item::before { border-color: var(--border-soft); } */
+/* .experience-list.fx-armed .experience-item::after { background: var(--border-soft); } */
 .experience-list.fx-armed .experience-item.fx-on::before { border-color: var(--primary-blue); }
 .experience-list.fx-armed .experience-item.fx-on::after { background: var(--primary-blue); }
 /* reveal */
@@ -689,43 +770,38 @@
   /* ===== Hover effects — ONLY in #about ===== */
   #about .hover-p { position: relative; }
 
-  /* Text: default state */
+  /* Text: default state — base styling for the headline.
+     The .fx-scrolltext-ready class (added by JS) takes over the
+     background/color and applies the sliding color-wipe effect.
+     Without that class (e.g. before JS runs), the headline just looks
+     like normal text. */
   #about .hover-p .my-text-tilte2 {
     cursor: default;
     transition: color .2s ease, background-size .2s ease;
-    background-image: linear-gradient(#dbeafe, #dbeafe);
-    background-repeat: no-repeat;
-    background-position: 0 100%;
-    background-size: 0% 100%;
-    border-radius: 3px;
-        line-height: 44px !important;
+    line-height: 44px !important;
     -webkit-box-decoration-break: clone;
             box-decoration-break: clone;
   }
 
     .my-text-tilte2-main:hover  my-text-tilte2{
     color: #1d4ed8;
-    background-size: 100% 100%;
   }
-  /* Text: hover state */
+  /* Text: hover state — overridden by .fx-scrolltext-ready:hover (below)
+     to use the sliding gradient instead of the older background-size trick. */
   #about .hover-p .my-text-tilte2:hover {
     color: #1d4ed8;
-    background-size: 100% 100%;
   }
 
 
     #about .hover-p .my-text-tilte2:hover {
     color: #1d4ed8;
-    background-size: 100% 100%;
   }
 
       #about .hover-p .my-text-tilte2-main:hover {
     color: #1d4ed8;
-    background-size: 100% 100%;
   }
     .my-text-tilte2-main:hover  my-text-tilte2{
     color: #1d4ed8;
-    background-size: 100% 100%;
   }
   /* Icon + Badge: default hidden */
   #about .hover-icon,
@@ -757,6 +833,719 @@
   /* Hover par instantly show (no animation) */
   #about .hover-p .my-text-tilte2:hover ~ .hover-icon  { display: block; }
   #about .hover-p .my-text-tilte2:hover ~ .hover-badge { display: inline-block; }
+
+      /* ====================================================== */
+      /* ======  ICON REVEAL HOVER ANIMATIONS  ================ */
+      /* ====================================================== */
+
+      /* --- Work/Play toggle icon reveal (ACTIVE tab only, rounded bottom-to-top emergence) --- */
+      #modeToggle { overflow: visible; }
+      .toggle-btn-icon-reveal {
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 4px;
+        opacity: 0;
+        pointer-events: none;
+        z-index: 5;
+        margin-bottom: -2px;
+        transition: opacity 0.3s ease;
+      }
+      .toggle-btn-icon-reveal i {
+        font-size: 12px;
+        color: var(--primary-blue);
+        opacity: 0;
+        /* Start INSIDE the button area (translateY positive) so they look like they emerge from behind */
+        transform: translate(0, 14px) scale(0.3) rotate(0deg);
+        transition: opacity 0.45s ease, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      /* Only the ACTIVE tab reveals icons when ANY part of the #modeToggle is hovered */
+      #modeToggle:hover .toggle-btn.active .toggle-btn-icon-reveal { opacity: 1; }
+      #modeToggle:hover .toggle-btn.active .toggle-btn-icon-reveal i { opacity: 0.85; }
+      /* Rounded fan-out: each icon curves up & outward at a different angle, staggered */
+      #modeToggle:hover .toggle-btn.active .toggle-btn-icon-reveal i:nth-child(1) {
+        transform: translate(-22px, -12px) scale(1) rotate(-14deg);
+        transition-delay: 0.04s;
+      }
+      #modeToggle:hover .toggle-btn.active .toggle-btn-icon-reveal i:nth-child(2) {
+        transform: translate(-11px, -18px) scale(1) rotate(-6deg);
+        transition-delay: 0.09s;
+      }
+      #modeToggle:hover .toggle-btn.active .toggle-btn-icon-reveal i:nth-child(3) {
+        transform: translate(0, -16px) scale(1) rotate(0deg);
+        transition-delay: 0.14s;
+      }
+      #modeToggle:hover .toggle-btn.active .toggle-btn-icon-reveal i:nth-child(4) {
+        transform: translate(11px, -19px) scale(1) rotate(6deg);
+        transition-delay: 0.19s;
+      }
+      #modeToggle:hover .toggle-btn.active .toggle-btn-icon-reveal i:nth-child(5) {
+        transform: translate(22px, -17px) scale(1) rotate(14deg);
+        transition-delay: 0.24s;
+      }
+
+      /* --- "Software Engineer" highlight + icon reveal --- */
+      .se-highlight {
+        position: relative;
+        display: inline;
+        /* Visual highlight removed per user request.
+           Only positioning is kept so the hover icon reveal still works. */
+        cursor: default;
+      }
+      .se-icon-reveal {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        gap: 8px;
+        pointer-events: none;
+        z-index: 0;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        white-space: nowrap;
+      }
+      .se-icon-reveal i {
+        font-size: 16px;
+        color: var(--primary-blue);
+        opacity: 0;
+        transform: translateY(0) scale(0.3);
+        transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+      }
+      .se-highlight:hover .se-icon-reveal { opacity: 1; }
+      .se-highlight:hover .se-icon-reveal i { opacity: 0.7; transform: translateY(-28px) scale(1); }
+      .se-highlight:hover .se-icon-reveal i:nth-child(1) { transition-delay: 0.05s; transform: translate(-22px, -28px) scale(1) rotate(-8deg); }
+      .se-highlight:hover .se-icon-reveal i:nth-child(2) { transition-delay: 0.12s; transform: translate(-8px, -32px) scale(1) rotate(5deg); }
+      .se-highlight:hover .se-icon-reveal i:nth-child(3) { transition-delay: 0.19s; transform: translate(8px, -32px) scale(1) rotate(-3deg); }
+      .se-highlight:hover .se-icon-reveal i:nth-child(4) { transition-delay: 0.26s; transform: translate(22px, -28px) scale(1) rotate(7deg); }
+      /* Floating while hovered */
+      .se-highlight:hover .se-icon-reveal i:nth-child(1) { animation: seFloat1 2.5s ease-in-out 0.35s infinite; }
+      .se-highlight:hover .se-icon-reveal i:nth-child(2) { animation: seFloat2 2.8s ease-in-out 0.35s infinite; }
+      .se-highlight:hover .se-icon-reveal i:nth-child(3) { animation: seFloat3 2.2s ease-in-out 0.35s infinite; }
+      .se-highlight:hover .se-icon-reveal i:nth-child(4) { animation: seFloat1 3.0s ease-in-out 0.35s infinite; }
+      @keyframes seFloat1 { 0%,100% { transform: translate(-22px, -28px) scale(1) rotate(-8deg); } 50% { transform: translate(-24px, -34px) scale(1.05) rotate(-4deg); } }
+      @keyframes seFloat2 { 0%,100% { transform: translate(-8px, -32px) scale(1) rotate(5deg); } 50% { transform: translate(-6px, -38px) scale(1.05) rotate(8deg); } }
+      @keyframes seFloat3 { 0%,100% { transform: translate(8px, -32px) scale(1) rotate(-3deg); } 50% { transform: translate(10px, -36px) scale(1.05) rotate(1deg); } }
+
+      /* Reduced motion */
+      @media (prefers-reduced-motion: reduce) {
+        .toggle-btn-icon-reveal, .se-icon-reveal { transition: none; }
+        #modeToggle:hover .toggle-btn.active .toggle-btn-icon-reveal i,
+        .se-highlight:hover .se-icon-reveal i { animation: none !important; }
+      }
+
+
+
+      /* --- "Software Engineer" highlight + icon reveal (FIXED) --- */
+.se-highlight {
+  position: relative;
+  display: inline-block;
+  /* Visual highlight removed per user request — keeps the same text styling
+     as surrounding text. Only the positioning (for hover icon reveal) is kept. */
+  cursor: default;
+  z-index: 1;
+  vertical-align: baseline;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+.se-highlight:hover {
+  /* Hover highlight removed (no background/border-radius), but z-index
+     bumped so the icon-reveal stays above the surrounding text. */
+  z-index: 10;
+}
+
+.se-icon-reveal {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 4px;
+  pointer-events: none;
+  z-index: 30;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  white-space: nowrap;
+  margin-bottom: -2px;
+}
+
+.se-icon-reveal i {
+  font-size: 12px;
+  color: var(--primary-blue);
+  opacity: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.10);
+  /* Start INSIDE the highlight (positive Y) so they look like they emerge from behind */
+  transform: translate(0, 14px) scale(0.3) rotate(0deg);
+  transition: opacity 0.45s ease, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.se-highlight:hover .se-icon-reveal { opacity: 1; }
+
+/* Rounded fan-out: each icon curves up & outward at a different angle, staggered */
+.se-highlight:hover .se-icon-reveal i:nth-child(1) {
+  transform: translate(-26px, -24px) scale(1) rotate(-14deg);
+  transition-delay: 0.04s;
+}
+.se-highlight:hover .se-icon-reveal i:nth-child(2) {
+  transform: translate(-9px, -30px) scale(1) rotate(-6deg);
+  transition-delay: 0.10s;
+}
+.se-highlight:hover .se-icon-reveal i:nth-child(3) {
+  transform: translate(9px, -30px) scale(1) rotate(6deg);
+  transition-delay: 0.16s;
+}
+.se-highlight:hover .se-icon-reveal i:nth-child(4) {
+  transform: translate(26px, -24px) scale(1) rotate(14deg);
+  transition-delay: 0.22s;
+}
+
+/* Floating while hovered */
+.se-highlight:hover .se-icon-reveal i:nth-child(1) { animation: seFloat1 2.5s ease-in-out 0.55s infinite; }
+.se-highlight:hover .se-icon-reveal i:nth-child(2) { animation: seFloat2 2.8s ease-in-out 0.55s infinite; }
+.se-highlight:hover .se-icon-reveal i:nth-child(3) { animation: seFloat3 2.2s ease-in-out 0.55s infinite; }
+.se-highlight:hover .se-icon-reveal i:nth-child(4) { animation: seFloat4 3.0s ease-in-out 0.55s infinite; }
+
+@keyframes seFloat1 { 0%,100% { transform: translate(-26px, -24px) scale(1) rotate(-14deg); } 50% { transform: translate(-28px, -28px) scale(1.06) rotate(-10deg); } }
+@keyframes seFloat2 { 0%,100% { transform: translate(-9px, -30px) scale(1) rotate(-6deg); } 50% { transform: translate(-8px, -34px) scale(1.06) rotate(-2deg); } }
+@keyframes seFloat3 { 0%,100% { transform: translate(9px, -30px) scale(1) rotate(6deg); } 50% { transform: translate(8px, -34px) scale(1.06) rotate(2deg); } }
+@keyframes seFloat4 { 0%,100% { transform: translate(26px, -24px) scale(1) rotate(14deg); } 50% { transform: translate(28px, -28px) scale(1.06) rotate(10deg); } }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .se-icon-reveal, .se-highlight { transition: none; }
+  .se-highlight:hover .se-icon-reveal i { animation: none !important; }
+}
+
+/* ============================================================== */
+/* ===== NEW: Experience card hover — ripple + slide-in detail === */
+/* ============================================================== */
+.experience-item .experience-header { position: relative; overflow: hidden; cursor: pointer; }
+.experience-item .experience-header > * { position: relative; z-index: 1; }
+.experience-item.xp-active .experience-header { border-color: var(--primary-blue); }
+
+.xp-ripple {
+  position: absolute !important; z-index: 0 !important; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle, color-mix(in srgb, var(--primary-blue) 18%, transparent),
+              color-mix(in srgb, var(--primary-blue) 7%, transparent) 70%);
+  transform: scale(var(--s0, .05)); opacity: .95;
+  transition: transform .75s cubic-bezier(.22, 1, .36, 1), opacity .35s ease;
+}
+.xp-ripple.grow { transform: scale(1); }
+.xp-ripple.out { opacity: 0; }
+
+.xp-stage { position: fixed; inset: 0; z-index: 9990; pointer-events: none; visibility: hidden; transition: visibility 0s .8s; }
+.xp-stage.open { visibility: visible; transition-delay: 0s; }
+.xp-backdrop { position: absolute; inset: 0; background: rgba(8, 12, 24, .38); backdrop-filter: blur(3px); opacity: 0; transition: opacity .5s ease; }
+.xp-stage.open .xp-backdrop { opacity: 1; }
+
+.xp-panel {
+  position: absolute; left: 50%; top: 50%; width: min(720px, 92vw); pointer-events: auto;
+  transform: translate(calc(-50% + 110vw), -50%) skewX(-6deg); opacity: 0;
+  transition: transform .85s cubic-bezier(.16, 1, .3, 1), opacity .4s ease;
+}
+.xp-stage.open .xp-panel { transform: translate(-50%, -50%) skewX(0); opacity: 1; }
+
+.xp-grip {
+  position: absolute; left: -14px; top: 50%; width: 14px; height: 64px; margin-top: -32px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
+  background: var(--primary-blue); border-radius: 8px 0 0 8px;
+  box-shadow: 0 6px 18px rgba(24, 62, 235, .35);
+}
+.xp-grip i { width: 3px; height: 3px; border-radius: 50%; background: #fff; opacity: .85; }
+
+.xp-body {
+  position: relative; max-height: 86vh; overflow-y: auto; padding: 26px 28px 24px;
+  background: var(--bg-card); color: var(--text-dark);
+  border: 1px solid var(--border-light); border-top: 3px solid var(--primary-blue); border-radius: 14px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, .28);
+  font-family: "Inter", system-ui, sans-serif;
+}
+.xp-eyebrow { font: 11px "Space Mono", monospace; letter-spacing: 2px; text-transform: uppercase; color: var(--primary-blue); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+.xp-eyebrow::before { content: ""; width: 22px; height: 1px; background: var(--primary-blue); }
+.xp-head { display: flex; align-items: center; gap: 14px; }
+.xp-logo { width: 52px; height: 52px; flex: 0 0 52px; border: 1px solid var(--border-light); border-radius: 12px; background: var(--bg-card); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.xp-logo img { width: 100%; height: 100%; object-fit: contain; padding: 6px; }
+.xp-title { margin: 0; font-size: 20px; font-weight: 700; letter-spacing: -.4px; color: var(--text-dark); line-height: 1.25; }
+.xp-sub { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-top: 6px; }
+.xp-sub a { font-size: 13px; font-weight: 500; color: var(--text-muted); text-decoration: underline; text-decoration-color: var(--border-soft); text-underline-offset: 3px; }
+.xp-sub a:hover { color: var(--primary-blue); text-decoration-color: var(--primary-blue); }
+.xp-date { padding: 4px 10px; border-radius: 6px; background: var(--bg-card-alt); border: 1px solid var(--border-light); font-size: 11px; font-weight: 500; color: var(--text-dark); white-space: nowrap; }
+.xp-label { margin: 22px 0 8px; padding-bottom: 8px; border-bottom: 1px solid var(--border-light); font: 600 11px "Space Mono", monospace; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); }
+.xp-desc { margin: 0; font-size: 13.5px; line-height: 1.75; color: var(--text-gray); }
+.xp-list { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.xp-list li { position: relative; padding-left: 22px; font-size: 13px; line-height: 1.6; color: var(--text-gray); }
+.xp-list li::before { content: ""; position: absolute; left: 0; top: 10px; width: 12px; height: 1px; background: var(--primary-blue); }
+.xp-close { position: absolute; top: 12px; right: 12px; width: 28px; height: 28px; border: 1px solid var(--border-light); border-radius: 8px; background: var(--bg-card-alt); color: var(--text-muted); cursor: pointer; font-size: 13px; line-height: 1; }
+.xp-close:hover { color: var(--primary-blue); border-color: var(--primary-blue); }
+.xp-swap { animation: xpSwap .35s ease; }
+@keyframes xpSwap { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+@media (hover: none) { .xp-backdrop { pointer-events: auto; } .xp-stage.open { pointer-events: auto; } }
+@media (max-width: 640px) { .xp-body { padding: 22px 18px 18px; } .xp-title { font-size: 17px; } .xp-grip { display: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .xp-panel { transform: translate(-50%, -50%) !important; transition: opacity .3s ease; }
+  .xp-ripple { transition: opacity .2s ease; transform: scale(1); }
+}
+
+/* ============================================================== */
+/* ===== THE TOOLBOX — skills field (matches reference image) == */
+/* ============================================================== */
+/* Layout: top row of monochrome icons, eyebrow ("THE STACK"),
+   large title "The toolbox." with curved underline, subtitle,
+   colored category filter chips, then a loose scatter of white
+   tool pills. All on a soft cream backdrop that sits inside the
+   #about section. */
+
+.toolbox {
+  position: relative;
+  width: 100%;
+  margin: 28px 0 36px;
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
+  isolation: isolate;
+}
+[data-theme="dark"] .toolbox {
+  background: #14151a;
+  border-color: var(--border-light);
+}
+
+/* Top row of small monochrome tech icons */
+.toolbox__icons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 18px 22px;
+  margin-bottom: 28px;
+  opacity: 0.5;
+}
+.toolbox__icons i {
+  font-size: 18px;
+  color: #555;
+  transition: color 0.25s ease, transform 0.25s ease;
+}
+.toolbox__icons i:hover {
+  color: var(--primary-blue);
+  transform: translateY(-2px);
+}
+[data-theme="dark"] .toolbox__icons i {
+  color: #b8bcc6;
+}
+
+/* Eyebrow ("THE STACK") with a green dot */
+.toolbox__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: #767676;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+[data-theme="dark"] .toolbox__eyebrow { color: #a0a3ad; }
+.toolbox__dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.toolbox__dot--green { background: #34d399; }
+
+/* Main title — "The toolbox." */
+.toolbox__title {
+  font-size: clamp(34px, 5vw, 58px);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  color: #141414;
+  margin: 0 0 6px;
+  position: relative;
+  display: inline-block;
+}
+[data-theme="dark"] .toolbox__title { color: #e8e9ed; }
+.toolbox__period { color: var(--primary-blue); }
+
+/* Curved blue underline beneath "toolbox" */
+.toolbox__underline {
+  width: 220px;
+  max-width: 100%;
+  height: 14px;
+  color: var(--primary-blue);
+  margin: 0 auto 18px;
+  display: block;
+}
+.toolbox__underline svg { width: 100%; height: 100%; display: block; }
+
+/* Subtitle paragraph */
+.toolbox__subtitle {
+  max-width: 640px;
+  font-size: 14px;
+  line-height: 1.65;
+  color: #555;
+  margin: 0 0 28px;
+}
+[data-theme="dark"] .toolbox__subtitle { color: #a0a3ad; }
+
+/* Category filter chips */
+.toolbox__filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px 12px;
+  margin-bottom: 28px;
+}
+.toolbox__filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, .06);
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #111;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  font-family: 'Inter', system-ui, sans-serif;
+}
+.toolbox__filter:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.07);
+  border-color: rgba(0, 0, 0, 0.12);
+}
+.toolbox__filter.is-active {
+  background: #141414;
+  color: #fff;
+  border-color: #141414;
+}
+[data-theme="dark"] .toolbox__filter {
+  background: #1c2230;
+  color: #e8e9ed;
+  border-color: var(--border-light);
+}
+[data-theme="dark"] .toolbox__filter.is-active {
+  background: #e8e9ed;
+  color: #141414;
+}
+/* Chip colored dots */
+.toolbox__chip-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+.toolbox__chip-dot--blue   { background: #3b82f6; }
+.toolbox__chip-dot--yellow { background: #eab308; }
+.toolbox__chip-dot--green  { background: #22c55e; }
+.toolbox__chip-dot--red    { background: #ef4444; }
+.toolbox__chip-dot--orange { background: #f97316; }
+
+/* Tool field — loose scatter of white pills */
+.toolbox__field {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px 14px;
+  max-width: 1000px;
+}
+.tool {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #111;
+  white-space: nowrap;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease, opacity 0.25s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  cursor: default;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+.tool:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.07);
+  border-color: rgba(0, 0, 0, 0.12);
+}
+.tool i { font-size: 14px; color: #555; }
+.tool .tool__dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+.tool__dot--blue   { background: #3b82f6; }
+.tool__dot--yellow { background: #eab308; }
+.tool__dot--green  { background: #22c55e; }
+.tool__dot--red    { background: #ef4444; }
+.tool__dot--orange { background: #f97316; }
+[data-theme="dark"] .tool {
+  background: #1c2230;
+  color: #e8e9ed;
+  border-color: var(--border-light);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+[data-theme="dark"] .tool i { color: #a0a3ad; }
+
+/* Filtered state: dim/hide non-matching tools */
+.toolbox.is-filtered .tool { opacity: 0.18; transform: scale(0.96); }
+.toolbox.is-filtered .tool.is-match {
+  opacity: 1;
+  transform: scale(1);
+  border-color: var(--primary-blue);
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--primary-blue) 18%, transparent);
+}
+
+/* Small screens */
+@media (max-width: 640px) {
+  .toolbox { padding: 26px 16px 32px; margin: 22px 0 28px; }
+  .toolbox__icons { gap: 12px 16px; }
+  .toolbox__icons i { font-size: 16px; }
+  .toolbox__filter { padding: 7px 13px; font-size: 12px; }
+  .tool { padding: 7px 13px; font-size: 12px; }
+  .toolbox__field { gap: 9px 10px; }
+}
+
+/* ============================================================== */
+/* ===== SCROLL-JACKING for "I am a software engineer" ======== */
+/* ============================================================== */
+/* While the headline color is filling, scroll is intercepted via
+   JS (preventDefault on wheel/touch). When the color is fully
+   filled, normal scrolling resumes. No CSS overflow tricks needed. */
+.fx-headline-lock {
+  position: relative;
+  z-index: 2;
+}
+
+/* Cross-system animation consistency: ensure GPU compositing for transforms */
+.projects-row-track,
+.skills-slider-track,
+.pill,
+.pill-inner,
+.cursor,
+.fx-glyph,
+.fx-art svg,
+.fx-art .fx-g,
+.about-card,
+.experience-header,
+.experience-logo,
+.experience-date,
+.xp-panel,
+.xp-ripple {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Cross-system animation consistency:
+   - Force a consistent transform model across browsers (translate3d)
+   - Ensure animations that use transform/opacity are not throttled
+   - Disable the OS-level smooth-scroll handoff so Lenis controls everything */
+@media (hover: hover) and (pointer: fine) {
+  /* desktop / laptop — Lenis drives wheel/touchpad scroll */
+  .page-section--scrollable,
+  #content-play,
+  .main-container,
+  .scrollable-content,
+  .sidebar-container {
+    scroll-behavior: auto; /* Lenis handles smoothing, not the browser */
+    -webkit-overflow-scrolling: auto;
+    overscroll-behavior: contain;
+  }
+}
+@media (hover: none) and (pointer: coarse) {
+  /* touch devices — keep native scrolling smooth and momentum-based */
+  .page-section--scrollable,
+  #content-play,
+  .main-container,
+  .scrollable-content,
+  .sidebar-container {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+}
+
+/* Disable text selection on interactive pill/skill elements so dragging
+   doesn't accidentally select text on Windows/Safari etc. */
+.pill, .pill-inner, .pill .dot,
+.strings-svg, .pill-layer,
+.cursor, .skills-slider .skills-text,
+.projects-row, .projects-row-track {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Force a consistent 3D context for the pills network so the
+   spring-physics feels identical regardless of GPU vendor.
+   We avoid changing overflow/positioning — only add GPU layer. */
+.hero, .pill-layer {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Respect reduced motion — disable smooth scroll & most animations */
+@media (prefers-reduced-motion: reduce) {
+  html, .page-section--scrollable, #content-play,
+  .main-container, .sidebar-container, .scrollable-content, body {
+    scroll-behavior: auto !important;
+  }
+  .pill-inner, .pill .dot, .cursor { transition: none !important; }
+  .pill:hover .pill-inner { transform: none !important; }
+}
+
+/* ============================================================== */
+/* ===== CENTER-BOTTOM FLOATING NAV TAB (Home | About) ========== */
+/* ============================================================== */
+/* A pill-shaped tab docked at the bottom-center of the viewport.
+   Sits above every section, follows the user as they scroll, and
+   routes to the same showSection() the sidebar nav uses.
+   Theme-aware (light/dark), responsive, and accessible. */
+.dock-nav {
+  position: fixed;
+  /* left: 50%; */
+  left: 60%;
+  bottom: 22px;
+  transform: translateX(-50%);
+  z-index: 9995;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px;
+  background: color-mix(in srgb, var(--bg-card) 86%, transparent);
+  backdrop-filter: blur(14px) saturate(1.4);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  border: 1px solid var(--border-light);
+  border-radius: 999px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.10),
+              0 2px 6px rgba(0, 0, 0, 0.04);
+  font-family: 'Inter', system-ui, sans-serif;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease,
+              transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+  will-change: transform;
+}
+[data-theme="dark"] .dock-nav {
+  background: color-mix(in srgb, var(--bg-card) 80%, transparent);
+  border-color: var(--border-light);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45),
+              0 2px 6px rgba(0, 0, 0, 0.30);
+}
+/* Hover lift — same feel as the toolbox filter chips */
+.dock-nav:hover {
+  transform: translateX(-50%) translateY(-2px);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.14),
+              0 3px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Individual nav button inside the dock */
+.dock-nav__btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color 0.25s ease, background-color 0.25s ease, transform 0.2s ease;
+  white-space: nowrap;
+  font-family: inherit;
+}
+.dock-nav__btn:hover {
+  color: var(--text-dark);
+  background: color-mix(in srgb, var(--bg-card-alt) 70%, transparent);
+}
+.dock-nav__btn:focus-visible {
+  outline: 2px solid var(--primary-blue);
+  outline-offset: 2px;
+}
+.dock-nav__btn.is-active {
+  color: #ffffff;
+  background: var(--primary-blue);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--primary-blue) 30%, transparent);
+}
+[data-theme="dark"] .dock-nav__btn.is-active {
+  color: #0d1014;
+  background: var(--primary-blue);
+}
+.dock-nav__btn i {
+  font-size: 12px;
+  transition: transform 0.25s ease;
+}
+.dock-nav__btn:hover i { transform: translateY(-1px); }
+
+/* Vertical separator between Home and About */
+.dock-nav__sep {
+  display: inline-block;
+  width: 1px;
+  height: 18px;
+  background: var(--border-soft);
+  flex-shrink: 0;
+  margin: 0 2px;
+}
+
+/* Hide the dock nav on very small screens to avoid clutter —
+   the sidebar nav still works there. */
+@media (max-width: 480px) {
+  .dock-nav {
+    bottom: 14px;
+    padding: 5px;
+  }
+  .dock-nav__btn {
+    padding: 8px 14px;
+    font-size: 12px;
+  }
+}
+
+/* Reduced motion — disable the lift animation */
+@media (prefers-reduced-motion: reduce) {
+  .dock-nav,
+  .dock-nav:hover,
+  .dock-nav__btn,
+  .dock-nav__btn i { transition: none !important; }
+  .dock-nav:hover { transform: translateX(-50%) !important; }
+}
+
+/* ============================================================== */
+/* ===== SITE-WIDE CONSISTENCY (castcany) ======================== */
+/* ============================================================== */
+/* Make sure every scrollable container has consistent overscroll
+   behavior so the dock nav never gets covered by a scroll bounce. */
+.page-section--scrollable,
+#content-play,
+.main-container,
+.scrollable-content,
+.sidebar-container {
+  overscroll-behavior: contain;
+}
+/* Ensure the dock nav stays above Lenis-driven content layers */
+.dock-nav { isolation: isolate; }
 
     </style>
   </head>
@@ -791,8 +1580,26 @@
           <div class="flex items-center gap-3">
             <div class="toggle-container mt-2" id="modeToggle">
               <div class="toggle-slider" id="toggleSlider"></div>
-              <button class="toggle-btn active" onclick="switchMode('work')">Work</button>
-              <button class="toggle-btn" onclick="switchMode('play')">Play</button>
+              <button class="toggle-btn active" onclick="switchMode('work')">
+                Work
+                <span class="toggle-btn-icon-reveal" aria-hidden="true">
+                  <i class="fa-solid fa-code"></i>
+                  <i class="fa-solid fa-laptop-code"></i>
+                  <i class="fa-brands fa-react"></i>
+                  <i class="fa-solid fa-terminal"></i>
+                  <i class="fa-solid fa-database"></i>
+                </span>
+              </button>
+              <button class="toggle-btn" onclick="switchMode('play')">
+                Play
+                <span class="toggle-btn-icon-reveal" aria-hidden="true">
+                  <i class="fa-solid fa-gamepad"></i>
+                  <i class="fa-solid fa-music"></i>
+                  <i class="fa-solid fa-palette"></i>
+                  <i class="fa-solid fa-wand-magic-sparkles"></i>
+                  <!-- <i class="fa-solid fa-puzzle-piece"></i> -->
+                </span>
+              </button>
             </div>
             <button class="mobile-menu-btn lg:hidden" id="mobileMenuBtn" onclick="toggleSidebar()" aria-label="Open menu" aria-expanded="false">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1053,7 +1860,13 @@
             </div>
           </div>
 
-          <h1 class="text-2xl mt-5 font-bold text-gray-900 tracking-tight my-text-tilte mb-3">Education</h1>
+
+
+
+         
+        </div>
+        <div class="mb-5">
+           <h1 class="text-2xl mt-4 font-bold text-gray-900 tracking-tight my-text-tilte mb-3">Education</h1>
 
           <p class="text-gray-600 text-sm leading-relaxed my-text gap-1">
             <span class="contact-dot" style="color: #111111;">·</span> Diploma in Software Engineering from Aptech
@@ -1061,6 +1874,48 @@
           <p class="text-gray-600 text-sm leading-relaxed my-text gap-1">
             <span class="contact-dot" style="color: #111111;">·</span> Continuing Education, College
           </p>
+        </div>
+
+                <div class="mb-6">
+           <h1 class="text-2xl mt-5 font-bold text-gray-900 tracking-tight my-text-tilte mb-3">Experience</h1>
+
+          <p class="text-gray-600 text-sm leading-relaxed my-text gap-1">
+             <a target="_blank" rel="noopener noreferrer" class=" skills-text" role="listitem" aria-hidden="true">
+                    Novelope 
+                </a>
+
+              <span class="contact-dot" style="color: #111111;">·</span> 
+                 <a target="_blank" rel="noopener noreferrer" class="skills-text" role="listitem" aria-hidden="true">
+                    SimulationsX
+                </a>
+               <span class="contact-dot" style="color: #111111;">·</span> 
+                 <a target="_blank" rel="noopener noreferrer" class=" skills-text" role="listitem" aria-hidden="true">
+                    Surplus  Pakistan
+                </a><span class="contact-dot" style="color: #111111;">·</span>
+              </p>
+               <p class="text-gray-600 text-sm leading-relaxed my-text gap-1">
+
+
+                 
+                 <a target="_blank" rel="noopener noreferrer" class="skills-text" role="listitem" aria-hidden="true">
+                    Uplynk
+                </a>
+
+    <span class="contact-dot" style="color: #111111;">·</span> 
+                 <a target="_blank" rel="noopener noreferrer" class="skills-text" role="listitem" aria-hidden="true">
+                    Count3
+                </a>
+   <span class="contact-dot" style="color: #111111;">·</span> 
+                 <a target="_blank" rel="noopener noreferrer" class="skills-text" role="listitem" aria-hidden="true">
+                    Texlynk
+                </a>
+                
+                   <span class="contact-dot" style="color: #111111;">·</span> 
+                 <a target="_blank" rel="noopener noreferrer" class="skills-text" role="listitem" aria-hidden="true">
+                    Ai Matterz
+                </a>
+                
+
         </div>
 
         <div class="mt-4">
@@ -1086,16 +1941,6 @@
         </div>
       </div>
 
-      <nav class="mt-2 pt-3 border-t border-gray-200">
-        <ul class="space-y-3 text-[14px] font-medium text-gray-500">
-          <li>
-            <a href="#hero" class="hover-underline hover:text-black transition-colors flex items-center gap-2 nav-link-active" onclick="showSection('hero'); closeSidebarOnMobile(); return false;">Home</a>
-          </li>
-          <li>
-            <a href="#about" class="hover-underline hover:text-black transition-colors" onclick="showSection('about'); closeSidebarOnMobile(); return false;">About & Academics</a>
-          </li>
-        </ul>
-      </nav>
     </aside>
 
     <main class="main-container relative">
@@ -1494,12 +2339,12 @@
             </section>
         </section>
 
-<section id="about" class="page-section page-section--scrollable bg-[#ffffff]" aria-label="About & Academics">
+<section id="about" class="page-section page-section--scrollable bg-[#ffffff] px-10" aria-label="About & Academics">
   <div class="about-shell">
 
-    <p class="hover-p text-gray-600 mt-10 mb-4 leading-relaxed my-text-tilte2-main">
-      <span class="my-text-tilte2">
-        I'm a Software Engineer at Aptech Computer Education, building secure web applications, enterprise systems, and cross-platform mobile apps. My approach is simple: think like an architect, build like an engineer, and ship like an owner.
+    <p class="hover-p fx-headline-lock text-gray-600 mt-10 mb-4 leading-relaxed my-text-tilte2-main">
+      <span class="my-text-tilte2" id="headlineText">
+        I'm a <span class="se-highlight">Software Engineer<span class="se-icon-reveal" aria-hidden="true"><i class="fa-brands fa-github"></i><i class="fa-brands fa-react"></i><i class="fa-brands fa-laravel"></i><i class="fa-brands fa-docker"></i></span></span> at Aptech Computer Education, building secure web applications, enterprise systems, and cross-platform mobile apps. My approach is simple: think like an architect, build like an engineer, and ship like an owner.
       </span>
 
       <svg class="hover-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
@@ -1509,131 +2354,303 @@
 
 
 
-
-
-
-            <div class="about-cards mt-3">
-              <div class="about-card">
-                <div class="about-card__icon"><i class="fa-solid fa-compass-drafting"></i></div>
-                <h4 class="about-card__title">Architect First</h4>
-                <p class="about-card__text">HLD &amp; LLD before code. Systems designed to scale, not just to ship.</p>
-              </div>
-              <div class="about-card">
-                <div class="about-card__icon"><i class="fa-solid fa-layer-group"></i></div>
-                <h4 class="about-card__title">Full-Stack Depth</h4>
-                <p class="about-card__text">.NET, React, PHP, Flutter — one engineer across the entire stack.</p>
-              </div>
-              <div class="about-card">
-                <div class="about-card__icon"><i class="fa-solid fa-shield-halved"></i></div>
-                <h4 class="about-card__title">Built to Last</h4>
-                <p class="about-card__text">Secure, maintainable, documented. Software that survives the next team.</p>
-              </div>
-            </div>
-
-            <div class="about-skills">
-              <div class="about-section-header">
-                <h1 class="text-2xl font-bold text-gray-900 tracking-tight my-text-tilte ">Skills</h1>
-              </div>
-              <div class="about-skills__grid">
-              <span class="about-skill-chip">
-                <i class="fa-brands fa-html5"></i>
-                HTML
-              </span>
-              <span class="about-skill-chip">
-                <i class="fa-brands fa-css3"></i>
-                CSS
-              </span>
-              <span class="about-skill-chip">
-                <i class="fa-brands fa-js"></i>
-                JavaScript
-              </span>
-              <span class="about-skill-chip">
-                <i class="fa-brands fa-bootstrap"></i>
-                Bootstrap
-              </span>
-              <span class="about-skill-chip">
-                <i class="fa-brands fa-tailwind-css"></i>
-                Tailwind CSS
-              </span>
-              <span class="about-skill-chip">
-                <i class="fa-brands fa-react"></i>
-                React.js
-              </span>
-              <span class="about-skill-chip">
-                <i class="fa-brands fa-angular"></i>
-                Angular.js
-              </span>
-              <span class="about-skill-chip">
-                <i class="fa-brands fa-php"></i>
-                PHP
-              </span>
-              <span class="about-skill-chip">
-                <i class="fa-brands fa-laravel"></i>
-                Laravel
-              </span>
-              <span class="about-skill-chip">
-                <i class="fa-solid fa-database"></i>
-                MySQL & SQL
-              </span>
-              <span class="about-skill-chip">
-                <i class="fa-solid fa-network-wired"></i>
-                RESTful API
-              </span>
-              <span class="about-skill-chip">
-                <i class="fa-brands fa-python"></i>
-                Python
-              </span>
-              <span class="about-skill-chip">
-                <i class="fa-brands fa-dart-lang"></i>
-                Dart
-              </span>
-              <span class="about-skill-chip">
-                <i class="fa-brands fa-flutter"></i>
-                Flutter
-              </span>
-              <span class="about-skill-chip">
-                <i class="fa-brands fa-node"></i>
-                Node.js
-              </span>
-              <span class="about-skill-chip">
-                <i class="fa-solid fa-gears"></i>
-                System Design
-              </span>
-              <span class="about-skill-chip">
-                <i class="fa-solid fa-cubes"></i>
-                LLD & HLD
-              </span>
-              <span class="about-skill-chip">
-                <i class="fa-brands fa-docker"></i>
-                Docker
-              </span>
-              <span class="about-skill-chip">
-                <i class="fa-brands fa-kubernetes"></i>
-                Kubernetes
-              </span>
-              <span class="about-skill-chip">
-                <i class="fa-brands fa-visual-studio"></i>
-                Visual Studio
-              </span>
-              <span class="about-skill-chip">
-                <i class="fa-brands fa-git-alt"></i>
-                Git
-              </span>
-              <span class="about-skill-chip">
-                <i class="fa-brands fa-github"></i>
-                GitHub
-              </span>
-              <span class="about-skill-chip">
-                <i class="fa-brands fa-figma"></i>
-                Figma
-              </span>
-
-              </div>
-            </div>
+<!-- ===== The toolbox. — skills field (matches the reference image) ===== -->
 
             <div class="about-experience">
-              <div class="about-section-header">
-                <h2 class="about-section-header__title">Experience</h2>
+              <div class="about-section-header_ mt-10">
+                <!-- <h2 class="about-section-header__tie">Experience</h2> -->
+                <h1 class="text-2xl font-bold text-gray-900 tracking-tight my-text-tilte ">Engineering Stack &amp; Capabilities</h1>
+              </div>
+            </div>
+<section class="toolbox" aria-label="The toolbox — skills and tools">
+  
+  
+  <!-- <h2 class="toolbox__te my-text">The toolbox<span class="toolbox__period">.</span></h2> -->
+  
+  <!-- <h1 class="text-2xl mb-10  mt-20 font-bold text-gray-900 tracking-tight my-text-tilte mb-3">Engineering Stack &amp; Capabilities</h1> -->
+
+<!-- <h3 class="my-text-tilte">Engineering Stack &amp; Capabilities</h3> -->
+
+<div class="toolbox__filters" role="list">
+  <button class="toolbox__filter" type="button" data-cat="software">
+    <span class="toolbox__chip-dot toolbox__chip-dot--blue"></span>
+    Software Development
+  </button>
+
+  <button class="toolbox__filter" type="button" data-cat="product">
+    <span class="toolbox__chip-dot toolbox__chip-dot--yellow"></span>
+    🚀 Product Engineering
+  </button>
+
+  <button class="toolbox__filter" type="button" data-cat="fullstack">
+    <span class="toolbox__chip-dot toolbox__chip-dot--green"></span>
+    Full-Stack Development
+  </button>
+
+  <button class="toolbox__filter" type="button" data-cat="thinking">
+    <span class="toolbox__chip-dot toolbox__chip-dot--red"></span>
+    🧠 Product Thinking
+  </button>
+
+  <button class="toolbox__filter" type="button" data-cat="frontend">
+    <span class="toolbox__chip-dot toolbox__chip-dot--yellow"></span>
+    Frontend Engineering
+  </button>
+
+  <button class="toolbox__filter" type="button" data-cat="backend">
+    <span class="toolbox__chip-dot toolbox__chip-dot--blue"></span>
+    Backend Engineering
+  </button>
+
+  <button class="toolbox__filter" type="button" data-cat="design">
+    <span class="toolbox__chip-dot toolbox__chip-dot--orange"></span>
+    🎨 UI/UX &amp; Figma
+  </button>
+
+  <button class="toolbox__filter" type="button" data-cat="system">
+    <span class="toolbox__chip-dot toolbox__chip-dot--green"></span>
+    System Design · HLD/LLD
+  </button>
+
+  <button class="toolbox__filter" type="button" data-cat="api">
+    <span class="toolbox__chip-dot toolbox__chip-dot--red"></span>
+    🔌 RESTful APIs
+  </button>
+
+  <button class="toolbox__filter" type="button" data-cat="database">
+    <span class="toolbox__chip-dot toolbox__chip-dot--yellow"></span>
+    🗄️ Database Engineering
+  </button>
+
+  <button class="toolbox__filter" type="button" data-cat="devops">
+    <span class="toolbox__chip-dot toolbox__chip-dot--blue"></span>
+    Docker · Kubernetes
+  </button>
+
+  <button class="toolbox__filter" type="button" data-cat="quality">
+    <span class="toolbox__chip-dot toolbox__chip-dot--orange"></span>
+    Quality &amp; Scalability
+  </button>
+</div>
+
+<div class="toolbox__field" id="toolboxField">
+
+  <!-- Software Development -->
+  <span class="tool" data-cat="software">
+    <i class="fa-brands fa-github"></i> Git &amp; GitHub
+  </span>
+  <span class="tool" data-cat="software">
+    <i class="fa-solid fa-code"></i> Clean Code
+  </span>
+  <span class="tool" data-cat="software">
+    <i class="fa-solid fa-cubes"></i> OOP
+  </span>
+  <span class="tool" data-cat="software">
+    <i class="fa-solid fa-diagram-project"></i> Design Patterns
+  </span>
+  <span class="tool" data-cat="software">
+    <i class="fa-solid fa-gears"></i> Problem Solving
+  </span>
+
+  <!-- Product Engineering -->
+  <span class="tool" data-cat="product">
+    <i class="fa-solid fa-rocket"></i> MVP Development
+  </span>
+  <span class="tool" data-cat="product">
+    <i class="fa-solid fa-cubes"></i> SaaS Applications
+  </span>
+  <span class="tool" data-cat="product">
+    <i class="fa-solid fa-layer-group"></i> Feature Ownership
+  </span>
+  <span class="tool" data-cat="product">
+    <i class="fa-solid fa-arrows-spin"></i> Iterative Delivery
+  </span>
+
+  <!-- Full-Stack Development -->
+  <span class="tool" data-cat="fullstack">
+    <i class="fa-brands fa-react"></i> React.js
+  </span>
+  <span class="tool" data-cat="fullstack">
+    <i class="fa-brands fa-laravel"></i> Laravel
+  </span>
+  <span class="tool" data-cat="fullstack">
+    <i class="fa-solid fa-code"></i> ASP.NET Core
+  </span>
+  <span class="tool" data-cat="fullstack">
+    <i class="fa-brands fa-php"></i> PHP
+  </span>
+  <span class="tool" data-cat="fullstack">
+    <i class="fa-brands fa-js"></i> JavaScript
+  </span>
+  <span class="tool" data-cat="fullstack">
+    <i class="fa-solid fa-laptop-code"></i> Full-Stack Apps
+  </span>
+
+  <!-- Product Thinking -->
+  <span class="tool" data-cat="thinking">
+    <i class="fa-solid fa-lightbulb"></i> Product Strategy
+  </span>
+  <span class="tool" data-cat="thinking">
+    <i class="fa-solid fa-users"></i> User-Centered Thinking
+  </span>
+  <span class="tool" data-cat="thinking">
+    <i class="fa-solid fa-list-check"></i> Requirements Analysis
+  </span>
+  <span class="tool" data-cat="thinking">
+    <i class="fa-solid fa-chart-line"></i> Business Logic
+  </span>
+
+  <!-- Frontend Engineering -->
+  <span class="tool" data-cat="frontend">
+    <i class="fa-brands fa-html5"></i> HTML5
+  </span>
+  <span class="tool" data-cat="frontend">
+    <i class="fa-brands fa-css3-alt"></i> CSS3
+  </span>
+  <span class="tool" data-cat="frontend">
+    <i class="fa-brands fa-react"></i> React.js
+  </span>
+  <span class="tool" data-cat="frontend">
+    <i class="fa-brands fa-bootstrap"></i> Bootstrap
+  </span>
+  <span class="tool" data-cat="frontend">
+    <i class="fa-solid fa-wand-magic-sparkles"></i> GSAP
+  </span>
+  <span class="tool" data-cat="frontend">
+    <i class="fa-solid fa-mobile-screen"></i> Responsive UI
+  </span>
+
+  <!-- Backend Engineering -->
+  <span class="tool" data-cat="backend">
+    <i class="fa-brands fa-laravel"></i> Laravel
+  </span>
+  <span class="tool" data-cat="backend">
+    <i class="fa-solid fa-code"></i> ASP.NET Core
+  </span>
+  <span class="tool" data-cat="backend">
+    <i class="fa-brands fa-php"></i> PHP
+  </span>
+  <span class="tool" data-cat="backend">
+    <i class="fa-solid fa-server"></i> Server-Side Logic
+  </span>
+  <span class="tool" data-cat="backend">
+    <i class="fa-solid fa-shield-halved"></i> Authentication
+  </span>
+  <span class="tool" data-cat="backend">
+    <i class="fa-solid fa-lock"></i> API Security
+  </span>
+
+  <!-- UI/UX & Figma -->
+  <span class="tool" data-cat="design">
+    <i class="fa-brands fa-figma"></i> Figma
+  </span>
+  <span class="tool" data-cat="design">
+    <i class="fa-solid fa-palette"></i> UI Design
+  </span>
+  <span class="tool" data-cat="design">
+    <i class="fa-solid fa-bezier-curve"></i> Design Systems
+  </span>
+  <span class="tool" data-cat="design">
+    <i class="fa-solid fa-eye"></i> UX Principles
+  </span>
+  <span class="tool" data-cat="design">
+    <i class="fa-solid fa-wand-magic-sparkles"></i> Micro-Interactions
+  </span>
+
+  <!-- System Design · HLD/LLD -->
+  <span class="tool" data-cat="system">
+    <i class="fa-solid fa-diagram-project"></i> High-Level Design
+  </span>
+  <span class="tool" data-cat="system">
+    <i class="fa-solid fa-sitemap"></i> Low-Level Design
+  </span>
+  <span class="tool" data-cat="system">
+    <i class="fa-solid fa-layer-group"></i> Architecture
+  </span>
+  <span class="tool" data-cat="system">
+    <i class="fa-solid fa-arrows-left-right-to-line"></i> Scalability Planning
+  </span>
+  <span class="tool" data-cat="system">
+    <i class="fa-solid fa-object-group"></i> Composition
+  </span>
+
+  <!-- RESTful APIs -->
+  <span class="tool" data-cat="api">
+    <i class="fa-solid fa-plug"></i> REST APIs
+  </span>
+  <span class="tool" data-cat="api">
+    <i class="fa-solid fa-code"></i> JSON
+  </span>
+  <span class="tool" data-cat="api">
+    <i class="fa-solid fa-book"></i> API Documentation
+  </span>
+  <span class="tool" data-cat="api">
+    <i class="fa-solid fa-shield-halved"></i> API Validation
+  </span>
+  <span class="tool" data-cat="api">
+    <i class="fa-solid fa-key"></i> Authentication &amp; Authorization
+  </span>
+
+  <!-- Database Engineering -->
+  <span class="tool" data-cat="database">
+    <i class="fa-solid fa-database"></i> MySQL
+  </span>
+  <span class="tool" data-cat="database">
+    <i class="fa-solid fa-database"></i> SQL Server
+  </span>
+  <span class="tool" data-cat="database">
+    <i class="fa-solid fa-table"></i> Database Design
+  </span>
+  <span class="tool" data-cat="database">
+    <i class="fa-solid fa-magnifying-glass-chart"></i> Query Optimization
+  </span>
+  <span class="tool" data-cat="database">
+    <i class="fa-solid fa-diagram-project"></i> Indexing &amp; Relationships
+  </span>
+
+  <!-- Docker & Kubernetes -->
+  <span class="tool" data-cat="devops">
+    <i class="fa-brands fa-docker"></i> Docker
+  </span>
+  <span class="tool" data-cat="devops">
+    <i class="fa-brands fa-kubernetes"></i> Kubernetes
+  </span>
+  <span class="tool" data-cat="devops">
+    <i class="fa-brands fa-git-alt"></i> Git
+  </span>
+  <span class="tool" data-cat="devops">
+    <i class="fa-brands fa-github"></i> GitHub
+  </span>
+  <span class="tool" data-cat="devops">
+    <i class="fa-solid fa-cloud"></i> Deployment
+  </span>
+
+  <!-- Quality & Scalability -->
+  <span class="tool" data-cat="quality">
+    <i class="fa-solid fa-vial"></i> Testing &amp; Validation
+  </span>
+  <span class="tool" data-cat="quality">
+    <i class="fa-solid fa-gauge-high"></i> Performance
+  </span>
+  <span class="tool" data-cat="quality">
+    <i class="fa-solid fa-shield-halved"></i> Security
+  </span>
+  <span class="tool" data-cat="quality">
+    <i class="fa-solid fa-chart-line"></i> Monitoring
+  </span>
+  <span class="tool" data-cat="quality">
+    <i class="fa-solid fa-arrow-up-right-dots"></i> Scalability
+  </span>
+
+</div>
+
+
+
+</section>
+
+            <div class="about-experience">
+              <div class="about-section-header_ mb-3">
+                <!-- <h2 class="about-section-header__tie">Experience</h2> -->
                 <h1 class="text-2xl font-bold text-gray-900 tracking-tight my-text-tilte ">Experience</h1>
               </div>
 
@@ -1649,11 +2666,12 @@
             <h3>Software Developer Intern</h3>
             <a href="https://novelops.com.pk/" target="_blank"
                rel="noopener noreferrer">Novelope Pakistan</a>
+               
             <span class="experience-date">2025 September – Present</span>
           </div>
         </div>
       </div>
-      <div class="experience-content">
+      <!-- <div class="experience-content">
         <p class="experience-description">
           As a Software Developer at Novelops Consulting, I focus on developing reliable, scalable, and user-friendly web applications. I enjoy solving real-world problems, writing clean and maintainable code, and continuously improving my technical skills to deliver high-quality software solutions.
         </p>
@@ -1664,7 +2682,7 @@
         <li>Continuously improve technical skills through hands-on experience and learning.</li>
         <li>Collaborate with teams to deliver impactful software solutions.</li>
         </ul>
-      </div>
+      </div> -->
     </article>
     <article class="experience-item">
       <div class="experience-header">
@@ -1680,7 +2698,7 @@
           </div>
         </div>
       </div>
-      <div class="experience-content">
+      <!-- <div class="experience-content">
         <p class="experience-description">
           Worked as a Full Stack Developer at SimulationsX, contributing to game development and software solutions. Developed a TOC (Game of Chance) game, focusing on gameplay functionality, interactive user experiences, and application logic.
         </p>
@@ -1690,7 +2708,7 @@
         <li>Applied software development and problem-solving skills throughout the development process.</li>
         <li>Collaborated on development tasks to improve functionality and overall game quality.</li>
         </ul>
-      </div>
+      </div> -->
     </article>
     <article class="experience-item">
       <div class="experience-header">
@@ -1706,7 +2724,7 @@
           </div>
         </div>
       </div>
-      <div class="experience-content">
+      <!-- <div class="experience-content">
         <p class="experience-description">
           Working as a PHP / Laravel Developer at Surplus Pakistan, responsible for maintaining and improving the existing Surplus software. Focused on fixing bugs, ensuring reliable functionality, optimizing performance, and keeping the application up to date.
         </p>
@@ -1717,7 +2735,7 @@
         <li>Implement updates and resolve issues based on software requirements.</li>
         <li>Work with databases and backend functionality to maintain data consistency.</li>
         </ul>
-      </div>
+      </div> -->
     </article>
     <article class="experience-item">
       <div class="experience-header">
@@ -1733,7 +2751,7 @@
           </div>
         </div>
       </div>
-      <div class="experience-content">
+      <!-- <div class="experience-content">
         <p class="experience-description">
           Developed Count3, a complete full-stack software application using React.js, PHP RESTful APIs, and MySQL. Responsible for designing the system architecture, building interactive user interfaces, developing backend services, and integrating database functionality to deliver a scalable and maintainable software solution.
         </p>
@@ -1745,7 +2763,7 @@
         <li>Planned the system architecture and organized application components for maintainability.</li>
         <li>Integrated frontend, backend APIs, and database functionality into a unified system.</li>
         </ul>
-      </div>
+      </div> -->
     </article>
 
   </div>
@@ -1824,8 +2842,9 @@
         
         // Show toast
         var toast = document.createElement("div");
-        toast.style.cssText = "position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--primary-blue);color:#fff;padding:8px 18px;border-radius:8px;font-size:12px;font-family:'Space Mono',monospace;font-weight:600;z-index:9999;opacity:0;transition:opacity 0.3s ease;box-shadow:0 4px 16px rgba(24,62,235,0.3);";
-        toast.textContent = "✓ " + email + " copied";
+        // toast.style.cssText = "position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--primary-blue);color:#fff;padding:8px 18px;border-radius:8px;font-size:12px;font-family:'Space Mono',monospace;font-weight:600;z-index:9999;opacity:0;transition:opacity 0.3s ease;box-shadow:0 4px 16px rgba(24,62,235,0.3);";
+        // toast.textContent  ;
+        // toast.textContent = "✓ " + email + " copied";
         document.body.appendChild(toast);
         setTimeout(function() { toast.style.opacity = "1"; }, 10);
         setTimeout(function() {
@@ -2042,12 +3061,20 @@
           if (main) main.scrollTo({ top: 0, behavior: 'smooth' });
 
           if (history.replaceState) history.replaceState(null, '', '#' + id);
+
+          // Notify other modules (e.g. scroll-jack) that the active section changed
+          window.dispatchEvent(new CustomEvent('sectionchange', { detail: { id: id } }));
         }
         window.showSection = showSection;
         document.addEventListener('DOMContentLoaded', function () {
           const hash = (window.location.hash || '#hero').replace('#', '');
           const valid = ['hero', 'about'];
           showSection(valid.indexOf(hash) !== -1 ? hash : 'hero');
+          // Dispatch sectionchange after initial paint so the scroll-lock
+          // engages correctly when the page first loads with #about
+          setTimeout(function () {
+            window.dispatchEvent(new CustomEvent('sectionchange', { detail: { id: hash || 'hero' } }));
+          }, 80);
         });
       })();
     </script>
@@ -2065,43 +3092,353 @@
   var $ = function (s, r) { return (r || doc).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || doc).querySelectorAll(s)); };
 
-  /* ---------- 1. Scroll-driven word colour ---------- */
+  /* ---------- 1. Scroll-driven headline color (scroll-jacked) ---------- */
+  /* Behaviour:
+     - While the about section is at the top, user scroll is "captured"
+       — page does NOT scroll; instead each scroll tick advances the
+       headline's --scroll-fill variable from 0 to 1. The CSS uses
+       background-size: calc(var(--scroll-fill) * 100%) so the headline
+       fills in left-to-right just like the existing hover animation.
+     - When --scroll-fill reaches 1, scroll lock is released and the
+       page begins to scroll normally.
+     - Existing hover animation on the headline is preserved (uses
+       .fx-scrolltext-ready class, and hover overrides background-size
+       to 100%). */
   function initScrollText() {
-    var about = $("#about"), h1 = $("#about .about-shell > h1") || $("#about .hover-p .my-text-tilte2");
+    var about = $("#about"),
+        h1 = $("#about .about-shell > h1") || $("#about .hover-p .my-text-tilte2");
     if (!about || !h1 || h1.dataset.fx) return;
     h1.dataset.fx = "1";
-    var text = h1.textContent.trim().replace(/\s+/g, " ");
-    h1.setAttribute("aria-label", text);
-    h1.textContent = "";
-    var words = text.split(" ").map(function (w, i, all) {
-      var s = doc.createElement("span");
-      s.className = "fx-word";
-      s.setAttribute("aria-hidden", "true");
-      s.textContent = w;
-      h1.appendChild(s);
-      if (i < all.length - 1) h1.appendChild(doc.createTextNode(" "));
-      return { el: s, p: -1 };
-    });
 
-    function progress() {
-      var range = about.scrollHeight - about.clientHeight;
-      if (range > 40) return clamp(about.scrollTop / Math.min(380, range), 0, 1);
-      var r = h1.getBoundingClientRect(), vh = window.innerHeight;
-      return clamp((vh * 0.85 - r.top) / (vh * 0.45), 0, 1);
-    }
-    function paint() {
-      var p = progress(), n = words.length;
-      words.forEach(function (w, i) {
-        var v = Math.round(clamp(p * n - i, 0, 1) * 100) / 100;
-        if (v !== w.p) { w.p = v; w.el.style.setProperty("--p", v); }
+    /* Mark the headline as ready so the CSS line-fill effect applies */
+    h1.classList.add("fx-scrolltext-ready");
+
+    /* ---- Wrap each VISUAL line of the headline into its own .hl-line span
+       so each line can be color-filled independently (line-by-line scroll).
+       We do this by walking the text nodes and wrapping each "word" (chunk
+       separated by whitespace) in an inline <span class="hl-word">, then
+       grouping words into lines based on their bounding rect top. The
+       words within a line are then collected into a single .hl-line span
+       that wraps the gradient. Re-run on resize so the lines stay in sync
+       if the layout changes. */
+    var wrapped = false;
+    var lineSpans = []; /* Array of { el: HTMLElement } */
+    var wordSpans = []; /* Array of <span class="hl-word"> elements */
+
+    function wrapWords() {
+      /* Walk all text nodes inside h1, but ignore the se-icon-reveal
+         markup so we don't disturb the hover icons. We split text on
+         whitespace and wrap each word in a span. Inline children like
+         the .se-highlight span are left in place; we wrap their text
+         content too. */
+
+      /* Preserve the se-highlight span so its hover behaviour survives.
+         Strategy: take a snapshot of the innerHTML, but we can't use
+         innerHTML because that destroys existing event listeners. So we
+         use a DOM walk: for every text node inside h1, split it on
+         whitespace and replace each chunk with a <span class="hl-word">
+         plus a text node for the space. */
+      var walker = doc.createTreeWalker(h1, NodeFilter.SHOW_TEXT, null);
+      var textNodes = [];
+      var n;
+      while ((n = walker.nextNode())) {
+        /* Skip text inside .se-icon-reveal (those are icon labels) */
+        if (n.parentElement && n.parentElement.closest(".se-icon-reveal")) continue;
+        textNodes.push(n);
+      }
+      textNodes.forEach(function (tn) {
+        var text = tn.nodeValue;
+        if (!text || !text.trim()) return;
+        var parent = tn.parentNode;
+        var frag = doc.createDocumentFragment();
+        /* Split on whitespace, keep words and spaces */
+        var parts = text.split(/(\s+)/);
+        parts.forEach(function (p) {
+          if (p === "") return;
+          if (/^\s+$/.test(p)) {
+            frag.appendChild(doc.createTextNode(p));
+          } else {
+            var w = doc.createElement("span");
+            w.className = "hl-word";
+            w.style.display = "inline";
+            w.textContent = p;
+            frag.appendChild(w);
+            wordSpans.push(w);
+          }
+        });
+        parent.replaceChild(frag, tn);
       });
     }
+
+    function groupIntoLines() {
+      /* Group wordSpans into lines based on their bounding rect top.
+         Each line becomes one .hl-line span. */
+      var groups = [];
+      var current = null;
+      var lastTop = null;
+      wordSpans.forEach(function (w) {
+        var r = w.getBoundingClientRect();
+        var top = Math.round(r.top);
+        if (lastTop === null || top !== lastTop) {
+          current = { top: top, words: [] };
+          groups.push(current);
+          lastTop = top;
+        }
+        current.words.push(w);
+      });
+
+      /* Clear any old .hl-line wrappers (without losing wordSpans). */
+      /* Build the line structure: wrap each group's words in a <span class="hl-line">.
+         We need to insert the hl-line spans around the existing hl-word spans
+         without disturbing their inline flow. */
+      lineSpans = [];
+      groups.forEach(function (g) {
+        /* Find the parent of the first word and create the line span
+           at the same position. */
+        var lineEl = doc.createElement("span");
+        lineEl.className = "hl-line";
+        /* Insert lineEl before the first word, then move all words of
+           this group (plus any whitespace text nodes between them) into
+           the lineEl. */
+        var firstWord = g.words[0];
+        var parent = firstWord.parentNode;
+        parent.insertBefore(lineEl, firstWord);
+
+        /* Walk through the parent's children from firstWord onward,
+           pulling each word and the whitespace between into lineEl,
+           stopping when we hit the last word of this group OR a word
+           that belongs to a different group. */
+        var node = firstWord;
+        var lastWord = g.words[g.words.length - 1];
+        var toMove = [];
+        while (node) {
+          var next = node.nextSibling;
+          if (node.nodeType === 3 /* text */) {
+            /* whitespace between words of this line — keep it */
+            toMove.push(node);
+          } else if (node.nodeType === 1 && node.classList.contains("hl-word")) {
+            /* is this word in this group? */
+            if (g.words.indexOf(node) !== -1) {
+              toMove.push(node);
+              if (node === lastWord) break;
+            } else {
+              /* belongs to a different line — stop */
+              break;
+            }
+          } else {
+            /* Some other element (e.g. the .se-highlight span wrapper) —
+               we keep it inside the line if its words belong here. But
+               since .se-highlight is inline and our wrapping put hl-word
+               spans inside it, we just treat it as part of the line. */
+            toMove.push(node);
+          }
+          node = next;
+        }
+        toMove.forEach(function (n2) { lineEl.appendChild(n2); });
+        lineSpans.push(lineEl);
+      });
+    }
+
+    function buildLines() {
+      if (wrapped) return;
+      wrapWords();
+      wrapped = true;
+      groupIntoLines();
+    }
+
+    function rebuildLines() {
+      /* On resize we need to re-group words into lines because the wrap
+         points may have changed. We ungroup by unwrapping each line
+         span (move its children back to the parent), then regroup. */
+      lineSpans.forEach(function (ls) {
+        var parent = ls.parentNode;
+        while (ls.firstChild) parent.insertBefore(ls.firstChild, ls);
+        parent.removeChild(ls);
+      });
+      lineSpans = [];
+      groupIntoLines();
+      /* Re-apply the current fill to the new lines */
+      applyFill(vp.v);
+    }
+
+    buildLines();
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function () { rebuildLines(); });
+    }
+
+    /* virtual progress (0..N) where N = number of lines. Each unit
+       represents one line fully filling. */
+    var vp = { v: 0 };
+    var locked = false;
+    /* pixels of wheel scroll needed to fully fill ONE line. Larger =
+       slower / more deliberate fill per line. */
+    var FILL_BUDGET_PER_LINE = 280;
+
+    function isHeadlineInView() {
+      var r = h1.getBoundingClientRect();
+      return r.bottom > 0 && r.top < window.innerHeight * 0.8;
+    }
+
+    /* Apply a virtual progress value to the line spans.
+       vp.v is in [0, N]. For each line i (0-indexed), its fill is:
+         lineFill_i = clamp(vp.v - i, 0, 1)
+       So line 0 fills first (0..1), then line 1, then line 2, etc. */
+    function applyFill(v) {
+      v = clamp(v, 0, lineSpans.length);
+      vp.v = v;
+      lineSpans.forEach(function (ls, i) {
+        var lf = clamp(v - i, 0, 1);
+        ls.style.setProperty("--line-fill", lf.toFixed(3));
+      });
+    }
+
+    function setFill(v) {
+      applyFill(v);
+    }
+
+    function isComplete() {
+      return vp.v >= lineSpans.length - 0.001;
+    }
+
+    function paint() {
+      /* While unlocked and user is past the top, keep fill at full. */
+      if (!locked && about.scrollTop > 4) {
+        if (!isComplete()) setFill(lineSpans.length);
+      }
+    }
+
     var raf = 0;
     function queue() { if (!raf) raf = requestAnimationFrame(function () { raf = 0; paint(); }); }
-    doc.addEventListener("scroll", queue, { passive: true, capture: true });
-    window.addEventListener("resize", queue);
-    if (window.ResizeObserver) new ResizeObserver(queue).observe(h1);
-    paint();
+
+    /* Engage the lock when the headline is in view and we're at the top
+       of the about section, while not yet complete. */
+    function updateLockState() {
+      var shouldLock = isHeadlineInView() && about.scrollTop <= 4 && !isComplete();
+      if (shouldLock && !locked) {
+        locked = true;
+        about.classList.add("fx-scroll-lock");
+      } else if (!shouldLock && locked && isComplete()) {
+        locked = false;
+        about.classList.remove("fx-scroll-lock");
+      }
+    }
+
+    /* Intercept wheel events while locked. preventDefault stops the page
+       from scrolling; we advance vp.v instead. When vp.v reaches N (all
+       lines complete), we release the lock so the next scroll tick
+       actually scrolls. */
+    function onWheel(e) {
+      if (!locked) return;
+      if (!about.classList.contains("page-section--active")) return;
+      var delta = e.deltaY;
+      if (Math.abs(delta) < 0.5) return;
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      var step = delta / FILL_BUDGET_PER_LINE;
+      var next = clamp(vp.v + step, 0, lineSpans.length);
+      setFill(next);
+      if (isComplete()) {
+        locked = false;
+        about.classList.remove("fx-scroll-lock");
+        queue();
+      }
+    }
+
+    /* Keyboard: PageUp/PageDown, Arrow Up/Down while locked */
+    function onKeyDown(e) {
+      if (!locked) return;
+      if (!about.classList.contains("page-section--active")) return;
+      var k = e.key, step = 0;
+      if (k === "ArrowDown" || k === "PageDown" || k === " ") step = 0.15;
+      else if (k === "ArrowUp" || k === "PageUp") step = -0.15;
+      else return;
+      e.preventDefault();
+      var next = clamp(vp.v + step, 0, lineSpans.length);
+      setFill(next);
+      if (isComplete()) {
+        locked = false;
+        about.classList.remove("fx-scroll-lock");
+      }
+      queue();
+    }
+
+    /* Touch: similar wheel handling — when locked, swipe advances the color */
+    var touchStartY = 0;
+    function onTouchStart(e) {
+      if (e.touches && e.touches.length) touchStartY = e.touches[0].clientY;
+    }
+    function onTouchMove(e) {
+      if (!locked) return;
+      if (!about.classList.contains("page-section--active")) return;
+      var y = e.touches && e.touches[0] ? e.touches[0].clientY : touchStartY;
+      var delta = touchStartY - y; /* swipe up → positive → fill forward */
+      if (Math.abs(delta) < 4) return;
+      e.preventDefault();
+      var step = delta / FILL_BUDGET_PER_LINE;
+      var next = clamp(vp.v + step, 0, lineSpans.length);
+      setFill(next);
+      touchStartY = y;
+      if (isComplete()) {
+        locked = false;
+        about.classList.remove("fx-scroll-lock");
+      }
+      queue();
+    }
+
+    /* Attach listeners — passive:false so we can preventDefault while locked */
+    about.addEventListener("wheel", onWheel, { passive: false, capture: true });
+    about.addEventListener("touchstart", onTouchStart, { passive: true });
+    about.addEventListener("touchmove", onTouchMove, { passive: false, capture: true });
+    doc.addEventListener("keydown", onKeyDown, { passive: false });
+
+    /* When the about section's scrollTop returns to 0, re-engage the lock
+       so the user can scroll-fill again (if they haven't completed yet). */
+    about.addEventListener("scroll", function () {
+      if (about.scrollTop <= 0 && !isComplete() && isHeadlineInView()) {
+        if (!locked) {
+          locked = true;
+          about.classList.add("fx-scroll-lock");
+        }
+      }
+      queue();
+    }, { passive: true });
+
+    /* When switching sections, ensure the lock state is correct */
+    window.addEventListener("sectionchange", function () {
+      if (about.classList.contains("page-section--active")) {
+        if (about.scrollTop <= 4 && !isComplete()) {
+          locked = true;
+          about.classList.add("fx-scroll-lock");
+        }
+      } else {
+        locked = false;
+        about.classList.remove("fx-scroll-lock");
+      }
+      queue();
+    });
+
+    /* Re-evaluate on resize — rebuild lines since wrap points may change */
+    var resizeT = null;
+    window.addEventListener("resize", function () {
+      updateLockState();
+      if (resizeT) clearTimeout(resizeT);
+      resizeT = setTimeout(function () {
+        rebuildLines();
+        queue();
+      }, 120);
+    });
+
+    /* Initial paint: empty fill, then engage lock on first load if about is active */
+    setFill(0);
+    setTimeout(function () {
+      rebuildLines();
+      setFill(0);
+      if (about.classList.contains("page-section--active") && about.scrollTop <= 4) {
+        locked = true;
+        about.classList.add("fx-scroll-lock");
+      }
+      queue();
+    }, 120);
   }
 
   /* ---------- 3. About card art + entrance ---------- */
@@ -2174,10 +3511,11 @@
     if (!about || !list || list.dataset.fx) return;
     list.dataset.fx = "1";
     var items = $$(".experience-item", list);
-    var line = doc.createElement("span");
-    line.className = "fx-line";
-    line.setAttribute("aria-hidden", "true");
-    list.appendChild(line);
+    // (timeline line is commented out — keep behavior identical to original)
+    // var line = doc.createElement("span");
+    // line.className = "fx-line";
+    // line.setAttribute("aria-hidden", "true");
+    // list.appendChild(line);
     items.forEach(function (it) {
       $$("li", it).forEach(function (li, i) { li.style.setProperty("--i", i); });
     });
@@ -2419,5 +3757,435 @@
 })();
 
     </script>
+
+    <!-- ============================================================== -->
+    <!-- NEW: Experience hover — ripple grows from cursor, then a detail -->
+    <!-- card is pulled in from the right to the centre of the page.     -->
+    <!-- ============================================================== -->
+    <script>
+    (function () {
+      var doc = document;
+      var items = Array.prototype.slice.call(doc.querySelectorAll("#about .experience-item"));
+      if (!items.length) return;
+
+      var DATA = {
+        "Novelope Pakistan": {
+          desc: "As a Software Developer at Novelops Consulting, I focus on developing reliable, scalable, and user-friendly web applications. I enjoy solving real-world problems, writing clean and maintainable code, and continuously improving my technical skills to deliver high-quality software solutions.",
+          points: [
+            "Develop reliable, scalable, and user-friendly web applications.",
+            "Build customized web solutions to meet diverse client needs.",
+            "Write clean, maintainable code and solve real-world problems.",
+            "Continuously improve technical skills through hands-on experience and learning.",
+            "Collaborate with teams to deliver impactful software solutions."
+          ]
+        },
+        "SimulationsX": {
+          desc: "Worked as a Full Stack Developer at SimulationsX, contributing to game development and software solutions. Developed a TOC (Game of Chance) game, focusing on gameplay functionality, interactive user experiences, and application logic.",
+          points: [
+            "Developed a TOC game with interactive gameplay and core game logic.",
+            "Implemented game functionality to provide a smooth and engaging user experience.",
+            "Applied software development and problem-solving skills throughout the development process.",
+            "Collaborated on development tasks to improve functionality and overall game quality."
+          ]
+        },
+        "Surplus Pakistan": {
+          desc: "Working as a PHP / Laravel Developer at Surplus Pakistan, responsible for maintaining and improving the existing Surplus software. Focused on fixing bugs, ensuring reliable functionality, optimizing performance, and keeping the application up to date.",
+          points: [
+            "Maintain and update the existing Surplus software using PHP and Laravel.",
+            "Identify and fix bugs to ensure smooth application functionality.",
+            "Improve application performance, reliability, and maintainability.",
+            "Implement updates and resolve issues based on software requirements.",
+            "Work with databases and backend functionality to maintain data consistency."
+          ]
+        },
+        "Count3": {
+          desc: "Developed Count3, a complete full-stack software application using React.js, PHP RESTful APIs, and MySQL. Responsible for designing the system architecture, building interactive user interfaces, developing backend services, and integrating database functionality to deliver a scalable and maintainable software solution.",
+          points: [
+            "Developed the complete Count3 software application using React.js, PHP, and MySQL.",
+            "Built responsive and interactive frontend components using React.js.",
+            "Designed and implemented RESTful APIs using PHP for frontend-backend communication.",
+            "Designed the MySQL database structure and integrated database operations.",
+            "Planned the system architecture and organized application components for maintainability.",
+            "Integrated frontend, backend APIs, and database functionality into a unified system."
+          ]
+        }
+      };
+
+      /* ---- stage ---- */
+      var stage = doc.createElement("div");
+      stage.className = "xp-stage";
+      stage.setAttribute("aria-hidden", "true");
+      stage.innerHTML =
+        '<div class="xp-backdrop"></div>' +
+        '<div class="xp-panel" role="dialog" aria-label="Experience details">' +
+          '<span class="xp-grip" aria-hidden="true"><i></i><i></i><i></i></span>' +
+          '<div class="xp-body"><button type="button" class="xp-close" aria-label="Close">&#10005;</button><div class="xp-content"></div></div>' +
+        '</div>';
+      doc.body.appendChild(stage);
+      var panel = stage.querySelector(".xp-panel");
+      var content = stage.querySelector(".xp-content");
+
+      function esc(s) { var d = doc.createElement("div"); d.textContent = s; return d.innerHTML; }
+
+      function fill(item, animate) {
+        var role = item.querySelector("h3").textContent.trim();
+        var a = item.querySelector(".experience-meta a");
+        var company = a.textContent.trim();
+        var date = item.querySelector(".experience-date").textContent.trim();
+        var img = item.querySelector(".experience-logo img");
+        var d = DATA[company] || { desc: "", points: [] };
+        content.innerHTML =
+          '<div class="xp-eyebrow">// experience</div>' +
+          '<div class="xp-head">' +
+            '<div class="xp-logo">' + (img ? '<img src="' + esc(img.getAttribute("src")) + '" alt="">' : "") + '</div>' +
+            '<div><h3 class="xp-title">' + esc(role) + '</h3>' +
+            '<div class="xp-sub"><a href="' + esc(a.href) + '" target="_blank" rel="noopener noreferrer">' + esc(company) + ' &#8599;</a>' +
+            '<span class="xp-date">' + esc(date) + '</span></div></div>' +
+          '</div>' +
+          (d.desc ? '<div class="xp-label">Overview</div><p class="xp-desc">' + esc(d.desc) + '</p>' : "") +
+          (d.points.length ? '<div class="xp-label">Key Responsibilities</div><ul class="xp-list">' +
+            d.points.map(function (p) { return "<li>" + esc(p) + "</li>"; }).join("") + "</ul>" : "");
+        if (animate) {
+          content.classList.remove("xp-swap"); void content.offsetWidth; content.classList.add("xp-swap");
+        }
+      }
+
+      /* ---- ripple ---- */
+      function startRipple(item, e) {
+        var h = item.querySelector(".experience-header");
+        var r = h.getBoundingClientRect();
+        var x = e && e.clientX != null ? e.clientX - r.left : r.width / 2;
+        var y = e && e.clientY != null ? e.clientY - r.top : r.height / 2;
+        var R = Math.hypot(Math.max(x, r.width - x), Math.max(y, r.height - y));
+        var el = doc.createElement("span");
+        el.className = "xp-ripple";
+        el.style.cssText = "width:" + 2 * R + "px;height:" + 2 * R + "px;left:" + (x - R) + "px;top:" + (y - R) + "px;--s0:" + (14 / (2 * R)).toFixed(4);
+        h.insertBefore(el, h.firstChild);
+        item._rp = el;
+        void el.offsetWidth;
+        requestAnimationFrame(function () { el.classList.add("grow"); });
+      }
+      function endRipple(item) {
+        var el = item._rp;
+        if (!el) return;
+        el.classList.add("out");
+        setTimeout(function () { el.remove(); }, 400);
+        item._rp = null;
+      }
+
+      /* ---- open / close ---- */
+      var tOpen, tClose, isOpen = false;
+      function openFor(item) {
+        clearTimeout(tClose);
+        items.forEach(function (i) { if (i !== item) i.classList.remove("xp-active"); });
+        item.classList.add("xp-active");
+        fill(item, isOpen);
+        isOpen = true;
+        stage.classList.add("open");
+        stage.setAttribute("aria-hidden", "false");
+      }
+      function closeAll() {
+        clearTimeout(tOpen);
+        isOpen = false;
+        stage.classList.remove("open");
+        stage.setAttribute("aria-hidden", "true");
+        items.forEach(function (i) { i.classList.remove("xp-active"); endRipple(i); });
+      }
+      function scheduleClose() { clearTimeout(tClose); tClose = setTimeout(closeAll, 350); }
+
+      var touchMode = window.matchMedia("(hover: none)").matches;
+
+      items.forEach(function (item) {
+        if (!touchMode) {
+          item.addEventListener("mouseenter", function (e) {
+            clearTimeout(tClose); clearTimeout(tOpen);
+            endRipple(item);
+            startRipple(item, e);
+            tOpen = setTimeout(function () { openFor(item); }, isOpen ? 200 : 650);
+          });
+          item.addEventListener("mouseleave", function () {
+            clearTimeout(tOpen);
+            endRipple(item);
+            scheduleClose();
+          });
+        } else {
+          item.addEventListener("click", function (e) {
+            endRipple(item);
+            startRipple(item, e);
+            clearTimeout(tOpen);
+            tOpen = setTimeout(function () { openFor(item); }, 450);
+          });
+        }
+      });
+
+      panel.addEventListener("mouseenter", function () { clearTimeout(tClose); });
+      panel.addEventListener("mouseleave", function () { if (!touchMode) scheduleClose(); });
+      stage.querySelector(".xp-close").addEventListener("click", closeAll);
+      stage.querySelector(".xp-backdrop").addEventListener("click", closeAll);
+      doc.addEventListener("keydown", function (e) { if (e.key === "Escape" && isOpen) closeAll(); });
+    })();
+    </script>
+
+
+
+
+
+
+<script>
+/* =========================================================
+   Toolbox filter — clicking a category chip dims non-matching
+   tools so the user can visually scan a single discipline.
+   Clicking the same chip again clears the filter.
+   ========================================================= */
+(function () {
+  "use strict";
+  var toolbox = document.querySelector(".toolbox");
+  if (!toolbox) return;
+  var filters = toolbox.querySelectorAll(".toolbox__filter");
+  var tools   = toolbox.querySelectorAll(".tool");
+
+  function applyFilter(cat) {
+    if (!cat) {
+      toolbox.classList.remove("is-filtered");
+      filters.forEach(function (f) { f.classList.remove("is-active"); });
+      tools.forEach(function (t) { t.classList.remove("is-match"); });
+      return;
+    }
+    toolbox.classList.add("is-filtered");
+    filters.forEach(function (f) {
+      f.classList.toggle("is-active", f.getAttribute("data-cat") === cat);
+    });
+    tools.forEach(function (t) {
+      t.classList.toggle("is-match", t.getAttribute("data-cat") === cat);
+    });
+  }
+
+  filters.forEach(function (f) {
+    f.addEventListener("click", function () {
+      var cat = f.getAttribute("data-cat");
+      if (f.classList.contains("is-active")) {
+        applyFilter(null);
+      } else {
+        applyFilter(cat);
+      }
+    });
+  });
+})();
+
+/* ---------- Toolbox entrance animation (GSAP) ---------- */
+if (window.gsap) {
+  gsap.from('.toolbox__icons i', {
+    opacity: 0, y: 6, scale: 0.7,
+    duration: 0.45, ease: 'power2.out',
+    stagger: 0.02, delay: 0.1,
+    clearProps: 'transform,opacity'
+  });
+  gsap.from('.toolbox__eyebrow', {
+    opacity: 0, y: 8, duration: 0.5, ease: 'power2.out', delay: 0.2, clearProps: 'transform,opacity'
+  });
+  gsap.from('.toolbox__title', {
+    opacity: 0, y: 16, duration: 0.7, ease: 'power3.out', delay: 0.25, clearProps: 'transform,opacity'
+  });
+  gsap.from('.toolbox__underline', {
+    opacity: 0, scaleX: 0, duration: 0.7, ease: 'power2.out', delay: 0.45,
+    transformOrigin: 'left center', clearProps: 'transform,opacity'
+  });
+  gsap.from('.toolbox__subtitle', {
+    opacity: 0, y: 8, duration: 0.6, ease: 'power2.out', delay: 0.5, clearProps: 'transform,opacity'
+  });
+  gsap.from('.toolbox__filter', {
+    opacity: 0, y: 10, scale: 0.9,
+    duration: 0.45, ease: 'back.out(1.5)',
+    stagger: 0.04, delay: 0.55,
+    clearProps: 'transform,opacity'
+  });
+  gsap.from('.tool', {
+    opacity: 0, y: 8, scale: 0.85,
+    duration: 0.4, ease: 'power2.out',
+    stagger: 0.012, delay: 0.7,
+    clearProps: 'transform,opacity'
+  });
+}
+</script>
+
+<!-- ============================================================= -->
+<!-- Lenis smooth scroll — initialized once per scrollable         -->
+<!-- container so behaviour is identical on every device/system.    -->
+<!-- ============================================================= -->
+<script>
+(function () {
+  "use strict";
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduced || typeof window.Lenis === "undefined") return;
+
+  /* Helper: attach a single Lenis instance to a scrollable element */
+  function attachLenis(el) {
+    if (!el || el.__lenis) return null;
+    var l = new window.Lenis({
+      wrapper: el,
+      content: el,
+      lerp: 0.1,            /* smooth-out factor; smaller = smoother/slower */
+      duration: 1.1,        /* fallback duration when wheelMode=duration */
+      wheelMultiplier: 1.0,
+      touchMultiplier: 1.2,
+      smoothWheel: true,
+      smoothTouch: false,   /* touch users want native scroll */
+      easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); }
+    });
+    el.__lenis = l;
+    return l;
+  }
+
+  /* The portfolio uses scrollable .page-section--scrollable elements,
+     the sidebar .scrollable-content, #content-play, and the main container.
+     Attach a Lenis instance to each that actually scrolls. */
+  var lenisInstances = [];
+  function initAll() {
+    var sels = [
+      ".page-section--scrollable",
+      "#content-play",
+      ".scrollable-content",
+      ".main-container",
+      ".sidebar-container"
+    ];
+    sels.forEach(function (sel) {
+      var els = document.querySelectorAll(sel);
+      els.forEach(function (el) {
+        var l = attachLenis(el);
+        if (l) lenisInstances.push(l);
+      });
+    });
+  }
+
+  /* RAF driver — uses a single rAF for all Lenis instances so we
+     get consistent 60 fps pacing across systems. */
+  var running = true;
+  function raf(time) {
+    if (!running) return;
+    lenisInstances.forEach(function (l) { l && l.raf(time); });
+    requestAnimationFrame(raf);
+  }
+  requestAnimationFrame(raf);
+
+  /* Pause/resume on visibility change for perf */
+  document.addEventListener("visibilitychange", function () {
+    running = !document.hidden;
+    if (running) requestAnimationFrame(raf);
+  });
+
+  /* Init now and also after fonts are ready (font load changes scroll size) */
+  initAll();
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function () {
+      /* recompute sizes on the existing instances */
+      lenisInstances.forEach(function (l) { l && l.resize && l.resize(); });
+    });
+  }
+
+  /* When the active section changes, reset its scroll via Lenis */
+  window.addEventListener("sectionchange", function (e) {
+    var id = (e && e.detail && e.detail.id) || (location.hash || "#hero").slice(1);
+    var target = document.getElementById(id);
+    if (target && target.__lenis) {
+      target.__lenis.scrollTo(0, { immediate: true });
+    }
+  });
+
+  /* === SCROLL-LOCK INTEGRATION ===
+     While the headline color is filling, the scroll-jack module puts
+     .fx-scroll-lock on the #about element. When that happens, we
+     stop the #about Lenis instance so its wheel handler doesn't fight
+     with the scroll-jack. When the lock class is removed, we resume. */
+  var aboutEl = document.getElementById("about");
+  function syncAboutLockState() {
+    if (!aboutEl || !aboutEl.__lenis) return;
+    if (aboutEl.classList.contains("fx-scroll-lock")) {
+      aboutEl.__lenis.stop && aboutEl.__lenis.stop();
+    } else {
+      aboutEl.__lenis.start && aboutEl.__lenis.start();
+    }
+  }
+  /* Apply immediately (in case #about was locked before Lenis started) */
+  syncAboutLockState();
+  /* Observe future class changes on #about */
+  if (aboutEl) {
+    var mo = new MutationObserver(function () { syncAboutLockState(); });
+    mo.observe(aboutEl, { attributes: true, attributeFilter: ["class"] });
+  }
+  /* Re-sync after sectionchange too */
+  window.addEventListener("sectionchange", syncAboutLockState);
+
+  /* Re-init when DOMContentLoaded in case we ran before parse finished */
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initAll);
+  }
+})();
+</script>
+
+<!-- ============================================================== -->
+<!-- CENTER-BOTTOM FLOATING NAV TAB — "Home | About"               -->
+<!-- Sits fixed at the bottom-center of the viewport, visible on   -->
+<!-- every section. Routes to the same showSection() the sidebar   -->
+<!-- uses, so behaviour is identical everywhere.                   -->
+<!-- ============================================================== -->
+<nav class="dock-nav" role="navigation" aria-label="Primary">
+  <button type="button" class="dock-nav__btn is-active" data-target="hero" aria-current="page">
+    <i class="fa-solid fa-house" aria-hidden="true"></i>
+    Home
+  </button>
+  <span class="dock-nav__sep" aria-hidden="true"></span>
+  <button type="button" class="dock-nav__btn" data-target="about">
+    <i class="fa-solid fa-user" aria-hidden="true"></i>
+    About
+  </button>
+</nav>
+
+<script>
+/* Wire the bottom dock nav to the existing showSection() so the
+   sidebar nav and the dock nav stay perfectly in sync. */
+(function () {
+  "use strict";
+  var dock = document.querySelector(".dock-nav");
+  if (!dock) return;
+  var buttons = dock.querySelectorAll(".dock-nav__btn");
+
+  function setActive(id) {
+    buttons.forEach(function (b) {
+      var isActive = b.getAttribute("data-target") === id;
+      b.classList.toggle("is-active", isActive);
+      if (isActive) b.setAttribute("aria-current", "page");
+      else b.removeAttribute("aria-current");
+    });
+  }
+
+  buttons.forEach(function (b) {
+    b.addEventListener("click", function () {
+      var id = b.getAttribute("data-target");
+      if (!id) return;
+      if (typeof window.showSection === "function") {
+        window.showSection(id);
+      }
+      /* Also close the mobile sidebar if open — closeSidebarOnMobile
+         is defined as a top-level function in an earlier script. */
+      if (typeof window.closeSidebarOnMobile === "function") {
+        window.closeSidebarOnMobile();
+      } else if (typeof closeSidebarOnMobile === "function") {
+        closeSidebarOnMobile();
+      }
+    });
+  });
+
+  /* Keep active state in sync whenever the active section changes
+     (whether the change came from the sidebar, the dock, or the URL). */
+  window.addEventListener("sectionchange", function (e) {
+    var id = (e && e.detail && e.detail.id) || (location.hash || "#hero").replace("#", "");
+    setActive(id);
+  });
+
+  /* Initialize from the current hash */
+  var initial = (location.hash || "#hero").replace("#", "");
+  setActive(initial || "hero");
+})();
+</script>
   </body>
 </html>
