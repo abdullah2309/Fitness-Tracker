@@ -9,7 +9,7 @@ A full-stack Fitness Tracker web application built using **MongoDB, Express, Rea
 ### 🔐 Authentication 
 
 * User Signup & Login
-* JWT-based authentication
+* JWT-based authentication  
 * Role-based access (Admin & User)
 
 ### 👤 User Features 
