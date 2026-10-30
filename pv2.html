@@ -48,7 +48,8 @@
         .main-container { margin-left: 380px; width: calc(100% - 380px); height: 100vh; overflow: hidden; background-color: var(--bg-offwhite); }
       }
 
-      * { scrollbar-width: thin; scrollbar-color: var(--primary-blue-soft) transparent; }
+      /* * { scrollbar-width: thin; scrollbar-color: var(--primary-blue-soft); } */
+       * { scrollbar-width: thin; scrollbar-color: var(--primary-blue-soft) transparent; }
       ::-webkit-scrollbar { width: 10px; height: 10px; }
       ::-webkit-scrollbar-track { background: var(--bg-card-alt); border-radius: 8px; }
       ::-webkit-scrollbar-thumb { background: var(--border-soft); border-radius: 8px; border: 2px solid var(--bg-card-alt); transition: background 0.25s ease; }
@@ -66,7 +67,7 @@
       .sidebar-container::-webkit-scrollbar-thumb { background: var(--border-soft); border-radius: 8px; border: 2px solid transparent; background-clip: padding-box; transition: background 0.25s ease; }
       .sidebar-container::-webkit-scrollbar-thumb:hover { background: var(--primary-blue); background-clip: padding-box; }
       .sidebar-container { scrollbar-width: thin; scrollbar-color: var(--border-soft) transparent; }
-
+ 
       .scrollable-content::-webkit-scrollbar { width: 6px; }
       .scrollable-content::-webkit-scrollbar-track { background: transparent; border-radius: 6px; }
       .scrollable-content::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 6px; transition: background 0.25s ease; }
